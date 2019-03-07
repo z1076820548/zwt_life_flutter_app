@@ -110,23 +110,31 @@ class _PullLoadWidgetState extends State<PullLoadWidget> {
     // TODO: implement build
     return null;
   }
+
+  ///空白页面
+  Widget _buildEmpty(){
+    return Container(
+      height: MediaQuery.of(context).size.height -100,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          FlatButton(
+            onPressed: (){},
+            child: Image(image:new  AssetImage(GlobalIcons.DEFAULT_USER_ICON),width: 70.0,height: 70.0,),
+          )
+        ],
+      ),
+    );
+  }
+  
+  ///上拉加载
+  Widget _buildProgressIndicator(){
+    ///是否需要显示上拉加载更多的loading
+    Widget bottomWidget = (control.needLoadMore)? Row(mainAxisAlignment: ,)
+  }
 }
 
-///空白页面
-Widget _buildEmpty(){
-  return Container(
-    height: MediaQuery.of(context).size.height -100,
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        FlatButton(
-          onPressed: (){},
-          child: Image(image: AssetImage(GlobalIcons.USER_ITEM_COMPANY),),
-        )
-      ],
-    ),
-  );
-}
+
 
 class PullLoadWidgetControl {
   ///数据，对齐增减，不能替换
