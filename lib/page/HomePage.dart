@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:zwt_life_flutter_app/common/dao/DaoResult.dart';
 import 'package:zwt_life_flutter_app/common/local/LocalStorage.dart';
 import 'package:zwt_life_flutter_app/common/local/SharedPreferencesKeys.dart';
 import 'package:zwt_life_flutter_app/common/model/search_history.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/shared_preferences.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/listviewrefresh/custom/HomeListRefresh.dart';
+import 'package:zwt_life_flutter_app/widget/GSYWidget/refresh/PullLoadWidget.dart';
 import 'package:zwt_life_flutter_app/widget/GSYWidget/search/SearchInput.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:zwt_life_flutter_app/widget/GSYWidget/refresh/MyListState.dart';
 
 class HomePage extends StatefulWidget {
   static final String sName = "Home";
@@ -17,7 +19,11 @@ class HomePage extends StatefulWidget {
   }
 }
 
-class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+class _HomePageState extends State<HomePage>
+    with
+        TickerProviderStateMixin,
+        AutomaticKeepAliveClientMixin<HomePage>,
+        MyListState<HomePage> {
   SearchHistoryList searchHistoryList;
   SpUtil sp;
   var hotSearchTag = [
@@ -32,6 +38,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     print("json $json");
     searchHistoryList = SearchHistoryList.fromJSON(json);
   }
+
+  List<String> str = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+  List<String> addStr = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
 
   @override
   void initState() {
@@ -52,10 +61,53 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       body: Column(
         children: <Widget>[
           Expanded(
-          child: HomeListRefresh(),
-        )
+            child: PullLoadWidget(
+              pullLoadWidgetControl,
+              (BuildContext context, int index) => _renderEventItem(index),
+              handleRefresh,
+              onLoadMore,
+              refreshKey: refreshIndicatorKey,
+            ),
+          )
         ],
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+
+  @override
+  // TODO: implement isRefreshFirst
+  bool get isRefreshFirst => true;
+
+  @override
+  bool get needHeader => false;
+
+  @override
+  requestLoadMore() async {
+    return new DataResult(addStr, true);
+  }
+
+  @override
+  requestRefresh() async {
+
+    return new DataResult(str, true);
+  }
+
+  _renderEventItem(int index) {
+    return Container(
+      height: 70.0,
+      child: Card(
+        child: Center(
+          child: Text(
+            pullLoadWidgetControl.dataList[index],
+            style: TextStyle(fontSize: 18.0),
+          ),
+        ),
+      ),
+    );
+  }
+
 }
