@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zwt_life_flutter_app/common/utils/CommonUtils.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/screen_util.dart';
-import 'package:zwt_life_flutter_app/page/HomePage.dart';
+import 'package:zwt_life_flutter_app/page/homepage/HomePage.dart';
 import 'package:zwt_life_flutter_app/widget/GSYWidget/MyCupertinoDialog.dart';
 
 class MainPage extends StatefulWidget {

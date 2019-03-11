@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:zwt_life_flutter_app/common/dao/DaoResult.dart';
+import 'package:zwt_life_flutter_app/common/data/HomeData.dart';
 import 'package:zwt_life_flutter_app/common/local/LocalStorage.dart';
 import 'package:zwt_life_flutter_app/common/local/SharedPreferencesKeys.dart';
+import 'package:zwt_life_flutter_app/common/model/kingkong.dart';
 import 'package:zwt_life_flutter_app/common/model/search_history.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/shared_preferences.dart';
+import 'package:zwt_life_flutter_app/widget/GSYWidget/banner/RectSwiperPaginationBuilder.dart';
 import 'package:zwt_life_flutter_app/widget/GSYWidget/refresh/PullLoadWidget.dart';
 import 'package:zwt_life_flutter_app/widget/GSYWidget/search/SearchInput.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -41,11 +44,34 @@ class _HomePageState extends State<HomePage>
 
   List<String> str = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
   List<String> addStr = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+  List dataList1 = [];
+
+  _processPinweidata() {
+    dataList1 = [];
+    var rags = homedata['data']['rags'];
+    rags.forEach((rag) {
+      if (rag['editorName'] == 'pinwei_home_floor') {
+        dataList1.add({
+          'editorName': 'pinwei_home_floor_title',
+          'title': rag['title'],
+          'url': rag['more']
+        });
+      }
+      (rag['rags'] as List).forEach((dynamic r) {
+        if (r['title'] == '') {
+          r['title'] = rag['title'];
+        }
+        dataList1.add(r);
+      });
+    });
+    //  print(dataList1);
+  }
 
   @override
   void initState() {
     super.initState();
     initSearchHistory();
+    _processPinweidata();
   }
 
   Widget buildSearchInput(BuildContext context) {
@@ -83,7 +109,7 @@ class _HomePageState extends State<HomePage>
   bool get isRefreshFirst => true;
 
   @override
-  bool get needHeader => false;
+  bool get needHeader => true;
 
   @override
   requestLoadMore() async {
@@ -92,22 +118,43 @@ class _HomePageState extends State<HomePage>
 
   @override
   requestRefresh() async {
-
     return new DataResult(str, true);
   }
 
   _renderEventItem(int index) {
-    return Container(
-      height: 70.0,
-      child: Card(
-        child: Center(
-          child: Text(
-            pullLoadWidgetControl.dataList[index],
-            style: TextStyle(fontSize: 18.0),
+    if (index == 0) {
+      return _headeeWidget();
+    } else {
+      return Container(
+        height: 70.0,
+        child: Card(
+          child: Center(
+            child: Text(
+              pullLoadWidgetControl.dataList[index - 1],
+              style: TextStyle(fontSize: 18.0),
+            ),
           ),
         ),
-      ),
-    );
+      );
+    }
   }
 
+  _headeeWidget() {
+    List<String> banners = <String>[
+      'https://img.alicdn.com/simba/img/TB18voJihYaK1RjSZFnSuu80pXa.jpg_q50.jpg'
+          'http://img.alicdn.com/imgextra/i3/115/O1CN01PsvX9s1Cii2Pvi3WM_!!115-0-luban.jpg',
+      'https://gw.alicdn.com/imgextra/i3/43/O1CN01ZPUEId1CBjWPLKzea_!!43-0-lubanu.jpg',
+      'https://gw.alicdn.com/imgextra/i2/41/O1CN01yCNeuw1CAojHBeUyC_!!41-0-lubanu.jpg'
+    ];
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        SwipperBanner(
+          banners: banners,
+        ),
+        SwipperGrid(data: KingKongList.fromJson(dataList1[1]['items'])),
+      ],
+    );
+  }
 }

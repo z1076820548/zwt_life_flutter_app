@@ -81,7 +81,7 @@ mixin MyListState<T extends StatefulWidget>
    resolveDataResult(res) {
      if (isShow) {
        setState(() {
-         pullLoadWidgetControl.needLoadMore = (res != null && res.data != null );
+         pullLoadWidgetControl.needLoadMore = (res != null && res.data != null && page < pageTotal);
        });
      }
    }

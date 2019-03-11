@@ -34,7 +34,7 @@ class UserDao {
     HttpManager.clearAuthorization();
     ResultData res = await HttpManager.netFetch(Address.getAuthorization(),
         json.encode(requestParams), null, new Options(method: "post"));
-    DataResult resultData = null;
+
     if (res != null && res.result) {
       await LocalStorage.save(Config.PW_KEY, password);
       DataResult resultData = await getUserInfo(null);

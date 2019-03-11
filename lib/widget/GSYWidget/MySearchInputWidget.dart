@@ -33,6 +33,7 @@ class _MySearchInputWidgetState extends State<MySearchInputWidget> {
       child: Row(
         children: <Widget>[
           RawMaterialButton(
+            onPressed: (()=>{}),
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             child: Icon(Icons.search, color: Colors.black26),
             constraints: BoxConstraints(minWidth: 0.0, minHeight: 0.0),
