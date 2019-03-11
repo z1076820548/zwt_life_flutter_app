@@ -6,7 +6,7 @@ import 'package:zwt_life_flutter_app/common/local/SharedPreferencesKeys.dart';
 import 'package:zwt_life_flutter_app/common/model/kingkong.dart';
 import 'package:zwt_life_flutter_app/common/model/search_history.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/shared_preferences.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/banner/RectSwiperPaginationBuilder.dart';
+import 'package:zwt_life_flutter_app/common/widgets/homewidget/banner.dart';
 import 'package:zwt_life_flutter_app/widget/GSYWidget/refresh/PullLoadWidget.dart';
 import 'package:zwt_life_flutter_app/widget/GSYWidget/search/SearchInput.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -74,18 +74,14 @@ class _HomePageState extends State<HomePage>
     _processPinweidata();
   }
 
-  Widget buildSearchInput(BuildContext context) {
-    return new SearchInput((value) {}, (value) {}, () {});
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: buildSearchInput(context),
-      ),
+
       body: Column(
         children: <Widget>[
+          HomeTopBar(),
           Expanded(
             child: PullLoadWidget(
               pullLoadWidgetControl,
