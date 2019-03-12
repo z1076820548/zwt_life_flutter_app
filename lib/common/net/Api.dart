@@ -1,3 +1,4 @@
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'dart:collection';
 import 'package:connectivity/connectivity.dart';
@@ -19,7 +20,7 @@ class HttpManager {
   ///[ url] 请求url
   ///[ params] 请求参数
   ///[ header] 外加头
-  ///[ option] 配置
+  ///[ option] 配置 get post
   static netFetch(url, params, Map<String, String> header, Options option, {noTip = false}) async {
 
     //没有网络
@@ -34,14 +35,14 @@ class HttpManager {
     }
 
     //授权码
-    if (optionParams["authorizationCode"] == null) {
-      var authorizationCode = await getAuthorization();
-      if (authorizationCode != null) {
-        optionParams["authorizationCode"] = authorizationCode;
-      }
-    }
-
-    headers["Authorization"] = optionParams["authorizationCode"];
+//    if (optionParams["authorizationCode"] == null) {
+//      var authorizationCode = await getAuthorization();
+//      if (authorizationCode != null) {
+//        optionParams["authorizationCode"] = authorizationCode;
+//      }
+//    }
+//
+//    headers["Authorization"] = optionParams["authorizationCode"];
 
     if (option != null) {
       option.headers = headers;
@@ -54,6 +55,10 @@ class HttpManager {
     option.connectTimeout = 15000;
 
     Dio dio = new Dio();
+    dio.interceptors.add(LogInterceptor(responseBody: true));
+    dio.interceptors.add(CookieManager(CookieJar()));
+
+
     Response response;
     try {
       response = await dio.request(url, data: params, options: option);

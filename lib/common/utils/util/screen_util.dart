@@ -3,6 +3,13 @@
 import 'package:flutter/material.dart';
 
 class ScreenUtil {
+
+  static const double designTopBarHeight = 45;
+  static const double designBttomBarHeight = 54;
+  static const int designWidth = 360; //设计稿宽度
+  static const int designHeight = 640; //设计稿高度
+  static const double searchTxtFieldHeight=34;
+
   static ScreenUtil instance = new ScreenUtil();
 
   //设计稿的设备尺寸修改

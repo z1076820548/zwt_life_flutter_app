@@ -15,6 +15,7 @@ import 'package:zwt_life_flutter_app/common/redux/UserRedux.dart';
 import 'package:zwt_life_flutter_app/common/utils/CommonUtils.dart';
 
 class UserDao {
+
   static login(userName, password, store) async {
     String type = userName + ":" + password;
     var bytes = utf8.encode(type);
@@ -37,55 +38,55 @@ class UserDao {
 
     if (res != null && res.result) {
       await LocalStorage.save(Config.PW_KEY, password);
-      DataResult resultData = await getUserInfo(null);
+//      DataResult resultData = await getUserInfo(null);
     }
   }
 
-  //获取用户详细信息
-  static getUserInfo(userName, {needDb = false}) async {
-    UserInfoDbProvider provider = new UserInfoDbProvider();
-    next() async {
-      ResultData res;
-      if (userName == null) {
-        res = await HttpManager.netFetch(
-            Address.getMyUserInfo(), null, null, null);
-      } else {
-        res = await HttpManager.netFetch(
-            Address.getUserInfo(userName), null, null, null);
-      }
-      if (res != null && res.result) {
-        String starred = "---";
-        if (res.data["type"] != "Organization") {
-          DataResult countRes = await getUserStaredCountNet(res.data["login"]);
-          if (countRes.result) {
-            starred = countRes.data;
-          }
-        }
-        User user = User.fromJson(res.data);
-        user.starred = starred;
-        if (userName == null) {
-          LocalStorage.save(Config.USER_INFO, json.encode(user.toJson()));
-        } else {
-          if (needDb) {
-            provider.insert(userName, json.encode(user.toJson()));
-          }
-        }
-        return new DataResult(user, true);
-      } else {
-        return new DataResult(res.data, false);
-      }
-    }
-
-    if (needDb) {
-      User user = await provider.getUserInfo(userName);
-      if (user == null) {
-        return await next();
-      }
-      DataResult dataResult = new DataResult(user, true, next: next());
-      return dataResult;
-    }
-    return await next();
-  }
+//  //获取用户详细信息
+//  static getUserInfo(userName, {needDb = false}) async {
+//    UserInfoDbProvider provider = new UserInfoDbProvider();
+//    next() async {
+//      ResultData res;
+//      if (userName == null) {
+//        res = await HttpManager.netFetch(
+//            Address.getMyUserInfo(), null, null, null);
+//      } else {
+//        res = await HttpManager.netFetch(
+//            Address.getUserInfo(userName), null, null, null);
+//      }
+//      if (res != null && res.result) {
+//        String starred = "---";
+//        if (res.data["type"] != "Organization") {
+//          DataResult countRes = await getUserStaredCountNet(res.data["login"]);
+//          if (countRes.result) {
+//            starred = countRes.data;
+//          }
+//        }
+//        User user = User.fromJson(res.data);
+//        user.starred = starred;
+//        if (userName == null) {
+//          LocalStorage.save(Config.USER_INFO, json.encode(user.toJson()));
+//        } else {
+//          if (needDb) {
+//            provider.insert(userName, json.encode(user.toJson()));
+//          }
+//        }
+//        return new DataResult(user, true);
+//      } else {
+//        return new DataResult(res.data, false);
+//      }
+//    }
+//
+//    if (needDb) {
+//      User user = await provider.getUserInfo(userName);
+//      if (user == null) {
+//        return await next();
+//      }
+//      DataResult dataResult = new DataResult(user, true, next: next());
+//      return dataResult;
+//    }
+//    return await next();
+//  }
 
   static clearAll(Store store) async {
     HttpManager.clearAuthorization();
@@ -93,29 +94,6 @@ class UserDao {
     store.dispatch(new UpdateUserAction(User.empty()));
   }
 
-  /**
-   * 在header中提起stared count
-   */
-  static getUserStaredCountNet(userName) async {
-    String url = Address.userStar(userName, null) + "&per_page=1";
-    ResultData res = await HttpManager.netFetch(url, null, null, null);
-    if (res != null && res.result && res.headers != null) {
-      try {
-        List<String> link = res.headers['link'];
-        if (link != null) {
-          int indexStart = link[0].lastIndexOf("page=") + 5;
-          int indexEnd = link[0].lastIndexOf(">");
-          if (indexStart >= 0 && indexEnd >= 0) {
-            String count = link[0].substring(indexStart, indexEnd);
-            return new DataResult(count, true);
-          }
-        }
-      } catch (e) {
-        print(e);
-      }
-    }
-    return new DataResult(null, false);
-  }
 
   ///获取本地登录用户信息
   static getUserInfoLocal() async {

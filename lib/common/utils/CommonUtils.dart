@@ -50,12 +50,7 @@ class CommonUtils {
     return date.toString().substring(0, 10);
   }
 
-  static String getUserChartAddress(String userName) {
-    return Address.graphicHost +
-        GlobalColors.primaryValueString.replaceAll("#", "") +
-        "/" +
-        userName;
-  }
+
 
   ///日期格式转换
   static String getNewsTimeStr(DateTime date) {
@@ -372,7 +367,7 @@ class CommonUtils {
                   child: new Text(CommonUtils.getLocale(context).app_cancel)),
               new FlatButton(
                   onPressed: () {
-                    launch(Address.updateUrl);
+//                    launch(Address.updateUrl);
                     Navigator.pop(context);
                   },
                   child: new Text(CommonUtils.getLocale(context).app_ok)),

@@ -91,7 +91,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.instance = ScreenUtil(width: 360, height: 640)..init(context);
+    ScreenUtil.instance = ScreenUtil(width: ScreenUtil.designWidth, height: ScreenUtil.designHeight)..init(context);
     initData();
     // TODO: implement build
     return Scaffold(

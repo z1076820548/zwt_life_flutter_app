@@ -4,7 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:zwt_life_flutter_app/page/MainPage.dart';
 import 'package:zwt_life_flutter_app/page/LoginPage.dart';
-import 'package:zwt_life_flutter_app/page/SearchPage.dart';
+import 'package:zwt_life_flutter_app/page/searchpage/SearchPage.dart';
+import 'package:zwt_life_flutter_app/page/searchpage/SearchResultListPage.dart';
 
 class NavigatorUtils {
   ///替换
@@ -109,9 +110,13 @@ class NavigatorUtils {
 
   ///搜索
   static Future goSearchPage(BuildContext context) {
-//    return NavigatorRouter(context, new SearchPage());
+    return NavigatorRouter(context, new SearchPage());
   }
 
+  ///搜索结果
+  static Future goSearchResultListPage(BuildContext context) {
+    return NavigatorRouter(context, new SearchResultListPage());
+  }
   ///提交详情
   static Future goPushDetailPage(BuildContext context, String userName,
       String reposName, String sha, bool needHomeIcon) {
