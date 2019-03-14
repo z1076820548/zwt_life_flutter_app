@@ -114,8 +114,8 @@ class NavigatorUtils {
   }
 
   ///搜索结果
-  static Future goSearchResultListPage(BuildContext context) {
-    return NavigatorRouter(context, new SearchResultListPage());
+  static Future goSearchResultListPage(BuildContext context,String keyWord) {
+    return NavigatorRouter(context, new SearchResultListPage(keyword: keyWord,));
   }
   ///提交详情
   static Future goPushDetailPage(BuildContext context, String userName,

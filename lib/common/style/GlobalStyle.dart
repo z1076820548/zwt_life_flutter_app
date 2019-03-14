@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 //颜色
-class GlobalColors{
+class GlobalColors {
   static const String primaryValueString = "#24292E";
   static const String primaryLightValueString = "#42464b";
   static const String primaryDarkValueString = "#121917";
@@ -26,6 +26,11 @@ class GlobalColors{
   static const int mainTextColor = primaryDarkValue;
   static const int textColorWhite = white;
 
+//聊天背景颜色
+  static const Color ChatThemeColor = Color.fromRGBO(242, 242, 242, 1.0);
+  static const Color ChatBgColor = Color.fromRGBO(229, 229, 229, 1.0);
+  static const Color ChatMsgColor = Color.fromRGBO(254, 255, 254, 1.0);
+  static const Color ChatTextColor = Colors.black;
 
   static const Color themeColor = Color.fromRGBO(132, 95, 63, 1.0);
   static const Color floorTitleColor = Color.fromRGBO(51, 51, 51, 1);
@@ -34,18 +39,19 @@ class GlobalColors{
   static const Color divideLineColor = Color.fromRGBO(245, 245, 245, 1.0);
   static const Color categoryDefaultColor = Color(0xFF666666);
   static const Color priceColor = Color.fromRGBO(182, 9, 9, 1.0);
-  static const Color pinweicorverSubtitleColor = Color.fromRGBO(153, 153, 153, 1.0);
+  static const Color pinweicorverSubtitleColor =
+      Color.fromRGBO(153, 153, 153, 1.0);
   static const Color pinweicorverBtTxtColor = Color(0xFFFFFFFF);
   static const Color tabtxtColor = Color.fromRGBO(88, 88, 88, 1.0);
-  static const Color cartDisableColor = Color.fromRGBO(221, 221,221,1.0);
-  static const Color cartItemChangenumBtColor = Color.fromRGBO(153, 153, 153, 1.0);
+  static const Color cartDisableColor = Color.fromRGBO(221, 221, 221, 1.0);
+  static const Color cartItemChangenumBtColor =
+      Color.fromRGBO(153, 153, 153, 1.0);
   static const Color cartItemCountTxtColor = Color.fromRGBO(102, 102, 102, 1.0);
   static const Color cartBottomBgColor = Color(0xFFFFFFFF);
-  static const Color goPayBtTxtColor =  Color(0xFFFFFFFF);
-  static const Color searchAppBarBgColor =  Color(0xFFFFFFFF);
+  static const Color goPayBtTxtColor = Color(0xFFFFFFFF);
+  static const Color searchAppBarBgColor = Color(0xFFFFFFFF);
 
   static const Color bottomBarbgColor = Color.fromRGBO(250, 250, 250, 1.0);
-
 
   static const Color searchRecomendDividerColor = Color(0xFFdedede);
 
@@ -64,15 +70,12 @@ class GlobalColors{
       900: const Color(primaryDarkValue),
     },
   );
-
-
-
 }
 
 //文本样式
-class GlobalConstant{
-
-  static const String app_default_share_url = "https://github.com/CarGuo/GSYGithubAppFlutter";
+class GlobalConstant {
+  static const String app_default_share_url =
+      "https://github.com/CarGuo/GSYGithubAppFlutter";
 
   static const lagerTextSize = 30.0;
   static const bigTextSize = 23.0;
@@ -232,9 +235,7 @@ class GlobalConstant{
     fontWeight: FontWeight.bold,
   );
 
-
-
-    /////////////////search//////////////////////
+  /////////////////search//////////////////////
   static TextStyle defaultStyle = TextStyle(
     fontSize: 14.0,
     color: Colors.black,
@@ -249,51 +250,79 @@ class GlobalConstant{
     color: GlobalColors.pinweicorverSubtitleColor,
   );
 
-  static TextStyle cartBottomTotalPriceStyle = TextStyle(fontSize: 18,color: GlobalColors.priceColor);
+  static TextStyle cartBottomTotalPriceStyle =
+      TextStyle(fontSize: 18, color: GlobalColors.priceColor);
 
-  static TextStyle searchResultItemCommentCountStyle = TextStyle(
-      fontSize: 12, color: Color(0xFF999999));
+  static TextStyle searchResultItemCommentCountStyle =
+      TextStyle(fontSize: 12, color: Color(0xFF999999));
 }
 
-class GlobalIcons{
+class GlobalIcons {
   static const String FONT_FAMILY = 'wxcIconFont';
 
   static const String DEFAULT_USER_ICON = 'static/images/logo.png';
   static const String DEFAULT_IMAGE = 'static/images/default_img.png';
-  static const String DEFAULT_REMOTE_PIC = 'https://raw.githubusercontent.com/CarGuo/GSYGithubAppFlutter/master/static/images/logo.png';
-  static const String LOGIN_BACKGROUND_ICON = 'static/images/login_background.png';
-  static const IconData HOME = const IconData(0xe624, fontFamily: GlobalIcons.FONT_FAMILY);
-  static const IconData MORE = const IconData(0xe674, fontFamily: GlobalIcons.FONT_FAMILY);
-  static const IconData SEARCH = const IconData(0xe61c, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const String DEFAULT_REMOTE_PIC =
+      'https://raw.githubusercontent.com/CarGuo/GSYGithubAppFlutter/master/static/images/logo.png';
+  static const String LOGIN_BACKGROUND_ICON =
+      'static/images/login_background.png';
+  static const IconData HOME =
+      const IconData(0xe624, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData MORE =
+      const IconData(0xe674, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData SEARCH =
+      const IconData(0xe61c, fontFamily: GlobalIcons.FONT_FAMILY);
 
-  static const IconData MAIN_DT = const IconData(0xe684, fontFamily: GlobalIcons.FONT_FAMILY);
-  static const IconData MAIN_QS = const IconData(0xe818, fontFamily: GlobalIcons.FONT_FAMILY);
-  static const IconData MAIN_MY = const IconData(0xe6d0, fontFamily: GlobalIcons.FONT_FAMILY);
-  static const IconData MAIN_SEARCH = const IconData(0xe61c, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData MAIN_DT =
+      const IconData(0xe684, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData MAIN_QS =
+      const IconData(0xe818, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData MAIN_MY =
+      const IconData(0xe6d0, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData MAIN_SEARCH =
+      const IconData(0xe61c, fontFamily: GlobalIcons.FONT_FAMILY);
 
-  static const IconData LOGIN_USER = const IconData(0xe666, fontFamily: GlobalIcons.FONT_FAMILY);
-  static const IconData LOGIN_PW = const IconData(0xe60e, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData LOGIN_USER =
+      const IconData(0xe666, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData LOGIN_PW =
+      const IconData(0xe60e, fontFamily: GlobalIcons.FONT_FAMILY);
 
-  static const IconData REPOS_ITEM_USER = const IconData(0xe63e, fontFamily: GlobalIcons.FONT_FAMILY);
-  static const IconData REPOS_ITEM_STAR = const IconData(0xe643, fontFamily: GlobalIcons.FONT_FAMILY);
-  static const IconData REPOS_ITEM_FORK = const IconData(0xe67e, fontFamily: GlobalIcons.FONT_FAMILY);
-  static const IconData REPOS_ITEM_ISSUE = const IconData(0xe661, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData REPOS_ITEM_USER =
+      const IconData(0xe63e, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData REPOS_ITEM_STAR =
+      const IconData(0xe643, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData REPOS_ITEM_FORK =
+      const IconData(0xe67e, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData REPOS_ITEM_ISSUE =
+      const IconData(0xe661, fontFamily: GlobalIcons.FONT_FAMILY);
 
-  static const IconData REPOS_ITEM_STARED = const IconData(0xe698, fontFamily: GlobalIcons.FONT_FAMILY);
-  static const IconData REPOS_ITEM_WATCH = const IconData(0xe681, fontFamily: GlobalIcons.FONT_FAMILY);
-  static const IconData REPOS_ITEM_WATCHED = const IconData(0xe629, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData REPOS_ITEM_STARED =
+      const IconData(0xe698, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData REPOS_ITEM_WATCH =
+      const IconData(0xe681, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData REPOS_ITEM_WATCHED =
+      const IconData(0xe629, fontFamily: GlobalIcons.FONT_FAMILY);
   static const IconData REPOS_ITEM_DIR = Icons.folder;
-  static const IconData REPOS_ITEM_FILE = const IconData(0xea77, fontFamily: GlobalIcons.FONT_FAMILY);
-  static const IconData REPOS_ITEM_NEXT = const IconData(0xe610, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData REPOS_ITEM_FILE =
+      const IconData(0xea77, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData REPOS_ITEM_NEXT =
+      const IconData(0xe610, fontFamily: GlobalIcons.FONT_FAMILY);
 
-  static const IconData USER_ITEM_COMPANY = const IconData(0xe63e, fontFamily: GlobalIcons.FONT_FAMILY);
-  static const IconData USER_ITEM_LOCATION = const IconData(0xe7e6, fontFamily: GlobalIcons.FONT_FAMILY);
-  static const IconData USER_ITEM_LINK = const IconData(0xe670, fontFamily: GlobalIcons.FONT_FAMILY);
-  static const IconData USER_NOTIFY = const IconData(0xe600, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData USER_ITEM_COMPANY =
+      const IconData(0xe63e, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData USER_ITEM_LOCATION =
+      const IconData(0xe7e6, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData USER_ITEM_LINK =
+      const IconData(0xe670, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData USER_NOTIFY =
+      const IconData(0xe600, fontFamily: GlobalIcons.FONT_FAMILY);
 
-  static const IconData ISSUE_ITEM_ISSUE = const IconData(0xe661, fontFamily: GlobalIcons.FONT_FAMILY);
-  static const IconData ISSUE_ITEM_COMMENT = const IconData(0xe6ba, fontFamily: GlobalIcons.FONT_FAMILY);
-  static const IconData ISSUE_ITEM_ADD = const IconData(0xe662, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData ISSUE_ITEM_ISSUE =
+      const IconData(0xe661, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData ISSUE_ITEM_COMMENT =
+      const IconData(0xe6ba, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData ISSUE_ITEM_ADD =
+      const IconData(0xe662, fontFamily: GlobalIcons.FONT_FAMILY);
 
   static const IconData ISSUE_EDIT_H1 = Icons.filter_1;
   static const IconData ISSUE_EDIT_H2 = Icons.filter_2;
@@ -304,7 +333,8 @@ class GlobalIcons{
   static const IconData ISSUE_EDIT_CODE = Icons.format_shapes;
   static const IconData ISSUE_EDIT_LINK = Icons.insert_link;
 
-  static const IconData NOTIFY_ALL_READ = const IconData(0xe62f, fontFamily: GlobalIcons.FONT_FAMILY);
+  static const IconData NOTIFY_ALL_READ =
+      const IconData(0xe62f, fontFamily: GlobalIcons.FONT_FAMILY);
 
   static const IconData PUSH_ITEM_EDIT = Icons.mode_edit;
   static const IconData PUSH_ITEM_ADD = Icons.add_box;

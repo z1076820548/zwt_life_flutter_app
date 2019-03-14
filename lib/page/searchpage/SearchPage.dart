@@ -58,7 +58,7 @@ class _SearchPageState extends State<SearchPage> {
 
   goSearchList(String keyWord) {
     if (keyWord.trim().isNotEmpty) {
-      NavigatorUtils.goSearchResultListPage(context);
+      NavigatorUtils.goSearchResultListPage(context,keyWord);
     }
   }
 

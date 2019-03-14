@@ -2,11 +2,11 @@ import 'package:zwt_life_flutter_app/common/config/Config.dart';
 
 ///地址数据
 class Address {
-  static const String host = "https://m.image.so.com/";
-
+  static const String baseUrl1 = "https://m.image.so.com";
+  static const String baseUrl2 = 'https://suggest.taobao.com';
   ///获取授权  post
   static getAuthorization() {
-    return "${host}authorizations";
+    return "${baseUrl1}authorizations";
   }
 
 

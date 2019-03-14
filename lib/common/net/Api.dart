@@ -6,8 +6,10 @@ import 'package:zwt_life_flutter_app/common/local/LocalStorage.dart';
 import 'ResultData.dart';
 import 'Code.dart';
 import 'package:zwt_life_flutter_app/common/config/Config.dart';
+
 ///http请求
 class HttpManager {
+  static final String TAG = "uriHttpManager#";
   static const CONTENT_TYPE_JSON = "application/json";
   static const CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
   static Map optionParams = {
@@ -18,15 +20,22 @@ class HttpManager {
 
   ///发起网络请求
   ///[ url] 请求url
+  ///[path] 请求路径
   ///[ params] 请求参数
   ///[ header] 外加头
   ///[ option] 配置 get post
-  static netFetch(url, params, Map<String, String> header, Options option, {noTip = false}) async {
-
+  static netFetch(baseUrl, String path, params,
+      {noTip = false,
+      Options option,
+      Map<String, String> header,
+      String method}) async {
     //没有网络
     var connectivityResult = await (new Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
-      return new ResultData(Code.errorHandleFunction(Code.NETWORK_ERROR, "", noTip), false, Code.NETWORK_ERROR);
+      return new ResultData(
+          Code.errorHandleFunction(Code.NETWORK_ERROR, "", noTip),
+          false,
+          Code.NETWORK_ERROR);
     }
 
     Map<String, String> headers = new HashMap();
@@ -46,22 +55,29 @@ class HttpManager {
 
     if (option != null) {
       option.headers = headers;
-    } else{
-      option = new Options(method: "get");
-      option.headers = headers;
+    } else {
+      if (method == null) {
+        //默认为空时 为get请求
+        method = "GET";
+      }
+      option = new Options(
+        method: method,
+        headers: headers,
+        connectTimeout: 5000,
+        receiveTimeout: 3000,
+      );
     }
 
     ///超时
     option.connectTimeout = 15000;
-
     Dio dio = new Dio();
+    dio.options.baseUrl = baseUrl;
     dio.interceptors.add(LogInterceptor(responseBody: true));
     dio.interceptors.add(CookieManager(CookieJar()));
-
-
     Response response;
     try {
-      response = await dio.request(url, data: params, options: option);
+      response =
+          await dio.request(path, queryParameters: params, options: option);
     } on DioError catch (e) {
       Response errorResponse;
       if (e.response != null) {
@@ -73,44 +89,53 @@ class HttpManager {
         errorResponse.statusCode = Code.NETWORK_TIMEOUT;
       }
       if (Config.DEBUG) {
-        print('请求异常: ' + e.toString());
-        print('请求异常url: ' + url);
+        print(TAG + '请求异常: ' + e.toString());
+        print(TAG + '请求异常path: ' + path);
       }
-      return new ResultData(Code.errorHandleFunction(errorResponse.statusCode, e.message, noTip), false, errorResponse.statusCode);
+      return new ResultData(
+          Code.errorHandleFunction(errorResponse.statusCode, e.message, noTip),
+          false,
+          errorResponse.statusCode);
     }
-
     if (Config.DEBUG) {
-      print('请求url: ' + url);
-      print('请求头: ' + option.headers.toString());
-      if (params != null) {
-        print('请求参数: ' + params.toString());
-      }
+      print(TAG +
+          '请求头: ' +
+          option.headers.toString() +
+          "请求方式：" +
+          option.method.toString());
       if (response != null) {
-        print('返回参数: ' + response.toString());
+        print(TAG + '返回参数: ' + response.toString());
       }
       if (optionParams["authorizationCode"] != null) {
-        print('authorizationCode: ' + optionParams["authorizationCode"]);
+        print(TAG + 'authorizationCode: ' + optionParams["authorizationCode"]);
       }
     }
 
     try {
-      if (option.contentType != null && option.contentType.primaryType == "text") {
+      if (option.contentType != null &&
+          option.contentType.primaryType == "text") {
         return new ResultData(response.data, true, Code.SUCCESS);
       } else {
         var responseJson = response.data;
         if (response.statusCode == 201 && responseJson["token"] != null) {
           optionParams["authorizationCode"] = 'token ' + responseJson["token"];
-          await LocalStorage.save(Config.TOKEN_KEY, optionParams["authorizationCode"]);
+          await LocalStorage.save(
+              Config.TOKEN_KEY, optionParams["authorizationCode"]);
         }
       }
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return new ResultData(response.data, true, Code.SUCCESS, headers: response.headers);
+        return new ResultData(response.data, true, Code.SUCCESS,
+            headers: response.headers);
       }
     } catch (e) {
-      print(e.toString() + url);
-      return new ResultData(response.data, false, response.statusCode, headers: response.headers);
+      print(e.toString() + baseUrl + path);
+      return new ResultData(response.data, false, response.statusCode,
+          headers: response.headers);
     }
-    return new ResultData(Code.errorHandleFunction(response.statusCode, "", noTip), false, response.statusCode);
+    return new ResultData(
+        Code.errorHandleFunction(response.statusCode, "", noTip),
+        false,
+        response.statusCode);
   }
 
   ///清除授权

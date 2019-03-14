@@ -33,13 +33,13 @@ class UserDao {
       "client_secret": NetConfig.CLIENT_SECRET
     };
     HttpManager.clearAuthorization();
-    ResultData res = await HttpManager.netFetch(Address.getAuthorization(),
-        json.encode(requestParams), null, new Options(method: "post"));
+//    ResultData res = await HttpManager.netFetch(Address.getAuthorization(),
+//        json.encode(requestParams), null, new Options(method: "post"));
 
-    if (res != null && res.result) {
+//    if (res != null && res.result) {
       await LocalStorage.save(Config.PW_KEY, password);
 //      DataResult resultData = await getUserInfo(null);
-    }
+//    }
   }
 
 //  //获取用户详细信息

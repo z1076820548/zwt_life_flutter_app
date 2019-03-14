@@ -46,4 +46,10 @@ class SearchResultListState extends State<SearchResultListPage> {
       listData.data.addAll(listModal.data);
     });
   }
+  @override
+  void initState() {
+    // TODO: implement initState
+    getSearchList(widget.keyword);
+    super.initState();
+  }
 }
