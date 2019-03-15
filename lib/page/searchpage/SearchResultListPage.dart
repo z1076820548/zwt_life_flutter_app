@@ -48,7 +48,6 @@ class SearchResultListState extends State<SearchResultListPage> {
   }
   @override
   void initState() {
-    // TODO: implement initState
     getSearchList(widget.keyword);
     super.initState();
   }
