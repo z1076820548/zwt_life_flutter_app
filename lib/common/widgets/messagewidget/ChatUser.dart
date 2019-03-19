@@ -4,7 +4,9 @@ class ChatUser {
   String userName;
 
   String userIconUrl;
+
   ChatData chatData;
+
 
 //  String get UserId => userId;
 
@@ -14,7 +16,10 @@ class ChatUser {
 
   ChatData get ChatDt => chatData;
 
-  ChatUser(this.userId, this.userName, this.userIconUrl, this.chatData);
+  ChatUser(
+  {this.userId, this.userName, this.userIconUrl, this.time, this.chatData});
+
+  var time;
 }
 
 class ChatData {
@@ -25,5 +30,5 @@ class ChatData {
 
   String get ImageUrl => imageUrl;
 
-  ChatData(this.text, this.imageUrl);
+  ChatData({this.text, this.imageUrl});
 }

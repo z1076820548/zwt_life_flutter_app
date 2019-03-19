@@ -28,7 +28,7 @@ class GlobalColors {
 
 //聊天背景颜色
   static const Color ChatThemeColor = Color.fromRGBO(242, 242, 242, 1.0);
-  static const Color ChatBgColor = Color.fromRGBO(229, 229, 229, 1.0);
+  static const Color ChatBgColor = Color.fromRGBO(229, 229, 229, 0.3);
   static const Color ChatMsgColor = Color.fromRGBO(254, 255, 254, 1.0);
   static const Color ChatTextColor = Colors.black;
 

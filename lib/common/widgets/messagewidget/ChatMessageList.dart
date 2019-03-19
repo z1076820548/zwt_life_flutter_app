@@ -16,14 +16,14 @@ class ChatMessageList extends StatefulWidget {
 
   const ChatMessageList({Key key,
     @required this.itemBuilder,
-    this.scrollDirection,
-    this.reverse,
+    this.scrollDirection = Axis.vertical,
+    this.reverse = false,
     this.controller,
     this.primary,
     this.physics,
-    this.shrinkWrap,
+    this.shrinkWrap = false,
     this.padding,
-    this.duration,
+    this.duration = const Duration(milliseconds: 300),
     this.defaultChild})
       : super(key: key);
 

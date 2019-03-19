@@ -32,20 +32,33 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
 
   getDataList() {
     listChat.add(new ChatUser(
-        "1076820548",
-        "明识",
-        "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1552640466&di=1052b2f2e877ead75521398a9b1f4172&src=http://img.yoyou.com/uploadfile/2017/0818/20170818095143376.jpg",
-        ChatData("12DASDAS", "")));
+        userId: "1076820548",
+        userName: "明识",
+        userIconUrl:
+            "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1552640466&di=1052b2f2e877ead75521398a9b1f4172&src=http://img.yoyou.com/uploadfile/2017/0818/20170818095143376.jpg",
+        time: 1552876766000,
+        chatData: ChatData(text: "你是？？？", imageUrl: "")));
     listChat.add(new ChatUser(
-        "1076820547",
-        "DSADAS",
-        "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1552640466&di=1052b2f2e877ead75521398a9b1f4172&src=http://img.yoyou.com/uploadfile/2017/0818/20170818095143376.jpg",
-        ChatData("345DASDAS", "")));
+        userId: "1076820547",
+        userName: "明识2",
+        userIconUrl:
+            "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1552640466&di=1052b2f2e877ead75521398a9b1f4172&src=http://img.yoyou.com/uploadfile/2017/0818/20170818095143376.jpg",
+        time: 1552876766058,
+        chatData: ChatData(text: "我叫明识2", imageUrl: "")));
     listChat.add(new ChatUser(
-        "1076820548",
-        "明识",
-        "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1552640466&di=1052b2f2e877ead75521398a9b1f4172&src=http://img.yoyou.com/uploadfile/2017/0818/20170818095143376.jpg",
-        ChatData("89ASDAS", "")));
+        userId: "1076820548",
+        userName: "明识",
+        userIconUrl:
+            "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1552640466&di=1052b2f2e877ead75521398a9b1f4172&src=http://img.yoyou.com/uploadfile/2017/0818/20170818095143376.jpg",
+        time: 1552876766111,
+        chatData: ChatData(text: "哦哦，我叫明识，萨瓦迪卡", imageUrl: "")));
+    listChat.sort((a, b) {
+      if (a.time > b.time) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
   }
 
   @override
@@ -62,7 +75,7 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
     return Scaffold(
       appBar: PreferredSize(
         child: AppBar(
-          elevation: 0,
+          elevation: 0.5,
           title: Text(
             "老杨",
             style: TextStyle(
@@ -80,6 +93,7 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
         preferredSize: Size.fromHeight(ScreenUtil.designTopBarHeight),
       ),
       body: Container(
+        color: GlobalColors.ChatBgColor,
         child: Column(
           children: <Widget>[
             Flexible(
@@ -184,7 +198,9 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
 
   IconButton getDefaultSendButton() {
     return new IconButton(
-      icon: new Icon(Icons.send),
+      icon: _isComposingMessage
+          ? Icon(Icons.send)
+          : Icon(Icons.add_circle_outline),
       onPressed: _isComposingMessage
           ? () => _textMessageSubmitted(_textEditingController.text)
           : null,
