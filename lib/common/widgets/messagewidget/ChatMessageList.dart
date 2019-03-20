@@ -1,7 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:zwt_life_flutter_app/common/event/ChatEvent.dart';
+import 'package:zwt_life_flutter_app/common/net/Code.dart';
+import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatMessageListItem.dart';
 import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatUser.dart';
+import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ListModel.dart';
 
-
+//AnimatedList
 class ChatMessageList extends StatefulWidget {
   final AnimatedListItemBuilder itemBuilder;
   final Axis scrollDirection;
@@ -13,18 +19,21 @@ class ChatMessageList extends StatefulWidget {
   final EdgeInsets padding;
   final Duration duration;
   final Widget defaultChild;
+  final List<ChatUser> listData;
 
-  const ChatMessageList({Key key,
-    @required this.itemBuilder,
-    this.scrollDirection = Axis.vertical,
-    this.reverse = false,
-    this.controller,
-    this.primary,
-    this.physics,
-    this.shrinkWrap = false,
-    this.padding,
-    this.duration = const Duration(milliseconds: 300),
-    this.defaultChild})
+  ChatMessageList(
+      {Key key,
+      @required this.itemBuilder,
+      this.scrollDirection = Axis.vertical,
+      this.reverse = false,
+      this.controller,
+      this.primary,
+      this.physics,
+      this.shrinkWrap = false,
+      this.padding,
+      this.duration = const Duration(milliseconds: 300),
+      this.defaultChild,
+      @required this.listData})
       : super(key: key);
 
   @override
@@ -36,9 +45,27 @@ class ChatMessageList extends StatefulWidget {
 
 class ChatMessageListState extends State<ChatMessageList> {
   final GlobalKey<AnimatedListState> _animatedListKey =
-  GlobalKey<AnimatedListState>();
+      GlobalKey<AnimatedListState>();
+  int _selectedItem;
+  int _nextItem;
+  ListModel<ChatUser> _list;
+  StreamSubscription stream;
   bool _loaded = true;
-  List<ChatUser> listChat;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    stream = Code.eventBus.on<ChatEvent>().listen((event) {
+      _insert(event.index,event.chatUser);
+    });
+    _list = ListModel<ChatUser>(
+      listKey: _animatedListKey,
+      initialItems: widget.listData,
+      removedItemBuilder: _buildRemovedItem,
+    );
+    _nextItem = _list.length;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +75,8 @@ class ChatMessageListState extends State<ChatMessageList> {
     // TODO: implement build
     return AnimatedList(
       key: _animatedListKey,
-      itemBuilder: widget.itemBuilder,
-      initialItemCount: 3,
+      itemBuilder: _buildItem,
+      initialItemCount: _list.length,
       scrollDirection: widget.scrollDirection,
       reverse: widget.reverse,
       controller: widget.controller,
@@ -60,8 +87,62 @@ class ChatMessageListState extends State<ChatMessageList> {
     );
   }
 
-//  Widget _buildItem(BuildContext context, int index,
-//      Animation<double> animation) {
-//    return widget.itemBuilder(context, ,animation, index);
-//  }
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
+
+  void _onChildAdded(int index) {
+    if (!_loaded) {
+      return; // AnimatedList is not created yet
+    }
+    _animatedListKey.currentState.insertItem(0, duration: widget.duration);
+  }
+
+  Widget _buildItem(
+      BuildContext context, int index, Animation<double> animation) {
+    return ChatMessageListItem(
+      animation: animation,
+      chatUser: _list[index],
+      selected: _selectedItem == index,
+      onTapContent: () {
+        setState(() {
+          _selectedItem = _selectedItem == index ? null : index;
+        });
+      },
+      // No gesture detector here: we don't want removed items to be interactive.
+    );
+  }
+
+  Widget _buildRemovedItem(
+      ChatUser chatUser, BuildContext context, Animation<double> animation) {
+    return ChatMessageListItem(
+      animation: animation,
+      chatUser: chatUser,
+      selected: false,
+      // No gesture detector here: we don't want removed items to be interactive.
+    );
+  }
+
+  // Insert the "next item" into the list model.
+  void _insert(int index,ChatUser chatUser) {
+    _list.insert(index, chatUser);
+  }
+
+  // Remove the selected item from the list model.
+  void _remove(ChatUser chatUser) {
+    if (_selectedItem != null) {
+      _list.removeAt(_list.indexOf(chatUser));
+      setState(() {
+        _selectedItem = null;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    stream.cancel();
+    super.dispose();
+  }
 }

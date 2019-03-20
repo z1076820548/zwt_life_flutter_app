@@ -18,9 +18,9 @@ import 'package:zwt_life_flutter_app/page/MainPage.dart';
 import 'package:zwt_life_flutter_app/page/LoginPage.dart';
 import 'package:zwt_life_flutter_app/page/WelcomePage.dart';
 
-
 SpUtil sp;
-void main() async{
+
+void main() async {
   runApp(FlutterReduxApp());
   sp = await SpUtil.getInstance();
   new SearchHistoryList(sp);
@@ -32,12 +32,13 @@ class FlutterReduxApp extends StatelessWidget {
   /// initialState 初始化 State
   final store = new Store<GlobalState>(
     appReducer,
+
     ///初始化数据
     initialState: new GlobalState(
         userInfo: User.empty(),
         eventList: new List(),
         trendList: new List(),
-        themeData: CommonUtils.getThemeData(Colors.orange),
+        themeData: CommonUtils.getThemeData(GlobalColors.ThemeColor),
         locale: Locale('zh', 'CH')),
   );
 
@@ -45,7 +46,6 @@ class FlutterReduxApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     //通过StoreProvider应用store
     // TODO: implement build
     return new StoreProvider(
@@ -82,7 +82,6 @@ class FlutterReduxApp extends StatelessWidget {
     );
   }
 }
-
 
 class MyLocalizations extends StatefulWidget {
   final Widget child;
@@ -131,40 +130,28 @@ class _MyLocalizations extends State<MyLocalizations> {
     switch (code) {
       case Code.NETWORK_ERROR:
         Fluttertoast.showToast(
-            msg: CommonUtils
-                .getLocale(context)
-                .network_error);
+            msg: CommonUtils.getLocale(context).network_error);
         break;
       case 401:
         Fluttertoast.showToast(
-            msg: CommonUtils
-                .getLocale(context)
-                .network_error_401);
+            msg: CommonUtils.getLocale(context).network_error_401);
         break;
       case 403:
         Fluttertoast.showToast(
-            msg: CommonUtils
-                .getLocale(context)
-                .network_error_403);
+            msg: CommonUtils.getLocale(context).network_error_403);
         break;
       case 404:
         Fluttertoast.showToast(
-            msg: CommonUtils
-                .getLocale(context)
-                .network_error_404);
+            msg: CommonUtils.getLocale(context).network_error_404);
         break;
       case Code.NETWORK_TIMEOUT:
-      //超时
+        //超时
         Fluttertoast.showToast(
-            msg: CommonUtils
-                .getLocale(context)
-                .network_error_timeout);
+            msg: CommonUtils.getLocale(context).network_error_timeout);
         break;
       default:
         Fluttertoast.showToast(
-            msg: CommonUtils
-                .getLocale(context)
-                .network_error_unknown +
+            msg: CommonUtils.getLocale(context).network_error_unknown +
                 " " +
                 message);
         break;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zwt_life_flutter_app/common/style/GlobalStyle.dart';
 import 'package:zwt_life_flutter_app/common/utils/NavigatorUtils.dart';
 class HomeTopBar extends StatelessWidget {
   @override
@@ -8,7 +9,7 @@ class HomeTopBar extends StatelessWidget {
         .padding
         .top;
     return Container(
-      color: Colors.white,
+      color: GlobalColors.ThemeColor,
       padding: EdgeInsets.only(
           top: statusBarHeight, left: 10, right: 10, bottom: 10),
       child: Row(
@@ -22,7 +23,7 @@ class HomeTopBar extends StatelessWidget {
               child: Container(
                 height: 34.0,
                 padding: EdgeInsets.all(5.0),
-                color: Color.fromRGBO(238, 238, 238, 0.5),
+                color: Colors.white,
                 child: Row(
                   children: <Widget>[
                     Container(
@@ -52,7 +53,7 @@ class HomeTopBar extends StatelessWidget {
             child: Icon(
               Icons.add_alert,
               size: 25.0,
-              color: Color.fromRGBO(132, 95, 63, 1.0),
+              color: Colors.white,
             ),
           )
         ],

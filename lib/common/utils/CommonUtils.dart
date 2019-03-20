@@ -142,7 +142,7 @@ class CommonUtils {
   }
 
   static getThemeData(Color color) {
-    return ThemeData(primarySwatch: color, platform: TargetPlatform.android,backgroundColor: Colors.white);
+    return ThemeData(primarySwatch: color);
   }
 
   /**

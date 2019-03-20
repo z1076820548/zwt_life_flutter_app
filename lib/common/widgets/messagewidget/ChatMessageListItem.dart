@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:zwt_life_flutter_app/common/style/GlobalStyle.dart';
 import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatUser.dart';
 
 class ChatMessageListItem extends StatelessWidget {
-  final Animation animation;
+  final Animation<double> animation;
+  final VoidCallback onTapContent;
   final ChatUser chatUser;
+  final bool selected;
 
-  ChatMessageListItem({this.animation, this.chatUser});
+  ChatMessageListItem(
+      {Key key,
+      @required this.animation,
+      @required this.chatUser,
+      this.onTapContent,
+      this.selected})
+      : assert(animation != null),
+        assert(chatUser != null),
+        assert(selected != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +45,7 @@ class ChatMessageListItem extends StatelessWidget {
             new Container(
               child: TabConversationBubble(
                 chatUser: chatUser,
+                onTapContent: onTapContent,
               ),
             ),
           ],
@@ -71,6 +84,7 @@ class ChatMessageListItem extends StatelessWidget {
             Container(
               child: TabConversationBubble(
                 chatUser: chatUser,
+                onTapContent: onTapContent,
               ),
             ),
           ],
@@ -147,22 +161,31 @@ class TabUserName extends StatelessWidget {
 //泡沫
 class TabConversationBubble extends StatelessWidget {
   final ChatUser chatUser;
+  final VoidCallback onTapContent;
 
-  const TabConversationBubble({Key key, @required this.chatUser})
+  const TabConversationBubble(
+      {Key key, @required this.chatUser, this.onTapContent})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-        color: Colors.white,
-      ),
-      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-      padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
-      child: TabUserChatContent(
-        chatUser: chatUser,
+    return GestureDetector(
+      onTap: onTapContent,
+      child: Container(
+        decoration: BoxDecoration(
+//        border:Border.all(width: 0.001),
+//        boxShadow: [
+//          BoxShadow()
+//        ],
+          borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+          color: GlobalColors.ChatMsgColor,
+        ),
+        margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+        padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
+        child: TabUserChatContent(
+          chatUser: chatUser,
+        ),
       ),
     );
   }

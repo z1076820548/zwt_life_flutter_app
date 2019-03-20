@@ -56,7 +56,7 @@ class _MainPageState extends State<MainPage> {
   Text getTabTitle(int curIndex) {
     if (curIndex == _selectedIndex) {
       return new Text(appBarTitles[curIndex],
-          style: new TextStyle(color: Colors.deepOrangeAccent));
+          style: new TextStyle());
     } else {
       return new Text(appBarTitles[curIndex],
           style: new TextStyle(color: Colors.black38));
@@ -116,7 +116,6 @@ class _MainPageState extends State<MainPage> {
               icon: getTabIcon(3), title: getTabTitle(3)),
         ],
         currentIndex: _selectedIndex,
-        fixedColor: Colors.deepOrangeAccent,
         onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
       ),

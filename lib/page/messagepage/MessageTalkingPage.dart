@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zwt_life_flutter_app/common/event/ChatEvent.dart';
+import 'package:zwt_life_flutter_app/common/net/Code.dart';
 import 'package:zwt_life_flutter_app/common/style/GlobalStyle.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/screen_util.dart';
 import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatMessageList.dart';
@@ -25,10 +28,13 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
     with SingleTickerProviderStateMixin {
   final TextEditingController _textEditingController =
       new TextEditingController();
+  final ScrollController _scrollController = new ScrollController();
+  FocusNode _contentFocusNode = FocusNode();
   bool _isComposingMessage = false;
   Animation animationTalk;
   AnimationController controller;
   List<ChatUser> listChat = [];
+  EventBus eventBus = new EventBus();
 
   getDataList() {
     listChat.add(new ChatUser(
@@ -54,9 +60,9 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
         chatData: ChatData(text: "哦哦，我叫明识，萨瓦迪卡", imageUrl: "")));
     listChat.sort((a, b) {
       if (a.time > b.time) {
-        return -1;
-      } else {
         return 1;
+      } else {
+        return -1;
       }
     });
   }
@@ -67,6 +73,7 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
     // TODO: implement initState
     super.initState();
     initAnimation();
+    initScroll();
   }
 
   @override
@@ -82,7 +89,7 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
                 fontSize: GlobalConstant.middleTextWhiteSize,
                 fontWeight: FontWeight.w600),
           ),
-          backgroundColor: GlobalColors.ChatThemeColor,
+//          backgroundColor: GlobalColors.ChatThemeColor,
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.person_outline),
@@ -97,14 +104,29 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
         child: Column(
           children: <Widget>[
             Flexible(
-              child: ChatMessageList(
-                reverse: true,
-                padding: const EdgeInsets.all(8.0),
-                itemBuilder: (BuildContext context, int index,
-                    Animation<double> animation) {
-                  return ChatMessageListItem(
-                      animation: animation, chatUser: listChat[index]);
+              child: GestureDetector(
+                onPanDown: (DragDownDetails e) {
+                  //隐藏输入框
+                  hideKey();
                 },
+                child: Scrollbar(
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: (ScrollNotification notification) {
+                      //return true; //放开此行注释后，进度条将失效
+                    },
+                    child: ChatMessageList(
+                      listData: listChat,
+                      controller: _scrollController,
+                      reverse: false,
+                      padding: const EdgeInsets.all(8.0),
+                      itemBuilder: (BuildContext context, int index,
+                          Animation<double> animation) {
+                        return ChatMessageListItem(
+                            animation: animation, chatUser: listChat[index]);
+                      },
+                    ),
+                  ),
+                ),
               ),
             ),
             Divider(
@@ -151,18 +173,17 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
   void dispose() {
     // TODO: implement dispose
     controller.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
   Widget _buildTextComposer() {
     return new IconTheme(
         data: new IconThemeData(
-          color: _isComposingMessage
-              ? Theme.of(context).accentColor
-              : Theme.of(context).disabledColor,
+          color: Theme.of(context).disabledColor,
         ),
         child: new Container(
-          margin: const EdgeInsets.symmetric(horizontal: 8.0),
+          color: GlobalColors.ChatBgColor,
           child: new Row(
             children: <Widget>[
               new Container(
@@ -170,21 +191,28 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
                 child: new IconButton(
                     icon: new Icon(
                       Icons.photo_camera,
-                      color: Theme.of(context).accentColor,
                     ),
                     onPressed: () async {}),
               ),
               new Flexible(
-                child: new TextField(
-                  controller: _textEditingController,
-                  onChanged: (String messageText) {
-                    setState(() {
-                      _isComposingMessage = messageText.length > 0;
-                    });
-                  },
-                  onSubmitted: _textMessageSubmitted,
-                  decoration:
-                      new InputDecoration.collapsed(hintText: "Send a message"),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: new TextField(
+                    controller: _textEditingController,
+                    onChanged: (String messageText) {
+                      setState(() {
+                        _isComposingMessage = messageText.length > 0;
+                      });
+                    },
+                    onSubmitted: _textMessageSubmitted,
+                    decoration: new InputDecoration(
+                        filled: true,
+                        fillColor: GlobalColors.ChatMsgColor,
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 4),
+                        hintText: "",
+                        border: OutlineInputBorder()),
+                  ),
                 ),
               ),
               new Container(
@@ -199,7 +227,10 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
   IconButton getDefaultSendButton() {
     return new IconButton(
       icon: _isComposingMessage
-          ? Icon(Icons.send)
+          ? Icon(
+              Icons.send,
+              color: Theme.of(context).accentColor,
+            )
           : Icon(Icons.add_circle_outline),
       onPressed: _isComposingMessage
           ? () => _textMessageSubmitted(_textEditingController.text)
@@ -209,9 +240,37 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
 
   Future<Null> _textMessageSubmitted(String text) async {
     _textEditingController.clear();
-
+    hideKey();
     setState(() {
+      listChat.add(new ChatUser(
+          userId: "1076820548",
+          userName: "明识",
+          userIconUrl:
+              "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1552640466&di=1052b2f2e877ead75521398a9b1f4172&src=http://img.yoyou.com/uploadfile/2017/0818/20170818095143376.jpg",
+          time: 1552876766000,
+          chatData: ChatData(text: text, imageUrl: "")));
       _isComposingMessage = false;
     });
+    _sendMessage(messageText: text, imageUrl: null);
+  }
+
+  void _sendMessage({String messageText, String imageUrl}) {
+    Code.eventBus.fire(new ChatEvent(
+        index: listChat.length,
+        chatUser: ChatUser(
+            userId: "1076820548",
+            userName: "明识",
+            userIconUrl:
+                "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1552640466&di=1052b2f2e877ead75521398a9b1f4172&src=http://img.yoyou.com/uploadfile/2017/0818/20170818095143376.jpg",
+            time: 1552876766000,
+            chatData: ChatData(text: messageText, imageUrl: ""))));
+  }
+
+  void initScroll() {
+    _scrollController.addListener(() {});
+  }
+
+  void hideKey() {
+    FocusScope.of(context).requestFocus(FocusNode());
   }
 }

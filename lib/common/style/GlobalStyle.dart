@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 //颜色
 class GlobalColors {
+  static const Color ThemeColor = Colors.blue;
   static const String primaryValueString = "#24292E";
   static const String primaryLightValueString = "#42464b";
   static const String primaryDarkValueString = "#121917";
