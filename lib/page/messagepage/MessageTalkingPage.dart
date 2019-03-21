@@ -26,15 +26,16 @@ class MessageTalkingPage extends StatefulWidget {
 
 class _MessageTalkingPage extends State<MessageTalkingPage>
     with SingleTickerProviderStateMixin {
+  //输入框控制
   final TextEditingController _textEditingController =
       new TextEditingController();
+
+  //发送完消息 需要下拉到最底部
   final ScrollController _scrollController = new ScrollController();
-  FocusNode _contentFocusNode = FocusNode();
   bool _isComposingMessage = false;
-  Animation animationTalk;
-  AnimationController controller;
   List<ChatUser> listChat = [];
   EventBus eventBus = new EventBus();
+  double maxScol = 50.0;
 
   getDataList() {
     listChat.add(new ChatUser(
@@ -70,10 +71,10 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
   @override
   void initState() {
     getDataList();
+    initScroll();
+
     // TODO: implement initState
     super.initState();
-    initAnimation();
-    initScroll();
   }
 
   @override
@@ -112,6 +113,8 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
                 child: Scrollbar(
                   child: NotificationListener<ScrollNotification>(
                     onNotification: (ScrollNotification notification) {
+                      if (notification.metrics.atEdge) {}
+                      maxScol = notification.metrics.pixels;
                       //return true; //放开此行注释后，进度条将失效
                     },
                     child: ChatMessageList(
@@ -156,23 +159,14 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
     );
   }
 
-  void initAnimation() {
-    controller = new AnimationController(
-        duration: new Duration(seconds: 1), vsync: this);
-    animationTalk = new Tween(begin: 1.0, end: 1.5).animate(controller)
-      ..addStatusListener((state) {
-        if (state == AnimationStatus.completed) {
-          controller.reverse();
-        } else if (state == AnimationStatus.dismissed) {
-          controller.forward();
-        }
-      });
+  //返回到底部的动画
+  void bottomAnimation() {
+    _scrollController.jumpTo(maxScol*listChat.length);
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    controller.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -250,13 +244,14 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
           time: 1552876766000,
           chatData: ChatData(text: text, imageUrl: "")));
       _isComposingMessage = false;
+      _sendMessage(messageText: text, imageUrl: null);
+      bottomAnimation();
     });
-    _sendMessage(messageText: text, imageUrl: null);
   }
 
   void _sendMessage({String messageText, String imageUrl}) {
     Code.eventBus.fire(new ChatEvent(
-        index: listChat.length,
+        index: listChat.length - 1,
         chatUser: ChatUser(
             userId: "1076820548",
             userName: "明识",

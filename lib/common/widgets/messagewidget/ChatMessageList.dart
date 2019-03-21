@@ -93,13 +93,6 @@ class ChatMessageListState extends State<ChatMessageList> {
     super.didChangeDependencies();
   }
 
-  void _onChildAdded(int index) {
-    if (!_loaded) {
-      return; // AnimatedList is not created yet
-    }
-    _animatedListKey.currentState.insertItem(0, duration: widget.duration);
-  }
-
   Widget _buildItem(
       BuildContext context, int index, Animation<double> animation) {
     return ChatMessageListItem(

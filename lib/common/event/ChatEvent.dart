@@ -4,5 +4,5 @@ class ChatEvent {
   ChatUser chatUser;
   int index;
 
-  ChatEvent({ this.index, this.chatUser});
+  ChatEvent({this.index, this.chatUser});
 }
