@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'dart:async';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zwt_life_flutter_app/common/event/ChatEvent.dart';
 import 'package:zwt_life_flutter_app/common/net/Code.dart';
@@ -12,10 +13,11 @@ import 'package:zwt_life_flutter_app/common/utils/util/screen_util.dart';
 import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatMessageList.dart';
 import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatMessageListItem.dart';
 import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatUser.dart';
-import 'package:zwt_life_flutter_app/common/utils/util/soundutils.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/MyFlatButton.dart';
 import 'package:zwt_life_flutter_app/widget/GSYWidget/MyOutLineButton.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/MyRaisedButton.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_sound/flutter_sound.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:image_picker/image_picker.dart';
 
 var currentUserEmail;
 var _scaffoldContext;
@@ -36,14 +38,38 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
   final TextEditingController _textEditingController =
       new TextEditingController();
 
+  StreamSubscription _recorderSubscription, _playerSubscription;
+
   //发送完消息 需要下拉到最底部
   final ScrollController _scrollController = new ScrollController();
+
+  //输入？
   bool _isComposingMessage = false;
+
+  //不显示麦克
   bool _isMicroPhone = false;
+
+  //用户数据
   List<ChatUser> listChat = [];
+
+  //订阅
   EventBus eventBus = new EventBus();
+
+  //输入框焦点变化
   FocusNode nodeOne = FocusNode();
+
+  //录音
+  FlutterSound flutterSound;
+
+  //开始录音？
   bool isStartRecoder = false;
+  String timeRecorder;
+
+  //录音路径
+  String pathRecorder;
+
+  //图片路径
+  File _image;
 
   getDataList() {
     listChat.add(new ChatUser(
@@ -80,12 +106,10 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
   void initState() {
     getDataList();
     initScroll();
-
+    flutterSound = new FlutterSound();
     // TODO: implement initState
     super.initState();
   }
-
-  initSound() {}
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +158,9 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
                       itemBuilder: (BuildContext context, int index,
                           Animation<double> animation) {
                         return ChatMessageListItem(
-                            animation: animation, chatUser: listChat[index]);
+                          animation: animation,
+                          chatUser: listChat[index],
+                        );
                       },
                     ),
                   ),
@@ -230,21 +256,25 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
         ),
         child: new Container(
           color: GlobalColors.ChatBgColor,
-          child: new Row(
+          child: Column(
             children: <Widget>[
-              new Container(
-                margin: new EdgeInsets.symmetric(horizontal: 4.0),
-                child: getDefaultMicButton(),
-              ),
-              new Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: _getDefultTextFile(),
-                ),
-              ),
-              new Container(
-                margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: getDefaultSendButton(),
+              new Row(
+                children: <Widget>[
+                  new Container(
+                    margin: new EdgeInsets.symmetric(horizontal: 4.0),
+                    child: getDefaultMicButton(),
+                  ),
+                  new Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: _getDefultTextFile(),
+                    ),
+                  ),
+                  new Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: getDefaultSendButton(),
+                  ),
+                ],
               ),
             ],
           ),
@@ -265,7 +295,7 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
             ),
       onPressed: _isComposingMessage
           ? () => _textMessageSubmitted(_textEditingController.text)
-          : null,
+          : () => getImage(),
     );
   }
 
@@ -304,21 +334,26 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
     }
 //    hideKey();
     setState(() {
-      listChat.add(new ChatUser(
-          userId: "1076820548",
-          userName: "明识",
-          userIconUrl:
-              "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1552640466&di=1052b2f2e877ead75521398a9b1f4172&src=http://img.yoyou.com/uploadfile/2017/0818/20170818095143376.jpg",
-          time: 1552876766000,
-          chatData: ChatData(text: text, imageUrl: "")));
-
       _isComposingMessage = false;
-      _sendMessage(messageText: text, imageUrl: null);
+      _sendMessage(messageText: text, imageUrl: null, voicePath: null);
       bottomAnimation();
     });
   }
 
-  void _sendMessage({String messageText, String imageUrl}) {
+  //发送消息
+  void _sendMessage(
+      {String messageText,
+      String imageUrl,
+      String voicePath,
+      String timeRecorder}) {
+    listChat.add(new ChatUser(
+        userId: "1076820548",
+        userName: "明识",
+        userIconUrl:
+            "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1552640466&di=1052b2f2e877ead75521398a9b1f4172&src=http://img.yoyou.com/uploadfile/2017/0818/20170818095143376.jpg",
+        time: 1552876766000,
+        chatData: ChatData(
+            text: messageText, imageUrl: imageUrl, voicePath: voicePath)));
     Code.eventBus.fire(new ChatEvent(
         index: 0,
         chatUser: ChatUser(
@@ -327,34 +362,70 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
             userIconUrl:
                 "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1552640466&di=1052b2f2e877ead75521398a9b1f4172&src=http://img.yoyou.com/uploadfile/2017/0818/20170818095143376.jpg",
             time: 1552876766000,
-            chatData: ChatData(text: messageText, imageUrl: ""))));
+            chatData: ChatData(
+                text: messageText,
+                imageUrl: imageUrl,
+                voicePath: voicePath,
+                timeRecorder: timeRecorder))));
   }
 
-  void _startRecorder()async {
+  //开始录音
+  void _startRecorder() async {
     setState(() {
       isStartRecoder = true;
     });
-    String uri = await SoundUtils.getInstance().getPath("46545654564/sound.mp4");
-    File file = new File(uri);
-    bool exists = await file.exists();
-    if (!exists) {
-      await file.delete();
-      SoundUtils.getInstance().startRecorder(uri: uri);
-      return;
-    }
+    Directory appDocDirectory = await getApplicationDocumentsDirectory();
+    String uri = appDocDirectory.path + '/' + 'df3453.m4a';
+    pathRecorder = await flutterSound.startRecorder(uri);
+    print('startRecorder: $pathRecorder');
+    // /storage/emulated/0/default.m4a
+//    /data/user/0/com.zwt.zwtlifeflutterapp/app_flutter/df.m4a
+    _recorderSubscription = flutterSound.onRecorderStateChanged.listen((e) {
+      DateTime date = DateTime.fromMillisecondsSinceEpoch(e.currentPosition.toInt());
+      setState(() {
+        timeRecorder = DateFormat('mm:ss', 'en_US').format(date);
+      });
+    });
   }
 
-  void _stopRecorder() {
+  //停止录音
+  void _stopRecorder() async {
     setState(() {
       isStartRecoder = false;
     });
-//    SoundUtils.getInstance().stopRecorder();
+    String result = await flutterSound.stopRecorder();
+    print('stopRecorder: $result');
+    if (_recorderSubscription != null) {
+      _recorderSubscription.cancel();
+      _recorderSubscription = null;
+    }
+    _sendMessage(voicePath: pathRecorder, timeRecorder: timeRecorder);
+//    _startPlayer();
   }
 
+  //播放录音
+  _startPlayer() async {
+    String pathPlayer = await flutterSound.startPlayer(pathRecorder);
+    print('startPlayer: $pathPlayer');
+    _playerSubscription = flutterSound.onPlayerStateChanged.listen((e) {
+      if (e != null) {
+        DateTime date =
+            DateTime.fromMillisecondsSinceEpoch(e.currentPosition.toInt());
+
+//        this.setState(() {
+//          this._isPlaying = true;
+//          this._playerTxt = txt.substring(0, 8);
+//        });
+      }
+    });
+  }
+
+  //滑动监听
   void initScroll() {
     _scrollController.addListener(() {});
   }
 
+  //隐藏键盘
   void hideKey() {
     setState(() {
       if (nodeOne.hasFocus) {
@@ -363,9 +434,19 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
     });
   }
 
+  //显示键盘
   void showKey() {
     setState(() {
       FocusScope.of(context).requestFocus(nodeOne);
+    });
+  }
+
+  //获得图片文件
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = image;
     });
   }
 }

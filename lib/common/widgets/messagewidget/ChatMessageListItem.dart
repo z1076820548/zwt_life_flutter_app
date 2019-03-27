@@ -1,10 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:zwt_life_flutter_app/common/style/GlobalStyle.dart';
 import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatUser.dart';
+import 'package:zwt_life_flutter_app/widget/GSYWidget/animation/VoicePlayingAnimation.dart';
 
 class ChatMessageListItem extends StatelessWidget {
   final Animation<double> animation;
-  final VoidCallback onTapContent;
   final ChatUser chatUser;
   final bool selected;
 
@@ -12,7 +15,6 @@ class ChatMessageListItem extends StatelessWidget {
       {Key key,
       @required this.animation,
       @required this.chatUser,
-      this.onTapContent,
       this.selected})
       : assert(animation != null),
         assert(chatUser != null),
@@ -45,7 +47,6 @@ class ChatMessageListItem extends StatelessWidget {
             new Container(
               child: TabConversationBubble(
                 chatUser: chatUser,
-                onTapContent: onTapContent,
               ),
             ),
           ],
@@ -84,7 +85,6 @@ class ChatMessageListItem extends StatelessWidget {
             Container(
               child: TabConversationBubble(
                 chatUser: chatUser,
-                onTapContent: onTapContent,
               ),
             ),
           ],
@@ -97,13 +97,33 @@ class ChatMessageListItem extends StatelessWidget {
 //泡沫的内容
 class TabUserChatContent extends StatelessWidget {
   final ChatUser chatUser;
+  final bool play;
 
-  const TabUserChatContent({Key key, @required this.chatUser})
+  const TabUserChatContent({Key key, @required this.chatUser, this.play})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (chatUser.chatData.ImageUrl != null &&
+    if (chatUser.chatData.voicePath != null &&
+        chatUser.chatData.voicePath.length > 0) {
+      return GestureDetector(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+              chatUser.chatData.timeRecorder,
+              style: TextStyle(
+                color: Colors.black,
+                letterSpacing: -0.4,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            VoicePlayingAnimation(color: GlobalColors.ChatTextColor, play: play)
+          ],
+        ),
+      );
+    } else if (chatUser.chatData.ImageUrl != null &&
         chatUser.chatData.ImageUrl.length > 0) {
       return Image.network(
         chatUser.chatData.ImageUrl,
@@ -161,32 +181,66 @@ class TabUserName extends StatelessWidget {
 //泡沫
 class TabConversationBubble extends StatelessWidget {
   final ChatUser chatUser;
-  final VoidCallback onTapContent;
+  StreamSubscription _playerSubscription;
 
-  const TabConversationBubble(
-      {Key key, @required this.chatUser, this.onTapContent})
-      : super(key: key);
+  TabConversationBubble({Key key, this.chatUser}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return GestureDetector(
-      onTap: onTapContent,
-      child: Container(
-        decoration: BoxDecoration(
+    return Container(
+      decoration: BoxDecoration(
 //        border:Border.all(width: 0.001),
 //        boxShadow: [
 //          BoxShadow()
 //        ],
-          borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-          color: GlobalColors.ChatMsgColor,
-        ),
-        margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-        padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
+        borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+        color: GlobalColors.ChatMsgColor,
+      ),
+//        margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+//        padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
+      child: FlatButton(
+        onPressed: () => {onTapContent()},
         child: TabUserChatContent(
           chatUser: chatUser,
         ),
       ),
     );
+  }
+
+  void onTapContent() {
+    if (chatUser.chatData.voicePath != null &&
+        chatUser.chatData.voicePath.length > 0) {
+      _startPlayer();
+    } else if (chatUser.chatData.ImageUrl != null &&
+        chatUser.chatData.ImageUrl.length > 0) {
+    } else {}
+  }
+
+  //播放录音
+  _startPlayer() async {
+    //录音
+    FlutterSound flutterSound = new FlutterSound();
+    if (_playerSubscription != null) {
+      _stopPlayer();
+    } else {
+      String pathPlayer =
+          await flutterSound.startPlayer(chatUser.chatData.voicePath);
+      print('startPlayer: $pathPlayer');
+      _playerSubscription = flutterSound.onPlayerStateChanged.listen((e) {
+        if (e != null) {}
+      });
+    }
+  }
+
+  _stopPlayer() async {
+    //录音
+    FlutterSound flutterSound = new FlutterSound();
+    String pathPlayer = await flutterSound.stopPlayer();
+    print('stopPlayer: $pathPlayer');
+    if (_playerSubscription != null) {
+      _playerSubscription.cancel();
+      _playerSubscription = null;
+    }
   }
 }

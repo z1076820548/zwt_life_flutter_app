@@ -7,7 +7,6 @@ class ChatUser {
 
   ChatData chatData;
 
-
 //  String get UserId => userId;
 
   String get UserName => userName;
@@ -16,8 +15,13 @@ class ChatUser {
 
   ChatData get ChatDt => chatData;
 
-  ChatUser(
-  {this.userId, this.userName, this.userIconUrl, this.time, this.chatData});
+  ChatUser({
+    this.userId,
+    this.userName,
+    this.userIconUrl,
+    this.time,
+    this.chatData,
+  });
 
   var time;
 }
@@ -25,10 +29,15 @@ class ChatUser {
 class ChatData {
   String text;
   String imageUrl;
+  String voicePath;
 
   String get Text => text;
 
   String get ImageUrl => imageUrl;
 
-  ChatData({this.text, this.imageUrl});
+  String get VoicePath => voicePath;
+
+  String timeRecorder;
+
+  ChatData({this.text, this.imageUrl, this.voicePath,this.timeRecorder});
 }

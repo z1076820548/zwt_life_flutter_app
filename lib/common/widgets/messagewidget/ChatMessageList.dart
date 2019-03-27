@@ -99,11 +99,6 @@ class ChatMessageListState extends State<ChatMessageList> {
       animation: animation,
       chatUser: _list[index],
       selected: _selectedItem == index,
-      onTapContent: () {
-        setState(() {
-          _selectedItem = _selectedItem == index ? null : index;
-        });
-      },
       // No gesture detector here: we don't want removed items to be interactive.
     );
   }

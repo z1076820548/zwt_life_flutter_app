@@ -21,7 +21,7 @@ mixin MyListState<T extends StatefulWidget>
 
    showRefreshLoading() {
      new Future.delayed(const Duration(seconds: 1), () {
-       refreshIndicatorKey.currentState.show().then((e) {});
+//       refreshIndicatorKey.currentState.show().then((e) {});
        return true;
      });
    }
