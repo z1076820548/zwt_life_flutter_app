@@ -71,3 +71,42 @@ class SwipperGrid extends StatelessWidget {
         });
   }
 }
+class _KingKongItemWidget extends StatelessWidget {
+  final KingKongItem item;
+  final int indexPage, indexItem;
+
+  _KingKongItemWidget({Key key, this.item, this.indexPage, this.indexItem})
+      : super(key: key);
+
+  _tap(indexPage, indexItem) {
+    print('点击了第$indexPage页$indexItem个Item');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Listener(//监听原始指针事件 防止手势冲突
+      onPointerDown: (details) {
+        _tap(indexPage, indexItem);
+      },
+      child: Container(
+        child: Column(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(left: 5, right: 5),
+              child: Image.network(
+                item.picUrl,
+                width: ScreenUtil().L(40),
+                height: ScreenUtil().L(35),
+              ),
+            ),
+            Padding(padding: new EdgeInsets.all(3)),
+            Text(
+              item.title,
+              style: TextStyle(fontSize: 12),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
