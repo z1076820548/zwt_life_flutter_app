@@ -31,7 +31,7 @@ class GlobalColors {
   static const Color ChatThemeColor = Color.fromRGBO(242, 242, 242, 1.0);
   static const Color ChatBgColor = Color.fromRGBO(229, 229, 229, 0.3);
   static const Color ChatMsgColor = Color.fromRGBO(254, 255, 254, 1.0);
-  static const Color ChatTextColor = Colors.black;
+  static const Color ChatTextColor = Colors.black87;
 
   static const Color themeColor = Color.fromRGBO(132, 95, 63, 1.0);
   static const Color floorTitleColor = Color.fromRGBO(51, 51, 51, 1);

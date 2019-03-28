@@ -6,12 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zwt_life_flutter_app/common/event/ChatEvent.dart';
+import 'package:zwt_life_flutter_app/common/event/ChatImageEvent.dart';
 import 'package:zwt_life_flutter_app/common/net/Code.dart';
 import 'package:zwt_life_flutter_app/common/style/GlobalStyle.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/ToastUtils.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/screen_util.dart';
 import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatMessageList.dart';
 import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatMessageListItem.dart';
+import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatSwipperGrid.dart';
 import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatUser.dart';
 import 'package:zwt_life_flutter_app/widget/GSYWidget/MyOutLineButton.dart';
 import 'package:flutter/services.dart';
@@ -70,6 +72,10 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
 
   //图片路径
   File _image;
+  bool _notShowBottomConat = true;
+
+  //监听图片
+  StreamSubscription streamImage;
 
   getDataList() {
     listChat.add(new ChatUser(
@@ -104,9 +110,19 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
 
   @override
   void initState() {
+    initSubscription();
     getDataList();
     initScroll();
     flutterSound = new FlutterSound();
+    nodeOne.addListener(() {
+      if (nodeOne.hasFocus) {
+        if (!_notShowBottomConat) {
+          setState(() {
+            _notShowBottomConat = !_notShowBottomConat;
+          });
+        }
+      }
+    });
     // TODO: implement initState
     super.initState();
   }
@@ -252,13 +268,15 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
   Widget _buildTextComposer() {
     return new IconTheme(
         data: new IconThemeData(
-          color: Theme.of(context).disabledColor,
+          color: GlobalColors.ChatTextColor,
         ),
         child: new Container(
           color: GlobalColors.ChatBgColor,
           child: Column(
+            //列
             children: <Widget>[
               new Row(
+                //行
                 children: <Widget>[
                   new Container(
                     margin: new EdgeInsets.symmetric(horizontal: 4.0),
@@ -276,6 +294,17 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
                   ),
                 ],
               ),
+              Offstage(
+                offstage: _notShowBottomConat,
+                child: new Column(
+                  children: <Widget>[
+                    Divider(
+                      height: 1.0,
+                    ),
+                    ChatSwipperGrid()
+                  ],
+                ),
+              )
             ],
           ),
         ));
@@ -295,7 +324,7 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
             ),
       onPressed: _isComposingMessage
           ? () => _textMessageSubmitted(_textEditingController.text)
-          : () => getImage(),
+          : () => getShowBottom(),
     );
   }
 
@@ -343,7 +372,7 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
   //发送消息
   void _sendMessage(
       {String messageText,
-      String imageUrl,
+      var imageUrl,
       String voicePath,
       String timeRecorder}) {
     listChat.add(new ChatUser(
@@ -381,7 +410,8 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
     // /storage/emulated/0/default.m4a
 //    /data/user/0/com.zwt.zwtlifeflutterapp/app_flutter/df.m4a
     _recorderSubscription = flutterSound.onRecorderStateChanged.listen((e) {
-      DateTime date = DateTime.fromMillisecondsSinceEpoch(e.currentPosition.toInt());
+      DateTime date =
+          DateTime.fromMillisecondsSinceEpoch(e.currentPosition.toInt());
       setState(() {
         timeRecorder = DateFormat('mm:ss', 'en_US').format(date);
       });
@@ -428,6 +458,9 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
   //隐藏键盘
   void hideKey() {
     setState(() {
+      if (!_notShowBottomConat) {
+        _notShowBottomConat = !_notShowBottomConat;
+      }
       if (nodeOne.hasFocus) {
         nodeOne.unfocus();
       }
@@ -437,16 +470,26 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
   //显示键盘
   void showKey() {
     setState(() {
+      if (!_notShowBottomConat) {
+        _notShowBottomConat = !_notShowBottomConat;
+      }
       FocusScope.of(context).requestFocus(nodeOne);
     });
   }
 
-  //获得图片文件
-  Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-
+  //展示底部
+  Future getShowBottom() async {
     setState(() {
-      _image = image;
+      if (nodeOne.hasFocus) {
+        nodeOne.unfocus();
+      }
+      _notShowBottomConat = !_notShowBottomConat;
+    });
+  }
+
+  void initSubscription() {
+    streamImage = Code.eventBus.on<ChatImageEvent>().listen((event) {
+      _sendMessage(imageUrl: event.image);
     });
   }
 }

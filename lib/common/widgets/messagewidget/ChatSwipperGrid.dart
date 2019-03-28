@@ -1,29 +1,37 @@
 //Grid
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:zwt_life_flutter_app/common/event/ChatImageEvent.dart';
+import 'package:zwt_life_flutter_app/common/model/ChatSwipperGridModel.dart';
+import 'package:zwt_life_flutter_app/common/net/Code.dart';
+import 'package:zwt_life_flutter_app/common/style/GlobalStyle.dart';
+import 'package:zwt_life_flutter_app/common/utils/NavigatorUtils.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/screen_util.dart';
 
-class SwipperGrid extends StatelessWidget {
-  var tabImages = [
-    [Icons.image, "照片"],
-    [Icons.camera_alt, "拍摄 "],
-    [Icons.phone, "语音通话"],
-    [Icons.location_on, "位置"],
-    [Icons.view_compact, "红包"],
-    [Icons.record_voice_over, "语音输入"],
-    [Icons.collections_bookmark, "收藏"],
-    [Icons.person_outline, "个人名片"],
-    [Icons.image, "文件"],
-    [Icons.camera_alt, "卡券"]
+class ChatSwipperGrid extends StatelessWidget {
+  List<ChatSwipperGridModel> tabImages = [
+    ChatSwipperGridModel(Icons.image, "照片"),
+    ChatSwipperGridModel(Icons.camera_alt, "拍摄"),
+    ChatSwipperGridModel(Icons.phone, "语音通话"),
+    ChatSwipperGridModel(Icons.location_on, "位置"),
+    ChatSwipperGridModel(Icons.view_compact, "红包"),
+    ChatSwipperGridModel(Icons.record_voice_over, "语音输入"),
+    ChatSwipperGridModel(Icons.collections_bookmark, "收藏"),
+    ChatSwipperGridModel(Icons.person_outline, "个人名片"),
+    ChatSwipperGridModel(Icons.image, "文件"),
+    ChatSwipperGridModel(Icons.camera_alt, "卡券"),
   ];
 
-  SwipperGrid({Key key}) : super(key: key);
+  ChatSwipperGrid({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = ScreenUtil().L(140);
+    double height = ScreenUtil().L(180);
     // TODO: implement build
     return Container(
       margin: EdgeInsets.all(8),
@@ -35,13 +43,13 @@ class SwipperGrid extends StatelessWidget {
         },
         itemCount: 2,
         pagination: SwiperPagination(
-          margin: EdgeInsets.only(top: 50),
           alignment: Alignment.bottomCenter,
-          builder: RectSwiperPaginationBuilder(
-              color: Colors.grey[350],
-              activeColor: Theme.of(context).primaryColor,
-              size: Size(5.0, 2),
-              activeSize: Size(5, 5)),
+          builder: DotSwiperPaginationBuilder(
+            color: Colors.black38,
+            activeColor: GlobalColors.ChatTextColor,
+            size: 5,
+            activeSize: 6,
+          ),
         ),
         scrollDirection: Axis.horizontal,
         autoplay: false,
@@ -59,54 +67,86 @@ class SwipperGrid extends StatelessWidget {
             ),
         itemCount: tabImages.length,
         itemBuilder: (context, indexItem) {
-          if (indexItem > 7) {
-            //7个一页
-            return null;
+          if (indexPage == 0) {
+            if (indexItem > 7) {
+              //7个一页
+              return null;
+            }
+            return _ItemWidget(
+                item: tabImages[indexItem],
+                indexPage: indexPage,
+                indexItem: indexItem);
+          } else if (indexPage == 1) {
+            if (indexItem > 1) {
+              return null;
+            }
+            return _ItemWidget(
+                item: tabImages[indexItem + 8],
+                indexPage: indexPage,
+                indexItem: indexItem + 8);
           }
+
           //如果显示到最后一个并且Icon总数小于200时继续获取数据
-          return _KingKongItemWidget(
-              item: data.items[indexItem],
-              indexPage: indexPage,
-              indexItem: indexItem);
         });
   }
 }
-class _KingKongItemWidget extends StatelessWidget {
-  final KingKongItem item;
+
+class _ItemWidget extends StatelessWidget {
+  final ChatSwipperGridModel item;
   final int indexPage, indexItem;
 
-  _KingKongItemWidget({Key key, this.item, this.indexPage, this.indexItem})
+  _ItemWidget({Key key, this.item, this.indexPage, this.indexItem})
       : super(key: key);
 
-  _tap(indexPage, indexItem) {
+  _tap(BuildContext context,indexPage, indexItem) {
     print('点击了第$indexPage页$indexItem个Item');
+    switch (indexItem) {
+      case 0:
+        //照片
+        getImage();
+        break;
+      case 1:
+      //拍摄
+        getCamera(context);
+        break;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Listener(//监听原始指针事件 防止手势冲突
+    return Listener(
+      //监听原始指针事件 防止手势冲突
       onPointerDown: (details) {
-        _tap(indexPage, indexItem);
+        _tap(context,indexPage, indexItem);
       },
       child: Container(
         child: Column(
           children: <Widget>[
             Container(
               margin: EdgeInsets.only(left: 5, right: 5),
-              child: Image.network(
-                item.picUrl,
-                width: ScreenUtil().L(40),
-                height: ScreenUtil().L(35),
+              child: Icon(
+                item.iconData,
+                size: ScreenUtil().L(40),
               ),
             ),
             Padding(padding: new EdgeInsets.all(3)),
             Text(
               item.title,
               style: TextStyle(fontSize: 12),
-            )
+            ),
           ],
         ),
       ),
     );
+  }
+
+  //获得图片文件
+  Future getImage() async {
+    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    Code.eventBus.fire(new ChatImageEvent(image: (image.path + "FILEIMAGE")));
+  }
+
+  void getCamera(BuildContext context) {
+    NavigatorUtils.gotoChatCameraHomePage( context);
   }
 }

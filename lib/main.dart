@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -19,12 +20,14 @@ import 'package:zwt_life_flutter_app/page/LoginPage.dart';
 import 'package:zwt_life_flutter_app/page/WelcomePage.dart';
 
 SpUtil sp;
+List<CameraDescription> cameras;
 
 void main() async {
   runApp(FlutterReduxApp());
   sp = await SpUtil.getInstance();
   new SearchHistoryList(sp);
   PaintingBinding.instance.imageCache.maximumSize = 100;
+  cameras = await availableCameras();
 }
 
 class FlutterReduxApp extends StatelessWidget {
