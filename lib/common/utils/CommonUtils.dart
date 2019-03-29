@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:redux/redux.dart';
@@ -79,16 +78,16 @@ class CommonUtils {
     } else {
       appDir = await getExternalStorageDirectory();
     }
-    PermissionStatus permission = await PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.storage);
-    if (permission != PermissionStatus.granted) {
-      Map<PermissionGroup, PermissionStatus> permissions =
-          await PermissionHandler()
-              .requestPermissions([PermissionGroup.storage]);
-      if (permissions[PermissionGroup.storage] != PermissionStatus.granted) {
-        return null;
-      }
-    }
+//    PermissionStatus permission = await PermissionHandler()
+//        .checkPermissionStatus(PermissionGroup.storage);
+//    if (permission != PermissionStatus.granted) {
+//      Map<PermissionGroup, PermissionStatus> permissions =
+//          await PermissionHandler()
+//              .requestPermissions([PermissionGroup.storage]);
+//      if (permissions[PermissionGroup.storage] != PermissionStatus.granted) {
+//        return null;
+//      }
+//    }
     String appDocPath = appDir.path + "/gsygithubappflutter";
     Directory appPath = Directory(appDocPath);
     await appPath.create(recursive: true);
@@ -149,16 +148,16 @@ class CommonUtils {
    * 切换语言
    */
   static changeLocale(Store<GlobalState> store, int index) {
-    Locale locale = store.state.platformLocale;
-    switch (index) {
-      case 1:
-        locale = Locale('zh', 'CH');
-        break;
-      case 2:
-        locale = Locale('en', 'US');
-        break;
-    }
-    store.dispatch(RefreshLocaleAction(locale));
+//    Locale locale = store.state.platformLocale;
+//    switch (index) {
+//      case 1:
+//        locale = Locale('zh', 'CH');
+//        break;
+//      case 2:
+//        locale = Locale('en', 'US');
+//        break;
+//    }
+//    store.dispatch(RefreshLocaleAction(locale));
   }
 
   static GlobalStringBase getLocale(BuildContext context) {

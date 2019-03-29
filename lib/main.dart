@@ -42,7 +42,7 @@ class FlutterReduxApp extends StatelessWidget {
         eventList: new List(),
         trendList: new List(),
         themeData: CommonUtils.getThemeData(GlobalColors.ThemeColor),
-        locale: Locale('zh', 'CH')),
+        ),
   );
 
   FlutterReduxApp({Key key}) : super(key: key);
@@ -61,12 +61,12 @@ class FlutterReduxApp extends StatelessWidget {
             GlobalWidgetsLocalizations.delegate,
             GlobalLocalizationsDelegate.delegate,
           ],
-          locale: store.state.locale,
-          supportedLocales: [store.state.locale],
+//          locale: store.state.locale,
+//          supportedLocales: [store.state.locale],
           theme: store.state.themeData,
           routes: {
             WelcomePage.sName: (context) {
-              store.state.platformLocale = Localizations.localeOf(context);
+//              store.state.platformLocale = Localizations.localeOf(context);
               return WelcomePage();
             },
             LoginPage.sName: (context) {
@@ -106,7 +106,7 @@ class _MyLocalizations extends State<MyLocalizations> {
       ///通过 StoreBuilder 和 Localizations 实现实时多语言切换
       return new Localizations.override(
         context: context,
-        locale: store.state.locale,
+//        locale: store.state.locale,
         child: widget.child,
       );
     });

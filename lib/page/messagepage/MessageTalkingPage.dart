@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zwt_life_flutter_app/common/event/ChatEvent.dart';
@@ -151,7 +152,7 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
         preferredSize: Size.fromHeight(ScreenUtil.designTopBarHeight),
       ),
       body: Container(
-        color: GlobalColors.ChatBgColor,
+//        color: GlobalColors.ChatBgColor,
         child: Column(
           children: <Widget>[
             Flexible(
@@ -176,6 +177,7 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
                         return ChatMessageListItem(
                           animation: animation,
                           chatUser: listChat[index],
+                          index: index,
                         );
                       },
                     ),

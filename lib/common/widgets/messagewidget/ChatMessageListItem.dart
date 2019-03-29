@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:intl/intl.dart';
+import 'package:zwt_life_flutter_app/common/event/ChatVoiceAniEvent.dart';
+import 'package:zwt_life_flutter_app/common/net/Code.dart';
 import 'package:zwt_life_flutter_app/common/style/GlobalStyle.dart';
 import 'package:zwt_life_flutter_app/common/utils/NavigatorUtils.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/screen_util.dart';
@@ -14,12 +16,12 @@ class ChatMessageListItem extends StatelessWidget {
   final Animation<double> animation;
   final ChatUser chatUser;
   final bool selected;
-
+  final int index;
   ChatMessageListItem(
       {Key key,
       @required this.animation,
       @required this.chatUser,
-      this.selected})
+      this.selected, this.index})
       : assert(animation != null),
         assert(chatUser != null),
         assert(selected != null),
@@ -27,6 +29,9 @@ class ChatMessageListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(selected){
+      print("yyyyyyy");
+    }
     return new SizeTransition(
       sizeFactor:
           new CurvedAnimation(parent: animation, curve: Curves.decelerate),
@@ -51,6 +56,7 @@ class ChatMessageListItem extends StatelessWidget {
             new Container(
               child: TabUserChatContent(
                 chatUser: chatUser,
+                index:index,
               ),
             ),
           ],
@@ -89,6 +95,7 @@ class ChatMessageListItem extends StatelessWidget {
             Container(
               child: TabUserChatContent(
                 chatUser: chatUser,
+                index:index,
               ),
             ),
           ],
@@ -102,14 +109,19 @@ class ChatMessageListItem extends StatelessWidget {
 class TabUserChatContent extends StatelessWidget {
   StreamSubscription _playerSubscription;
   final ChatUser chatUser;
-
-  TabUserChatContent({Key key, @required this.chatUser}) : super(key: key);
+  final int index;
+  TabUserChatContent({Key key, @required this.chatUser, this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     if (chatUser.chatData.voicePath != null &&
         chatUser.chatData.voicePath.length > 0) {
-      return GestureDetector(
+      return FlatButton(
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        color: GlobalColors.ChatMsgColor,
+        onPressed: () => onTapContent(),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -122,7 +134,7 @@ class TabUserChatContent extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            VoicePlayingAnimation(color: GlobalColors.ChatTextColor)
+            VoicePlayingAnimation(color: GlobalColors.ChatTextColor,index: index,)
           ],
         ),
       );
@@ -167,7 +179,7 @@ class TabUserChatContent extends StatelessWidget {
       return FlatButton(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         color: GlobalColors.ChatMsgColor,
-        onPressed: () => {onTapContent()},
+        onPressed: () => onTapContent,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         child: Text(
@@ -183,7 +195,7 @@ class TabUserChatContent extends StatelessWidget {
     }
   }
 
-  void onTapContent() {
+  onTapContent() async {
     if (chatUser.chatData.voicePath != null &&
         chatUser.chatData.voicePath.length > 0) {
       _startPlayer();
@@ -197,15 +209,22 @@ class TabUserChatContent extends StatelessWidget {
     //录音
     FlutterSound flutterSound = new FlutterSound();
     if (_playerSubscription != null) {
+      Code.eventBus.fire(new ChatVoiceAniEvent(startPlayer: false,index:index));
       _stopPlayer();
     } else {
       String pathPlayer =
           await flutterSound.startPlayer(chatUser.chatData.voicePath);
       print('startPlayer: $pathPlayer');
       _playerSubscription = flutterSound.onPlayerStateChanged.listen((e) {
-        if (e != null) {}
+        if (e != null) {
+
+        }else{
+          Code.eventBus.fire(new ChatVoiceAniEvent(startPlayer: false,index:index));
+        }
       });
+      Code.eventBus.fire(new ChatVoiceAniEvent(startPlayer: true,index:index));
     }
+
   }
 
   _stopPlayer() async {

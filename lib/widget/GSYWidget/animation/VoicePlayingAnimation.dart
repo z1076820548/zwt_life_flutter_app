@@ -1,8 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/src/utils.dart';
+import 'package:zwt_life_flutter_app/common/event/ChatVoiceAniEvent.dart';
+import 'package:zwt_life_flutter_app/common/net/Code.dart';
 import 'package:zwt_life_flutter_app/common/style/GlobalStyle.dart';
 
 class VoicePlayingAnimation extends StatefulWidget {
+  final int index;
+
   VoicePlayingAnimation({
     Key key,
     this.color,
@@ -10,6 +16,7 @@ class VoicePlayingAnimation extends StatefulWidget {
     this.itemBuilder,
     this.duration = const Duration(milliseconds: 1400),
     this.play = false,
+    this.index,
   })  : assert(
             !(itemBuilder is IndexedWidgetBuilder && color is Color) &&
                 !(itemBuilder == null && color == null),
@@ -30,18 +37,20 @@ class VoicePlayingAnimation extends StatefulWidget {
 class _VoicePlayingAnimationState extends State<VoicePlayingAnimation>
     with SingleTickerProviderStateMixin {
   AnimationController _scaleCtrl;
+  StreamSubscription stream;
 
   @override
   void initState() {
     super.initState();
     _scaleCtrl = AnimationController(vsync: this, duration: widget.duration)
-      ..addListener(() {
-        if (widget.play) {
-          _scaleCtrl.forward();
-        }else{
-          _scaleCtrl.stop();
-        }
-      });
+      ..addListener(() {});
+    stream = Code.eventBus.on<ChatVoiceAniEvent>().listen((event) {
+      if (event.startPlayer && event.index == widget.index) {
+        startAni();
+      } else  {
+        stopAni();
+      }
+    });
   }
 
   @override
@@ -73,5 +82,17 @@ class _VoicePlayingAnimationState extends State<VoicePlayingAnimation>
         ? widget.itemBuilder(context, index)
         : Image(image: AssetImage("static/images/voice.png"), width: 20.0);
     ;
+  }
+
+  startAni() async {
+    setState(() {
+      _scaleCtrl.repeat();
+    });
+  }
+
+  stopAni() async {
+    setState(() {
+      _scaleCtrl.reset();
+    });
   }
 }

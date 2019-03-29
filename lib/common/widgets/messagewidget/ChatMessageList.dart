@@ -57,7 +57,7 @@ class ChatMessageListState extends State<ChatMessageList> {
     // TODO: implement initState
     super.initState();
     stream = Code.eventBus.on<ChatEvent>().listen((event) {
-      _insert(event.index,event.chatUser);
+      _insert(event.index, event.chatUser);
     });
     _list = ListModel<ChatUser>(
       listKey: _animatedListKey,
@@ -99,6 +99,7 @@ class ChatMessageListState extends State<ChatMessageList> {
       animation: animation,
       chatUser: _list[index],
       selected: _selectedItem == index,
+      index: index,
       // No gesture detector here: we don't want removed items to be interactive.
     );
   }
@@ -114,7 +115,7 @@ class ChatMessageListState extends State<ChatMessageList> {
   }
 
   // Insert the "next item" into the list model.
-  void _insert(int index,ChatUser chatUser) {
+  void _insert(int index, ChatUser chatUser) {
     _list.insert(index, chatUser);
   }
 
