@@ -10,6 +10,8 @@ import 'package:zwt_life_flutter_app/common/event/ChatEvent.dart';
 import 'package:zwt_life_flutter_app/common/event/ChatImageEvent.dart';
 import 'package:zwt_life_flutter_app/common/net/Code.dart';
 import 'package:zwt_life_flutter_app/common/style/GlobalStyle.dart';
+import 'package:zwt_life_flutter_app/common/utils/CommonUtils.dart';
+import 'package:zwt_life_flutter_app/common/utils/util/TipUtil.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/ToastUtils.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/screen_util.dart';
 import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatMessageList.dart';
@@ -230,7 +232,9 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
         Offstage(
           offstage: !_isMicroPhone,
           child: Listener(
-            onPointerDown: (PointerDownEvent event) => _startRecorder(),
+//            onPointerDown: (PointerDownEvent event) => _startRecorder(),
+            onPointerDown: (PointerDownEvent event) =>
+                TipUtil.nothing(context, "1654654564"),
             onPointerUp: (PointerUpEvent event) => _stopRecorder(),
             child: MyOutlineButton(
               color: GlobalColors.ChatMsgColor,

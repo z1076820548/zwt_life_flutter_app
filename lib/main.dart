@@ -18,7 +18,6 @@ import 'package:zwt_life_flutter_app/common/utils/util/shared_preferences.dart';
 import 'package:zwt_life_flutter_app/page/MainPage.dart';
 import 'package:zwt_life_flutter_app/page/LoginPage.dart';
 import 'package:zwt_life_flutter_app/page/WelcomePage.dart';
-
 SpUtil sp;
 List<CameraDescription> cameras;
 
