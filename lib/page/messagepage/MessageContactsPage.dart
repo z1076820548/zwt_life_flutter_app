@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:zwt_life_flutter_app/public.dart';
+
 class MessageContactsPage extends StatefulWidget {
   static final String sName = "MessageContacts";
 
@@ -157,7 +158,7 @@ class _MessageContactsPageState extends State<MessageContactsPage> {
           child: InkWell(
             splashColor: Colors.grey,
             onTap: () {
-                NavigatorUtils.gotoMessageTalkingPage(context);
+              NavigatorUtils.gotoMessageTalkingPage(context);
             },
             child: new ListTile(
               leading: new CircleAvatar(
