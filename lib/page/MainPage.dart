@@ -1,10 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:zwt_life_flutter_app/common/utils/CommonUtils.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/screen_util.dart';
+import 'package:zwt_life_flutter_app/page/bookshelfpage/BookShelfPage.dart';
 import 'package:zwt_life_flutter_app/page/homepage/HomePage.dart';
+import 'package:zwt_life_flutter_app/page/messagepage/MessageContactsPage.dart';
 import 'package:zwt_life_flutter_app/page/messagepage/MessageTalkingPage.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/MyCupertinoDialog.dart';
-
+import 'package:zwt_life_flutter_app/widget/otherwidget/MyCupertinoDialog.dart';
+import 'package:zwt_life_flutter_app/public.dart';
 class MainPage extends StatefulWidget {
   static final String sName = "main";
 
@@ -29,7 +32,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
-  var appBarTitles = ['商品', '消息', '购物车', '我的'];
+  var appBarTitles = ['书架', '消息', '购物车', '我的'];
   var tabImages;
 
   /*
@@ -43,7 +46,7 @@ class _MainPageState extends State<MainPage> {
   /*
    * 根据索引获得对应的normal或是press的icon
    */
-  Icon getTabIcon(int curIndex) {
+  Image getTabIcon(int curIndex) {
     if (curIndex == _selectedIndex) {
       return tabImages[curIndex][1];
     }
@@ -55,11 +58,9 @@ class _MainPageState extends State<MainPage> {
    */
   Text getTabTitle(int curIndex) {
     if (curIndex == _selectedIndex) {
-      return new Text(appBarTitles[curIndex],
-          style: new TextStyle());
+      return new Text(appBarTitles[curIndex]);
     } else {
-      return new Text(appBarTitles[curIndex],
-          style: new TextStyle(color: Colors.black38));
+      return new Text(appBarTitles[curIndex]);
     }
   }
 
@@ -73,26 +74,28 @@ class _MainPageState extends State<MainPage> {
       bottom的按压图片
      */
     tabImages = [
-      [Icon(Icons.home), Icon(Icons.home)],
-      [Icon(Icons.message), Icon(Icons.message)],
-      [Icon(Icons.shopping_cart), Icon(Icons.shopping_cart)],
-      [Icon(Icons.person_outline), Icon(Icons.person_outline)]
+      [getTabImage('static/images/bookshelf1.png'), getTabImage('static/images/bookshelf2.png')],
+      [getTabImage('static/images/bookshelf1.png'), getTabImage('static/images/bookshelf2.png')],
+      [getTabImage('static/images/bookshelf1.png'), getTabImage('static/images/bookshelf2.png')],
+      [getTabImage('static/images/bookshelf1.png'), getTabImage('static/images/bookshelf2.png')],
+//      [Icon(Icons.message), Icon(Icons.message)],
+//      [Icon(Icons.shopping_cart), Icon(Icons.shopping_cart)],
+//      [Icon(Icons.person_outline), Icon(Icons.person_outline)]
     ];
 
     _bodys = [
+      new BookShelfPage(),
+      new MessageContactsPage(),
       new HomePage(),
-      new MessageTalkingPage(),
       new HomePage(),
-      new HomePage(),
-//      new ShopPage(),
-//      new MsgPage(),
-//      new MyPage()
     ];
   }
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.instance = ScreenUtil(width: ScreenUtil.designWidth, height: ScreenUtil.designHeight)..init(context);
+    ScreenUtil.instance = ScreenUtil(
+        width: ScreenUtil.designWidth, height: ScreenUtil.designHeight)
+      ..init(context);
     initData();
     // TODO: implement build
     return Scaffold(
@@ -103,7 +106,9 @@ class _MainPageState extends State<MainPage> {
 //          IconButton(icon: Icon(Icons.share), onPressed: () {}),
 //        ],
 //      ),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: CupertinoTabBar(
+        backgroundColor: Colors.white,
+        activeColor: GlobalColors.themeColor,
         // 底部导航
         items: <BottomNavigationBarItem>[
           new BottomNavigationBarItem(
@@ -117,7 +122,7 @@ class _MainPageState extends State<MainPage> {
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed,
+
       ),
       body: _bodys[_selectedIndex],
     );

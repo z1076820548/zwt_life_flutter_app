@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/tip/TipDialog.dart';
+import 'package:zwt_life_flutter_app/widget/otherwidget/tip/TipDialog.dart';
 
 class TipUtil {
   static Future<Null> nothing(BuildContext context, String tip) {

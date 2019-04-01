@@ -30,7 +30,7 @@ class SearchTopBarActionWidget extends StatelessWidget {
         child: Text(
           "搜索",
           style: TextStyle(
-              color: GlobalColors.ThemeColor),
+              color: GlobalColors.themeColor),
         ),
       ),
     );

@@ -5,24 +5,19 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zwt_life_flutter_app/common/event/ChatEvent.dart';
 import 'package:zwt_life_flutter_app/common/event/ChatImageEvent.dart';
 import 'package:zwt_life_flutter_app/common/net/Code.dart';
 import 'package:zwt_life_flutter_app/common/style/GlobalStyle.dart';
-import 'package:zwt_life_flutter_app/common/utils/CommonUtils.dart';
-import 'package:zwt_life_flutter_app/common/utils/util/TipUtil.dart';
-import 'package:zwt_life_flutter_app/common/utils/util/ToastUtils.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/screen_util.dart';
 import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatMessageList.dart';
 import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatMessageListItem.dart';
 import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatSwipperGrid.dart';
 import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatUser.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/MyOutLineButton.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:zwt_life_flutter_app/widget/otherwidget/MyOutLineButton.dart';
 
 var currentUserEmail;
 var _scaffoldContext;
@@ -232,9 +227,9 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
         Offstage(
           offstage: !_isMicroPhone,
           child: Listener(
-//            onPointerDown: (PointerDownEvent event) => _startRecorder(),
-            onPointerDown: (PointerDownEvent event) =>
-                TipUtil.nothing(context, "1654654564"),
+            onPointerDown: (PointerDownEvent event) => _startRecorder(),
+//            onPointerDown: (PointerDownEvent event) =>
+//                TipUtil.loading( context),
             onPointerUp: (PointerUpEvent event) => _stopRecorder(),
             child: MyOutlineButton(
               color: GlobalColors.ChatMsgColor,

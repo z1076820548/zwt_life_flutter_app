@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:zwt_life_flutter_app/common/style/GlobalStyle.dart';
 import 'package:zwt_life_flutter_app/common/utils/CommonUtils.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/refresh/PullLoadWidgetControl.dart';
-
+import 'package:zwt_life_flutter_app/widget/otherwidget/refresh/PullLoadWidgetControl.dart';
 class PullLoadWidget extends StatefulWidget {
   ///item渲染
   final IndexedWidgetBuilder itemBuilder;

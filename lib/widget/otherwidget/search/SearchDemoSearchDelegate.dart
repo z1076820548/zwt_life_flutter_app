@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/search/ResultCard.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/search/SuggestionList.dart';
+import 'package:zwt_life_flutter_app/widget/otherwidget/search/ResultCard.dart';
+import 'package:zwt_life_flutter_app/widget/otherwidget/search/SuggestionList.dart';
 
 class SearchDemoSearchDelegate extends SearchDelegate<int> {
 

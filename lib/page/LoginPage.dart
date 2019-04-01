@@ -7,13 +7,9 @@ import 'package:zwt_life_flutter_app/common/local/LocalStorage.dart';
 import 'package:zwt_life_flutter_app/common/local/SharedPreferencesKeys.dart';
 import 'package:zwt_life_flutter_app/common/model/search_history.dart';
 import 'package:zwt_life_flutter_app/common/redux/GlobalState.dart';
-import 'package:zwt_life_flutter_app/common/style/GlobalStyle.dart';
-import 'package:zwt_life_flutter_app/common/utils/CommonUtils.dart';
-import 'package:zwt_life_flutter_app/common/utils/NavigatorUtils.dart';
-import 'package:zwt_life_flutter_app/common/utils/util/MyFluwxUtils.dart';
-import 'package:zwt_life_flutter_app/common/utils/util/ToastUtils.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/MyRaisedButton.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/MyTextField.dart';
+import 'package:zwt_life_flutter_app/widget/otherwidget/MyRaisedButton.dart';
+import 'package:zwt_life_flutter_app/widget/otherwidget/MyTextField.dart';
+import 'package:zwt_life_flutter_app/public.dart';
 
 class LoginPage extends StatefulWidget {
   static final String sName = "login";

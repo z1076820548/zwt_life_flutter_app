@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/menu/src/radial_menu_button.dart';
+import 'package:zwt_life_flutter_app/widget/otherwidget/menu/src/radial_menu_button.dart';
 
 const double _defaultButtonSize = 48.0;
 

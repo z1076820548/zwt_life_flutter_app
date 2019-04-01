@@ -7,8 +7,8 @@ import 'package:zwt_life_flutter_app/common/model/search_history.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/shared_preferences.dart';
 import 'package:zwt_life_flutter_app/common/widgets/homewidget/HomeTopBar.dart';
 import 'package:zwt_life_flutter_app/common/widgets/homewidget/banner.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/refresh/PullLoadWidget.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/refresh/MyListState.dart';
+import 'package:zwt_life_flutter_app/widget/otherwidget/refresh/MyListState.dart';
+import 'package:zwt_life_flutter_app/widget/otherwidget/refresh/PullLoadWidget.dart';
 
 class HomePage extends StatefulWidget {
   static final String sName = "Home";

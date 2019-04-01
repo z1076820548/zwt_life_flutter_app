@@ -19,8 +19,8 @@ import 'package:zwt_life_flutter_app/common/redux/ThemeRedux.dart';
 import 'package:zwt_life_flutter_app/common/style/GlobalStringBase.dart';
 import 'package:zwt_life_flutter_app/common/style/GlobalStyle.dart';
 import 'package:zwt_life_flutter_app/common/utils/NavigatorUtils.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/MyCupertinoDialog.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/MyRaisedButton.dart';
+import 'package:zwt_life_flutter_app/widget/otherwidget/MyCupertinoDialog.dart';
+import 'package:zwt_life_flutter_app/widget/otherwidget/MyRaisedButton.dart';
 
 class CommonUtils {
   static final double MILLIS_LIMIT = 1000.0;

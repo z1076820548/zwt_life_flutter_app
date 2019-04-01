@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:zwt_life_flutter_app/widget/GSYWidget/tip/LoadingView.dart';
+import 'package:zwt_life_flutter_app/widget/otherwidget/tip/LoadingView.dart';
 
 enum TipDialogType { NOTHING, LOADING, SUCCESS, FAIL, INFO }
 

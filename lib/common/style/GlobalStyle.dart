@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 //颜色
 class GlobalColors {
-  static const Color ThemeColor = Colors.blue;
+  static const Color  themeColor = Colors.blue;
   static const String primaryValueString = "#24292E";
   static const String primaryLightValueString = "#42464b";
   static const String primaryDarkValueString = "#121917";
@@ -33,7 +33,7 @@ class GlobalColors {
   static const Color ChatMsgColor = Color.fromRGBO(254, 255, 254, 1.0);
   static const Color ChatTextColor = Colors.black87;
 
-  static const Color themeColor = Color.fromRGBO(132, 95, 63, 1.0);
+//  static const Color themeColor = Color.fromRGBO(132, 95, 63, 1.0);
   static const Color floorTitleColor = Color.fromRGBO(51, 51, 51, 1);
   static const Color searchBarBgColor = Color.fromRGBO(240, 240, 240, 1.0);
   static const Color searchBarTxtColor = Color(0xFFCDCDCD);

@@ -9,7 +9,7 @@ class HomeTopBar extends StatelessWidget {
         .padding
         .top;
     return Container(
-      color: GlobalColors.ThemeColor,
+      color: GlobalColors.themeColor,
       padding: EdgeInsets.only(
           top: statusBarHeight, left: 10, right: 10, bottom: 10),
       child: Row(

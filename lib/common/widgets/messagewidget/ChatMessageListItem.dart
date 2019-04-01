@@ -10,7 +10,7 @@ import 'package:zwt_life_flutter_app/common/style/GlobalStyle.dart';
 import 'package:zwt_life_flutter_app/common/utils/NavigatorUtils.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/screen_util.dart';
 import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatUser.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/animation/VoicePlayingAnimation.dart';
+import 'package:zwt_life_flutter_app/widget/otherwidget/animation/VoicePlayingAnimation.dart';
 
 class ChatMessageListItem extends StatelessWidget {
   final Animation<double> animation;

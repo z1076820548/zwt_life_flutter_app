@@ -6,6 +6,7 @@ import 'package:zwt_life_flutter_app/page/MainPage.dart';
 import 'package:zwt_life_flutter_app/page/LoginPage.dart';
 import 'package:zwt_life_flutter_app/page/messagepage/ChatCameraHomePage.dart';
 import 'package:zwt_life_flutter_app/page/messagepage/ImageHudPage.dart';
+import 'package:zwt_life_flutter_app/page/messagepage/MessageTalkingPage.dart';
 import 'package:zwt_life_flutter_app/page/searchpage/SearchPage.dart';
 import 'package:zwt_life_flutter_app/page/searchpage/SearchResultListPage.dart';
 
@@ -212,6 +213,14 @@ class NavigatorUtils {
       BuildContext context) {
     NavigatorRouter(
         context, new ChatCameraHomePage());
+  }
+
+
+  ///聊天
+  static gotoMessageTalkingPage(
+      BuildContext context) {
+    NavigatorRouter(
+        context, new MessageTalkingPage());
   }
 
   static NavigatorRouter(BuildContext context, Widget widget) {

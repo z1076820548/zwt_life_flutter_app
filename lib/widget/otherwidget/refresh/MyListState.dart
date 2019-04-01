@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:zwt_life_flutter_app/widget/GSYWidget/refresh/PullLoadWidgetControl.dart';
+import 'package:zwt_life_flutter_app/widget/otherwidget/refresh/PullLoadWidgetControl.dart';
 
 mixin MyListState<T extends StatefulWidget>
     on State<T>, AutomaticKeepAliveClientMixin<T> {

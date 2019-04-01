@@ -14,6 +14,7 @@ import 'package:zwt_life_flutter_app/common/net/Code.dart';
 import 'package:zwt_life_flutter_app/common/redux/GlobalState.dart';
 import 'package:zwt_life_flutter_app/common/style/GlobalStyle.dart';
 import 'package:zwt_life_flutter_app/common/utils/CommonUtils.dart';
+import 'package:zwt_life_flutter_app/common/utils/util/TipUtil.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/shared_preferences.dart';
 import 'package:zwt_life_flutter_app/page/MainPage.dart';
 import 'package:zwt_life_flutter_app/page/LoginPage.dart';
@@ -40,7 +41,7 @@ class FlutterReduxApp extends StatelessWidget {
         userInfo: User.empty(),
         eventList: new List(),
         trendList: new List(),
-        themeData: CommonUtils.getThemeData(GlobalColors.ThemeColor),
+        themeData: CommonUtils.getThemeData(GlobalColors.themeColor),
         ),
   );
 
