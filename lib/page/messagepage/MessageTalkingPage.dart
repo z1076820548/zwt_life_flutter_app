@@ -18,6 +18,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:zwt_life_flutter_app/widget/otherwidget/MyOutLineButton.dart';
+import 'package:zwt_life_flutter_app/public.dart';
 
 var currentUserEmail;
 var _scaffoldContext;
@@ -404,8 +405,8 @@ class _MessageTalkingPage extends State<MessageTalkingPage>
     setState(() {
       isStartRecoder = true;
     });
-    Directory appDocDirectory = await getApplicationDocumentsDirectory();
-    String uri = appDocDirectory.path + '/' + 'df3453.m4a';
+    String root = await FileUtil.getRootPath();
+    String uri = root + '/df3453.m4a';
     pathRecorder = await flutterSound.startRecorder(uri);
     print('startRecorder: $pathRecorder');
     // /storage/emulated/0/default.m4a

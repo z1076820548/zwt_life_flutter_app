@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage>
 
   initSearchHistory() async {
     sp = await SpUtil.getInstance();
-    String json = sp.getString(SharedPreferencesKeys.searchHistory);
+    String json = sp.getString(SharedPreferencesKeys.searchHistory,"");
     print("json $json");
     searchHistoryList = SearchHistoryList.fromJSON(json);
   }

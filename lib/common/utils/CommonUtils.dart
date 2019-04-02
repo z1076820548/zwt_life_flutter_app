@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -19,6 +20,7 @@ import 'package:zwt_life_flutter_app/common/redux/ThemeRedux.dart';
 import 'package:zwt_life_flutter_app/common/style/GlobalStringBase.dart';
 import 'package:zwt_life_flutter_app/common/style/GlobalStyle.dart';
 import 'package:zwt_life_flutter_app/common/utils/NavigatorUtils.dart';
+import 'package:zwt_life_flutter_app/common/utils/util/screen_util.dart';
 import 'package:zwt_life_flutter_app/widget/otherwidget/MyCupertinoDialog.dart';
 import 'package:zwt_life_flutter_app/widget/otherwidget/MyRaisedButton.dart';
 
@@ -370,6 +372,69 @@ class CommonUtils {
                   child: new Text(CommonUtils.getLocale(context).app_ok)),
             ],
           );
+        });
+  }
+
+//选择喜好
+  static Future<Null> showLickeDialog(BuildContext context) {
+    return showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return new Material(
+              color: Colors.transparent,
+              child: Center(
+                child: new Container(
+                  width: ScreenUtil.getInstance().L(250),
+                  height: ScreenUtil.getInstance().L(200),
+                  padding: new EdgeInsets.all(4.0),
+                  decoration: new BoxDecoration(
+                    color: Colors.white,
+                    //用一个BoxDecoration装饰器提供背景图片
+                    borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                  ),
+                  child: new Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      new Container(child: Text("将根据喜好推荐相应小说")),
+                      new Container(height: 10.0),
+                      new Container(child: Text("请选择您的喜好")),
+                      new Container(height: 10.0),
+                      Image(image:AssetImage("static/images/gender.png"),),
+                      new Container(height: 10.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          FlatButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            color: Colors.blue[700],
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0)),
+                            child: Text(
+                              "男生小说",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          Container(
+                            width: 40.0,
+                          ),
+                          FlatButton(
+                            color: Colors.pinkAccent,
+                            onPressed: () {},
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0)),
+                            child: Text(
+                              "女生小说",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ));
         });
   }
 }

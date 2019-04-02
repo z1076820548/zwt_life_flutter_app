@@ -1,18 +1,16 @@
-
 import 'dart:async';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 /// 用来做shared_preferences的存储
 class SpUtil {
   static SpUtil _instance;
+
   static Future<SpUtil> get instance async {
     return await getInstance();
   }
 
   static SharedPreferences _spf;
-
 
   SpUtil._();
 
@@ -20,11 +18,10 @@ class SpUtil {
     _spf = await SharedPreferences.getInstance();
   }
 
-  static Future<SpUtil> getInstance() async  {
+  static Future<SpUtil> getInstance() async {
     if (_instance == null) {
       _instance = new SpUtil._();
       await _instance._init();
-
     }
     return _instance;
   }
@@ -35,6 +32,7 @@ class SpUtil {
     }
     return false;
   }
+
   // 判断是否存在数据
   bool hasKey(String key) {
     Set keys = getKeys();
@@ -51,19 +49,28 @@ class SpUtil {
     return _spf.get(key);
   }
 
-  getString(String key) {
+  getString(String key, String defaultVal) {
     if (_beforeCheck()) return null;
-    return _spf.getString(key);
+    if (_spf.getString(key) != null && _spf.getString(key).length > 0) {
+      return _spf.getString(key);
+    } else {
+      return defaultVal;
+    }
   }
 
   Future<bool> putString(String key, String value) {
     if (_beforeCheck()) return null;
     return _spf.setString(key, value);
+
   }
 
-  bool getBool(String key) {
+  bool getBool(String key, bool defaultVal) {
     if (_beforeCheck()) return null;
-    return _spf.getBool(key);
+    if (_spf.getBool(key) != null) {
+      return _spf.getBool(key);
+    } else {
+      return defaultVal;
+    }
   }
 
   Future<bool> putBool(String key, bool value) {
@@ -71,9 +78,13 @@ class SpUtil {
     return _spf.setBool(key, value);
   }
 
-  int getInt(String key) {
+  int getInt(String key, int defaultVal) {
     if (_beforeCheck()) return null;
-    return _spf.getInt(key);
+    if (_spf.getInt(key) != null) {
+      return _spf.getInt(key);
+    } else {
+      return defaultVal;
+    }
   }
 
   Future<bool> putInt(String key, int value) {
@@ -104,8 +115,6 @@ class SpUtil {
     if (_beforeCheck()) return null;
     return _spf.get(key);
   }
-
-
 
   Future<bool> remove(String key) {
     if (_beforeCheck()) return null;
