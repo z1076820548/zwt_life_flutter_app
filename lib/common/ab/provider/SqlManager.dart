@@ -12,17 +12,16 @@ class SqlManager {
   static Database _database;
 
   //数据库
-  static init() async {
+  static init(String name) async {
     //open the database
     var databasesPath = await getDatabasesPath();
-    DataResult userRes = await UserDao.getUserInfoLocal();
-    String dbName = _NAME;
-    if (userRes != null && userRes.result) {
-      User user = userRes.data;
-      if (user != null && user.login != null) {
-        dbName = user.login + "_" + _NAME;
-      }
-    }
+    String dbName = name+"_"+_NAME;
+//    if (userRes != null && userRes.result) {
+//      User user = userRes.data;
+//      if (user != null && user.login != null) {
+//        dbName = user.login + "_" + _NAME;
+//      }
+//    }
     String path = databasesPath + dbName;
     if (Platform.isIOS) {
       path = databasesPath + "/" + dbName;

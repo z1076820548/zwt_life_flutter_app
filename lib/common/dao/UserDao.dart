@@ -1,18 +1,14 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:redux/redux.dart';
-import 'package:zwt_life_flutter_app/common/ab/provider/user/UserInfoDbProvider.dart';
 import 'package:zwt_life_flutter_app/common/config/Config.dart';
 import 'package:zwt_life_flutter_app/common/config/NetConfig.dart';
-import 'package:zwt_life_flutter_app/common/dao/DaoResult.dart';
 import 'package:zwt_life_flutter_app/common/local/LocalStorage.dart';
 import 'package:zwt_life_flutter_app/common/model/User.dart';
 import 'package:zwt_life_flutter_app/common/net/Api.dart';
-import 'package:zwt_life_flutter_app/common/net/Address.dart';
-import 'package:zwt_life_flutter_app/common/net/ResultData.dart';
 import 'package:zwt_life_flutter_app/common/redux/UserRedux.dart';
 import 'package:zwt_life_flutter_app/common/utils/CommonUtils.dart';
+import 'package:zwt_life_flutter_app/public.dart';
 
 class UserDao {
 
@@ -38,7 +34,7 @@ class UserDao {
 
 //    if (res != null && res.result) {
       await LocalStorage.save(Config.PW_KEY, password);
-//      DataResult resultData = await getUserInfo(null);
+//      Data resultData = await getUserInfo(null);
 //    }
   }
 
@@ -57,7 +53,7 @@ class UserDao {
 //      if (res != null && res.result) {
 //        String starred = "---";
 //        if (res.data["type"] != "Organization") {
-//          DataResult countRes = await getUserStaredCountNet(res.data["login"]);
+//          Data countRes = await getUserStaredCountNet(res.data["login"]);
 //          if (countRes.result) {
 //            starred = countRes.data;
 //          }
@@ -71,9 +67,9 @@ class UserDao {
 //            provider.insert(userName, json.encode(user.toJson()));
 //          }
 //        }
-//        return new DataResult(user, true);
+//        return new Data(user, true);
 //      } else {
-//        return new DataResult(res.data, false);
+//        return new Data(res.data, false);
 //      }
 //    }
 //
@@ -82,7 +78,7 @@ class UserDao {
 //      if (user == null) {
 //        return await next();
 //      }
-//      DataResult dataResult = new DataResult(user, true, next: next());
+//      Data dataResult = new Data(user, true, next: next());
 //      return dataResult;
 //    }
 //    return await next();
@@ -101,9 +97,9 @@ class UserDao {
     if (userText != null) {
       var userMap = json.decode(userText);
       User user = User.fromJson(userMap);
-      return new DataResult(user, true);
+      return new Data(user, true);
     } else {
-      return new DataResult(null, false);
+      return new Data(null, false);
     }
   }
 
@@ -125,7 +121,7 @@ class UserDao {
     if(localeIndex != null && localeIndex.length != 0){
       CommonUtils.changeLocale(store, int.parse(localeIndex));
     }
-    return new DataResult(res.data, (res.result &&(token != null)));
+    return new Data(res.data, (res.result &&(token != null)));
   }
 
 

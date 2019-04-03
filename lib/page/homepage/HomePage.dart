@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:zwt_life_flutter_app/common/dao/DaoResult.dart';
 import 'package:zwt_life_flutter_app/common/data/HomeData.dart';
 import 'package:zwt_life_flutter_app/common/local/SharedPreferencesKeys.dart';
 import 'package:zwt_life_flutter_app/common/model/kingkong.dart';
@@ -7,6 +6,7 @@ import 'package:zwt_life_flutter_app/common/model/search_history.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/shared_preferences.dart';
 import 'package:zwt_life_flutter_app/common/widgets/homewidget/HomeTopBar.dart';
 import 'package:zwt_life_flutter_app/common/widgets/homewidget/banner.dart';
+import 'package:zwt_life_flutter_app/public.dart';
 import 'package:zwt_life_flutter_app/widget/otherwidget/refresh/MyListState.dart';
 import 'package:zwt_life_flutter_app/widget/otherwidget/refresh/PullLoadWidget.dart';
 
@@ -106,12 +106,12 @@ class _HomePageState extends State<HomePage>
 
   @override
   requestLoadMore() async {
-    return new DataResult(addStr, true);
+    return new Data(addStr, true);
   }
 
   @override
   requestRefresh() async {
-    return new DataResult(str, true);
+    return new Data(str, true);
   }
 
   _renderEventItem(int index) {

@@ -6,6 +6,7 @@ import 'package:zwt_life_flutter_app/common/model/User.dart';
 
 class UserInfoDbProvider extends BaseDbProvider {
   final String name = 'UserInfo';
+
   final String columnId = '_id';
   final String columnUserName = "userName";
   final String columnData = "data";

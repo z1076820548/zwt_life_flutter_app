@@ -42,8 +42,6 @@ class FlutterReduxApp extends StatelessWidget {
     ///初始化数据
     initialState: new GlobalState(
       userInfo: User.empty(),
-      eventList: new List(),
-      trendList: new List(),
       themeData: CommonUtils.getThemeData(GlobalColors.themeColor),
     ),
   );

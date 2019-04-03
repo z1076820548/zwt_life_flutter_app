@@ -3,6 +3,7 @@ import 'package:zwt_life_flutter_app/common/model/support/BookMark.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/screen_util.dart';
 import 'package:zwt_life_flutter_app/main.dart';
 
+//设置管理
 class SettingManager {
   static SettingManager _manager;
 
@@ -134,7 +135,7 @@ class SettingManager {
   }
 
   bool isUserChooseSex() {
-    if (sp.getString("userChooseSex", null) == null) {
+    if (sp.getString("userChooseSex", null) == null || sp.getString("userChooseSex", null).toString().length == 0) {
       return false;
     } else {
       return true;

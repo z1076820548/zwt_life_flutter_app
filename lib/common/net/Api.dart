@@ -63,8 +63,8 @@ class HttpManager {
       option = new Options(
         method: method,
         headers: headers,
-        connectTimeout: 5000,
-        receiveTimeout: 3000,
+        connectTimeout: 30000,
+        receiveTimeout: 30000,
       );
     }
 
@@ -97,6 +97,8 @@ class HttpManager {
           false,
           errorResponse.statusCode);
     }
+
+
     if (Config.DEBUG) {
       print(TAG +
           '请求头: ' +
@@ -106,15 +108,12 @@ class HttpManager {
       if (response != null) {
         print(TAG + '返回参数: ' + response.toString());
       }
-      if (optionParams["authorizationCode"] != null) {
-        print(TAG + 'authorizationCode: ' + optionParams["authorizationCode"]);
-      }
     }
 
     try {
       if (option.contentType != null &&
           option.contentType.primaryType == "text") {
-        return new ResultData(response.data, true, Code.SUCCESS);
+        return new ResultData(response.toString, true, Code.SUCCESS);
       } else {
         var responseJson = response.data;
         if (response.statusCode == 201 && responseJson["token"] != null) {
@@ -124,7 +123,7 @@ class HttpManager {
         }
       }
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return new ResultData(response.data, true, Code.SUCCESS,
+        return new ResultData(response, true, Code.SUCCESS,
             headers: response.headers);
       }
     } catch (e) {
@@ -132,10 +131,7 @@ class HttpManager {
       return new ResultData(response.data, false, response.statusCode,
           headers: response.headers);
     }
-    return new ResultData(
-        Code.errorHandleFunction(response.statusCode, "", noTip),
-        false,
-        response.statusCode);
+
   }
 
   ///清除授权

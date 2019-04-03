@@ -1,21 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:zwt_life_flutter_app/common/model/Event.dart';
-import 'package:zwt_life_flutter_app/common/model/TrendingRepoModel.dart';
 import 'package:zwt_life_flutter_app/common/model/User.dart';
-import 'package:zwt_life_flutter_app/common/redux/EventRedux.dart';
-import 'package:zwt_life_flutter_app/common/redux/LocaleRedux.dart';
 import 'package:zwt_life_flutter_app/common/redux/ThemeRedux.dart';
-import 'package:zwt_life_flutter_app/common/redux/TrendReducer.dart';
 import 'package:zwt_life_flutter_app/common/redux/UserRedux.dart';
 
 class GlobalState {
   //用户信息
   User userInfo;
-  ///用户接受到的事件列表
-  List<Event> eventList = new List();
-
-  ///用户接受到的事件列表
-  List<TrendingRepoModel> trendList = new List();
 
   //主题数据
   ThemeData themeData;
@@ -23,7 +13,7 @@ class GlobalState {
 
 
   //构造方法
-  GlobalState({this.userInfo, this.eventList, this.trendList, this.themeData});
+  GlobalState({this.userInfo, this.themeData});
 
 }
 
@@ -34,12 +24,6 @@ GlobalState appReducer(GlobalState state,action){
   return GlobalState(
     ///通过 UserReducer 将 GSYState 内的 userInfo 和 action 关联在一起
     userInfo: UserReducer(state.userInfo, action),
-
-    ///通过 EventReducer 将 GSYState 内的 eventList 和 action 关联在一起
-    eventList: EventReducer(state.eventList, action),
-
-    ///通过 TrendReducer 将 GSYState 内的 trendList 和 action 关联在一起
-    trendList: TrendReducer(state.trendList, action),
 
     ///通过 ThemeDataReducer 将 GSYState 内的 themeData 和 action 关联在一起
     themeData: ThemeDataReducer(state.themeData, action),
