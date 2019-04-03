@@ -376,7 +376,7 @@ class CommonUtils {
   }
 
 //选择喜好
-  static Future<Null> showLickeDialog(BuildContext context) {
+  static Future<Null> showLickeDialog(BuildContext context,VoidCallback onPressedleft,VoidCallback onPressedright) {
     return showCupertinoDialog(
         context: context,
         builder: (BuildContext context) {
@@ -405,9 +405,7 @@ class CommonUtils {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           FlatButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
+                            onPressed: onPressedleft,
                             color: Colors.blue[700],
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0)),
@@ -421,7 +419,7 @@ class CommonUtils {
                           ),
                           FlatButton(
                             color: Colors.pinkAccent,
-                            onPressed: () {},
+                            onPressed: onPressedright,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0)),
                             child: Text(
