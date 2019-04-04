@@ -1,5 +1,4 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:zwt_life_flutter_app/common/dao/DaoResult.dart';
 import 'package:zwt_life_flutter_app/common/dao/UserDao.dart';
 import 'package:zwt_life_flutter_app/common/model/User.dart';
 import 'dart:async';
@@ -12,10 +11,10 @@ class SqlManager {
   static Database _database;
 
   //数据库
-  static init(String name) async {
+  static init() async {
     //open the database
     var databasesPath = await getDatabasesPath();
-    String dbName = name+"_"+_NAME;
+    String dbName = _NAME;
 //    if (userRes != null && userRes.result) {
 //      User user = userRes.data;
 //      if (user != null && user.login != null) {

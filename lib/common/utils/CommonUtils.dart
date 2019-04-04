@@ -95,22 +95,22 @@ class CommonUtils {
   }
 
   static saveImage(String url) async {
-    Future<String> _findPath(String imageUrl) async {
-      final cache = await CacheManager.getInstance();
-      final file = await cache.getFile(imageUrl);
-      if (file == null) {
-        return null;
-      }
-      Directory localPath = await CommonUtils.getLocalPath();
-      if (localPath == null) {
-        return null;
-      }
-      final name = splitFileNameByPath(file.path);
-      final result = await file.copy(localPath.path + name);
-      return result.path;
-    }
-
-    return _findPath(url);
+//    Future<String> _findPath(String imageUrl) async {
+//      final cache = await CacheManager.getInstance();
+//      final file = await cache.getFile(imageUrl);
+//      if (file == null) {
+//        return null;
+//      }
+//      Directory localPath = await CommonUtils.getLocalPath();
+//      if (localPath == null) {
+//        return null;
+//      }
+//      final name = splitFileNameByPath(file.path);
+//      final result = await file.copy(localPath.path + name);
+//      return result.path;
+//    }
+//
+//    return _findPath(url);
   }
 
   static splitFileNameByPath(String path) {
