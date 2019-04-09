@@ -84,10 +84,10 @@ class _MainPageState extends State<MainPage> {
     ];
 
     _bodys = [
-      new BookShelfPage(),
-      new MessageContactsPage(),
-      new HomePage(),
-      new HomePage(),
+       BookShelfPage(),
+       MessageContactsPage(),
+       HomePage(),
+       HomePage(),
     ];
   }
 

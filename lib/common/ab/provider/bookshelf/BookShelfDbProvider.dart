@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:zwt_life_flutter_app/common/ab/provider/BaseDbProvider.dart';
+import 'package:zwt_life_flutter_app/common/ab/provider/SqlProvider.dart';
 import 'package:zwt_life_flutter_app/common/model/RecommendBooks.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/codeutil.dart';
 
@@ -13,7 +13,7 @@ import 'package:zwt_life_flutter_app/common/utils/util/codeutil.dart';
  */
 
 class BookShelfDbProvider extends BaseDbProvider {
-  final String name = 'BookShelf';
+  final String name = 'BookShelf10';
   final String columnId = "_id";
   final String columnBookId = "bookId";
   final String columnReadDate = "readDate";
@@ -27,10 +27,10 @@ class BookShelfDbProvider extends BaseDbProvider {
   BookShelfDbProvider();
 
   Map<String, dynamic> toMap(
-      String columnBookId, DateTime readDate, String data) {
+      String bookId, DateTime readDate, String data) {
     Map<String, dynamic> map = {
+      columnBookId: bookId,
       columnReadDate: readDate.millisecondsSinceEpoch,
-      columnBookId: columnBookId,
       columnData: data
     };
     if (id != null) {
@@ -50,9 +50,9 @@ class BookShelfDbProvider extends BaseDbProvider {
   tableSqlString() {
     return tableBaseString(name, columnId) +
         '''
-        $columnBookId text not null
-        $columnReadDate int not null,
-        $columnData text not null)
+        $columnBookId text ,
+        $columnReadDate int ,
+        $columnData text )
       ''';
   }
 
@@ -73,12 +73,12 @@ class BookShelfDbProvider extends BaseDbProvider {
   }
 
   //单条查询
-  Future _getProviderOne(Database db, String columnBookId) async {
+  Future _getProviderOne(Database db, String bookId) async {
     List<Map<String, dynamic>> maps = await db.query(
       name,
-      columns: [columnId, columnReadDate, columnData],
+      columns: [columnId, columnBookId, columnReadDate, columnData],
       where: "$columnBookId = ?",
-      whereArgs: [columnBookId],
+      whereArgs: [bookId],
     );
     if (maps.length > 0) {
       BookShelfDbProvider provider = BookShelfDbProvider.fromMap(maps.first);
@@ -89,15 +89,15 @@ class BookShelfDbProvider extends BaseDbProvider {
 
   ///单条插入到数据库
   Future insert(
-      String columnBookId, DateTime dateTime, String dataMapString) async {
+      String bookId, DateTime dateTime, String dataMapString) async {
     Database db = await getDataBase();
-    var provider = await _getProviderOne(db, columnBookId);
+    var provider = await _getProviderOne(db, bookId);
     if (provider != null) {
-      await db.update(name, toMap(columnBookId, dateTime, dataMapString),
-          where: "$columnBookId = ?", whereArgs: [columnBookId]);
+      await db.update(name, toMap(bookId, dateTime, dataMapString),
+          where: "$columnBookId = ?", whereArgs: [bookId]);
     } else {
       return await db.insert(
-          name, toMap(columnBookId, dateTime, dataMapString));
+          name, toMap(bookId, dateTime, dataMapString));
     }
   }
 
@@ -119,11 +119,10 @@ class BookShelfDbProvider extends BaseDbProvider {
     return null;
   }
 
-
   ///获取单条数据
-  Future<List<RecommendBooks>> getOneData(String columnBookId) async {
+  Future<List<RecommendBooks>> getOneData(String bookId) async {
     Database db = await getDataBase();
-    var provider = await _getProviderOne(db,columnBookId);
+    var provider = await _getProviderOne(db, bookId);
     if (provider != null) {
       List<RecommendBooks> list = new List();
       for (var providerMap in provider) {

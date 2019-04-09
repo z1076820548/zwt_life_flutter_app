@@ -17,7 +17,7 @@ class BookShelfPage extends StatefulWidget {
 
 class _BookShelfPageState extends State<BookShelfPage>
     with AutomaticKeepAliveClientMixin {
-  List<RecommendBooks> recommendBooksList = new List();
+  static List<RecommendBooks> recommendBooksList = new List();
   RefreshController _refreshController;
   ScrollController _scrollController;
   final SlidableController slidableController = new SlidableController();
@@ -26,7 +26,7 @@ class _BookShelfPageState extends State<BookShelfPage>
   void initState() {
     _refreshController = new RefreshController();
     _scrollController = new ScrollController();
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(Duration(seconds: 0), () {
       checkNewUser(context);
     });
     super.initState();
@@ -85,11 +85,15 @@ class _BookShelfPageState extends State<BookShelfPage>
           new IconSlideAction(
               foregroundColor: Colors.grey,
               color: Colors.grey[50],
-              caption: '养肥', icon: Icons.collections_bookmark, onTap: () {}),
+              caption: '养肥',
+              icon: Icons.collections_bookmark,
+              onTap: () {}),
           new IconSlideAction(
               foregroundColor: Colors.grey,
               color: Colors.grey[50],
-              caption: '置顶', icon: Icons.vertical_align_top, onTap: () {}),
+              caption: '置顶',
+              icon: Icons.vertical_align_top,
+              onTap: () {}),
           new IconSlideAction(
             caption: '删除',
             foregroundColor: Colors.red,
@@ -158,12 +162,20 @@ class _BookShelfPageState extends State<BookShelfPage>
     );
   }
 
-  void checkNewUser(BuildContext context) {
+  void checkNewUser(BuildContext context) async {
+    //第一次登录 选择性别
     if (!SettingManager.getInstance().isUserChooseSex()) {
       CommonUtils.showLickeDialog(context, () {
         setSex(Constant.MALE);
       }, () {
         setSex(Constant.FEMALE);
+      });
+    } else {
+      //否则 从数据库中读取书架
+      BookShelfDbProvider bookShelfDbProvider = new BookShelfDbProvider();
+      var data = await bookShelfDbProvider.getAllData();
+      setState(() {
+        recommendBooksList = data;
       });
     }
   }
@@ -174,12 +186,19 @@ class _BookShelfPageState extends State<BookShelfPage>
 
   setSex(String sex) async {
     Navigator.pop(context);
-//    SettingManager.getInstance().saveUserChooseSex(sex);
+    SettingManager.getInstance().saveUserChooseSex(sex);
     Data data = await dioGetRecommend(sex);
     if (data.result && data.data.toString().length > 0) {
       setState(() {
         recommendBooksList = data.data;
       });
+      BookShelfDbProvider bookShelfDbProvider = new BookShelfDbProvider();
+
+      for (RecommendBooks recommendBooks in data.data) {
+        //将书架目录加入数据库
+       await bookShelfDbProvider.insert(recommendBooks.id, DateTime.now(),
+            json.encode(recommendBooks.toJson()));
+      }
     }
   }
 }

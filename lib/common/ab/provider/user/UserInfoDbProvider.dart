@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:sqflite/sqflite.dart';
-import 'package:zwt_life_flutter_app/common/ab/provider/BaseDbProvider.dart';
+import 'package:zwt_life_flutter_app/common/ab/provider/SqlProvider.dart';
 import 'package:zwt_life_flutter_app/common/model/User.dart';
 
 class UserInfoDbProvider extends BaseDbProvider {
