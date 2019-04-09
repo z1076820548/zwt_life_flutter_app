@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:zwt_life_flutter_app/common/net/Api.dart';
 import 'package:zwt_life_flutter_app/public.dart';
 
+//收藏栏
 dioGetRecommend(String gender) async {
   String url = Constant.API_BASE_URL;
   String path = "/book/recommend";
@@ -25,21 +26,37 @@ dioGetRecommend(String gender) async {
   }
 }
 
-dioGetAToc(String bookId,String view) async {
+//更新小说章节
+dioGetAToc(String bookId, String view) async {
   String url = Constant.API_BASE_URL;
   String path = "/mix-atoc/$bookId";
   Map<String, String> requestParams = {
     "view": "$view",
   };
-  ResultData res = await HttpManager.netFetch(url, path, requestParams, method: 'GET');
+  ResultData res =
+      await HttpManager.netFetch(url, path, requestParams, method: 'GET');
+  List<Chapters> chaptersList = new List();
   if (res != null && res.result) {
-    Map tocMap = json.decode(res.data.toString());
-    var map = tocMap['mixToc'];
-//    for (int i = 0; i < recommend.books.length; i++) {
-//      var data = recommend.books[i];
-//      recommendBooksList.add(data);
-//    }
-//    return Data(recommendBooksList, true);
+    Map<String, dynamic> tocMap = json.decode(res.data.toString());
+    var map = tocMap["mixToc"];
+    MixToc mic = MixToc.fromJson(map);
+    return Data(mic, true);
+  } else {
+    return Data("", false);
+  }
+}
+
+//获取小说章节具体内容
+dioGetChapterBody(String url) async {
+  String url = Constant.API_BASE_URL2;
+  String path = "/chapter/$url";
+  Map<String, String> requestParams = {};
+  ResultData res =
+      await HttpManager.netFetch(url, path, requestParams, method: 'GET');
+  if (res != null && res.result) {
+    Map map = json.decode(res.data.toString());
+    Chapter chapter = Chapter.fromJson(map["chapter"]);
+    return Data(chapter, true);
   } else {
     return Data("", false);
   }

@@ -21,12 +21,13 @@ class RecommendBooks{
    int chaptersCount;
    String lastChapter;
    String recentReadingTime = "";
+   bool noUpdate = true;
 
    RecommendBooks(this.id, this.author, this.cover, this.shortIntro,
        this.title, this.hasCp, this.isTop, this.isSeleted, this.showCheckBox,
        this.isFromSD, this.path, this.latelyFollower, this.retentionRatio,
        this.updated, this.chaptersCount, this.lastChapter,
-       this.recentReadingTime);
+       this.recentReadingTime,this.noUpdate);
 
    factory RecommendBooks.fromJson(Map<String, dynamic> json) => _$RecommendBooksFromJson(json);
    Map<String, dynamic> toJson() => _$RecommendBooksToJson(this);

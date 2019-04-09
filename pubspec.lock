@@ -29,6 +29,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.8"
+  battery:
+    dependency: "direct main"
+    description:
+      name: battery
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.3.0+3"
   boolean_selector:
     dependency: transitive
     description:

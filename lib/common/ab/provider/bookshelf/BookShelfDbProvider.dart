@@ -13,7 +13,7 @@ import 'package:zwt_life_flutter_app/common/utils/util/codeutil.dart';
  */
 
 class BookShelfDbProvider extends BaseDbProvider {
-  final String name = 'BookShelf10';
+  final String name = 'BookShelf12';
   final String columnId = "_id";
   final String columnBookId = "bookId";
   final String columnReadDate = "readDate";

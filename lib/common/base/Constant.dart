@@ -5,6 +5,8 @@ class Constant {
 
   static final String API_BASE_URL = "http://api.zhuishushenqi.com";
 
+  static final String API_BASE_URL2 = "http://chapter2.zhuishushenqi.com";
+
   static String PATH_DATA = FileUtil.root + "/cache";
 
   static String PATH_COLLECT = FileUtil.root + "/collect";

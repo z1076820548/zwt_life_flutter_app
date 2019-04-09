@@ -24,7 +24,8 @@ RecommendBooks _$RecommendBooksFromJson(Map<String, dynamic> json) {
       json['updated'] as String,
       json['chaptersCount'] as int,
       json['lastChapter'] as String,
-      json['recentReadingTime'] as String);
+      json['recentReadingTime'] as String,
+      json['noUpdate'] as bool);
 }
 
 Map<String, dynamic> _$RecommendBooksToJson(RecommendBooks instance) =>
@@ -45,5 +46,6 @@ Map<String, dynamic> _$RecommendBooksToJson(RecommendBooks instance) =>
       'updated': instance.updated,
       'chaptersCount': instance.chaptersCount,
       'lastChapter': instance.lastChapter,
-      'recentReadingTime': instance.recentReadingTime
+      'recentReadingTime': instance.recentReadingTime,
+      'noUpdate': instance.noUpdate
     };

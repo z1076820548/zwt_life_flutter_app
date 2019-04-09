@@ -66,7 +66,25 @@ class _BookShelfPageState extends State<BookShelfPage>
                   height: ScreenUtil.getInstance().L(50),
                 ),
               ),
-              title: new Text('${item.title}'),
+              title: Row(
+                children: <Widget>[
+                  new Text('${item.title}'),
+                  Container(
+                    width: 5,
+                  ),
+                  Offstage(
+                    offstage: item.noUpdate == null ? true:item.noUpdate,
+                    child: new Container(
+                      color: Colors.red,
+                      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+                      child: Text(
+                        "更新",
+                        style: TextStyle(color: Colors.white, fontSize: 10),
+                      ),
+                    ),
+                  )
+                ],
+              ),
               subtitle: new Text(
                 '${item.lastChapter}',
                 style: TextStyle(fontSize: 11),
@@ -177,10 +195,30 @@ class _BookShelfPageState extends State<BookShelfPage>
       setState(() {
         recommendBooksList = data;
       });
+      RecommendBooks recommendBooks;
       for (int i = 0; i < recommendBooksList.length; i++) {
-        await dioGetAToc(recommendBooksList[i].id, "chapters");
+        recommendBooks = recommendBooksList[i];
+        Data data = await dioGetAToc(recommendBooks.id, "chapters");
+        if (data.result && data.data.toString().length > 0) {
+          MixToc mixToc = data.data;
+          List<Chapters> chaptersList = mixToc.chapters;
+          //章节是否更新
+          if (!recommendBooks.lastChapter.trim().contains(chaptersList.last.title.trim())) {
+            //是
+            //数据库插入
+            recommendBooks.noUpdate = false;
+            recommendBooks.lastChapter = chaptersList.last.title;
+            bookShelfDbProvider.insert(recommendBooks.id, DateTime.now(),
+                json.encode(recommendBooks.toJson()));
+            //用户要点击阅读以后 更新才会清除 不然一直存在
+            print("章节已更新");
+            setState(() {
+              recommendBooksList[i].lastChapter = chaptersList.last.title;
+              recommendBooksList[i].noUpdate = false;
+            });
+          }
+        }
       }
-
     }
   }
 

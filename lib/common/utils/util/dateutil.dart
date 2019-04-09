@@ -9,4 +9,5 @@ class DateUtil {
 //    DateFormat('mm:ss', 'en_US').format(date)
     return DateFormat(newPattern).format(datetime);
   }
+
 }

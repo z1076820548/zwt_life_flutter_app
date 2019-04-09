@@ -13,10 +13,9 @@ export 'package:zwt_life_flutter_app/common/utils/util/screen_util.dart';
 export 'package:zwt_life_flutter_app/common/utils/util/fileutil.dart';
 export 'package:zwt_life_flutter_app/common/utils/util/stringutil.dart';
 export 'package:zwt_life_flutter_app/common/utils/util/dateutil.dart';
+export 'package:zwt_life_flutter_app/common/utils/util/screen_util2.dart';
 //service
-export 'package:zwt_life_flutter_app/common/net/services/bookshelf.dart';
-export 'package:zwt_life_flutter_app/common/net/services/search.dart';
-
+export 'netservice.dart';
 //model
 export 'package:zwt_life_flutter_app/model.dart';
 
