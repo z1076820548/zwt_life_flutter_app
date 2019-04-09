@@ -177,6 +177,10 @@ class _BookShelfPageState extends State<BookShelfPage>
       setState(() {
         recommendBooksList = data;
       });
+      for (int i = 0; i < recommendBooksList.length; i++) {
+        await dioGetAToc(recommendBooksList[i].id, "chapters");
+      }
+
     }
   }
 
@@ -196,7 +200,7 @@ class _BookShelfPageState extends State<BookShelfPage>
 
       for (RecommendBooks recommendBooks in data.data) {
         //将书架目录加入数据库
-       await bookShelfDbProvider.insert(recommendBooks.id, DateTime.now(),
+        await bookShelfDbProvider.insert(recommendBooks.id, DateTime.now(),
             json.encode(recommendBooks.toJson()));
       }
     }

@@ -24,3 +24,23 @@ dioGetRecommend(String gender) async {
     return Data("", false);
   }
 }
+
+dioGetAToc(String bookId,String view) async {
+  String url = Constant.API_BASE_URL;
+  String path = "/mix-atoc/$bookId";
+  Map<String, String> requestParams = {
+    "view": "$view",
+  };
+  ResultData res = await HttpManager.netFetch(url, path, requestParams, method: 'GET');
+  if (res != null && res.result) {
+    Map tocMap = json.decode(res.data.toString());
+    var map = tocMap['mixToc'];
+//    for (int i = 0; i < recommend.books.length; i++) {
+//      var data = recommend.books[i];
+//      recommendBooksList.add(data);
+//    }
+//    return Data(recommendBooksList, true);
+  } else {
+    return Data("", false);
+  }
+}
