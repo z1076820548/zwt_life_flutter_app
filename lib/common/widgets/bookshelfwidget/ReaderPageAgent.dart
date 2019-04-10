@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:zwt_life_flutter_app/public.dart';
 
 class ReaderPageAgent {
-  static List<Map<String, int>> getPageOffsets(String content, double height, double width, double fontSize) {
-
+  static List<Map<String, int>> getPageOffsets(
+      String content, double height, double width, double fontSize) {
     String tempStr = content;
     List<Map<String, int>> pageConfig = [];
     int last = 0;
     while (true) {
       Map<String, int> offset = {};
       offset['start'] = last;
-      TextPainter textPainter = TextPainter(textDirection: TextDirection.ltr,maxLines: 15);
-      textPainter.text = TextSpan(text: tempStr, style: TextStyle(fontSize: fontSize));
-      textPainter.layout(maxWidth: width,minWidth: width);
+      TextPainter textPainter = TextPainter(
+          textDirection: TextDirection.ltr,
+          maxLines: 15,
+          text: TextSpan(text: tempStr, style: TextStyle()),
+          strutStyle: StrutStyle(fontSize: fontSize));
+//      textPainter.text = TextSpan(text: tempStr, style: TextStyle(fontSize: fontSize));
+      textPainter.layout(maxWidth: width, minWidth: width);
       var end = textPainter.getPositionForOffset(Offset(width, height)).offset;
 
       if (end == 0) {

@@ -27,10 +27,9 @@ class HeaderInterceptor implements Interceptor {
         "If-Modified-Since": "Tue, 02 Aug 2016 03:20:06 UTC",
       };
       options.headers.addAll(map);
-      return options;
     }
     // TODO: implement onRequest
-    return null;
+    return options;
   }
 
   @override
