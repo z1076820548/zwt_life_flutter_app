@@ -18,7 +18,7 @@ class ReaderView extends StatelessWidget {
             top: 0,
             right: 0,
             bottom: 0,
-            child: Image.asset('img/read_bg.png', fit: BoxFit.cover)),
+            child: Image.asset('static/images/read_bg.png', fit: BoxFit.cover)),
         ReaderOverlayer(
             article: article, page: page, topSafeHeight: topSafeHeight),
         buildContent(article, page),
@@ -27,21 +27,28 @@ class ReaderView extends StatelessWidget {
   }
 
   buildContent(Chapter article, int page) {
-    var content = article.stringAtPageIndex(page);
+    var content = StringUtils.formatContent(article.stringAtPageIndex(page));
 
-    if (content.startsWith('\n')) {
-      content = content.substring(1);
-    }
     return Container(
       color: Colors.transparent,
-      margin: EdgeInsets.fromLTRB(
-          15,
-          topSafeHeight + ScreenUtil.designTopBarHeight,
-          10,
-          ScreenUtil2.bottomSafeHeight + ScreenUtil.bottomBarHeight),
-      child: Text.rich(
-        TextSpan(children: [TextSpan(text: content)]),
-        textAlign: TextAlign.justify,
+      margin: EdgeInsets.fromLTRB(15, topSafeHeight + ReaderUtils.topOffset, 10,
+          ScreenUtil2.bottomSafeHeight + ReaderUtils.bottomOffset),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(article.title,
+              style: TextStyle(fontSize: ScreenUtil().setSp(12))),
+          Text.rich(
+            TextSpan(children: [
+              TextSpan(
+                  text: content,
+                  style: TextStyle(
+                      fontSize: ScreenUtil()
+                          .setSp(SettingManager().getReadFontSize())))
+            ]),
+            textAlign: TextAlign.justify,
+          )
+        ],
       ),
     );
   }

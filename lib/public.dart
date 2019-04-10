@@ -14,9 +14,12 @@ export 'package:zwt_life_flutter_app/common/utils/util/fileutil.dart';
 export 'package:zwt_life_flutter_app/common/utils/util/stringutil.dart';
 export 'package:zwt_life_flutter_app/common/utils/util/dateutil.dart';
 export 'package:zwt_life_flutter_app/common/utils/util/screen_util2.dart';
+export 'package:zwt_life_flutter_app/common/utils/util/readutil.dart';
 //service
 export 'netservice.dart';
 //model
 export 'package:zwt_life_flutter_app/model.dart';
 
 export 'dart:convert';
+
+export 'package:zwt_life_flutter_app/common/manager/settingmanager.dart';

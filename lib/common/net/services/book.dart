@@ -47,15 +47,18 @@ dioGetAToc(String bookId, String view) async {
 }
 
 //获取小说章节具体内容
-dioGetChapterBody(String url) async {
+dioGetChapterBody(String link, String title) async {
+  link = link.replaceAll("/", "%2F");
+  link = link.replaceAll("?", "%3F");
   String url = Constant.API_BASE_URL2;
-  String path = "/chapter/$url";
+  String path = "/chapter/$link";
   Map<String, String> requestParams = {};
   ResultData res =
       await HttpManager.netFetch(url, path, requestParams, method: 'GET');
   if (res != null && res.result) {
     Map map = json.decode(res.data.toString());
     Chapter chapter = Chapter.fromJson(map["chapter"]);
+    chapter.title = title;
     return Data(chapter, true);
   } else {
     return Data("", false);

@@ -13,9 +13,9 @@ class _BatteryViewState extends State<BatteryView> {
   double batteryLevel = 0;
   @override
   void initState() {
+    getBatteryLevel();
     super.initState();
 
-    getBatteryLevel();
   }
 
   getBatteryLevel() async {
@@ -46,7 +46,7 @@ class _BatteryViewState extends State<BatteryView> {
       height: 12,
       child: Stack(
         children: <Widget>[
-          Image.asset('img/reader_battery.png'),
+          Image.asset('static/images/reader_battery.png'),
           Container(
             margin: EdgeInsets.fromLTRB(2, 2, 2, 2),
             width: 20 * batteryLevel,

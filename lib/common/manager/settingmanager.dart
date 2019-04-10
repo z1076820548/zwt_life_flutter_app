@@ -12,32 +12,44 @@ class SettingManager {
   }
 
   /**
-   * 保存书籍阅读字体大小
-   *
-   * @param bookId     需根据bookId对应，避免由于字体大小引起的分页不准确
-   * @param fontSizePx
-   * @return
-   */
-  void saveFontSize(String bookId, int fontSizePx) {
-    // 书籍对应
-    sp.putInt(getFontSizeKey(bookId), fontSizePx);
-  }
-
-  /**
    * 保存全局生效的阅读字体大小
    *
    * @param fontSizePx
    */
-  String getFontSizeKey(String bookId) {
-    return bookId + "-readFontSize";
+  String getFontSizeKey() {
+    return "-readFontSize";
   }
 
-  void saveFontszie(int fontSizePx) {
-    saveFontSize("", fontSizePx);
+  String getLetterHeightKey() {
+    return "-readLetterHeight";
   }
 
-  int getReadFontSize(String bookId) {
-    return sp.getInt(getFontSizeKey(bookId), 20);
+  String getLetterSpacingKey() {
+    return "-readLetterSpacing";
+  }
+
+  void saveFontSize(int fontSizePx) {
+    sp.putInt(getFontSizeKey(), fontSizePx);
+  }
+
+  void saveLetterHeight(double height) {
+    sp.putDouble(getLetterHeightKey(), height);
+  }
+
+  void saveLetterSpacing(double widght) {
+    sp.putDouble(getLetterSpacingKey(), widght);
+  }
+
+  int getReadFontSize() {
+    return sp.getInt(getFontSizeKey(), 19);
+  }
+
+  double getLetterHeight() {
+    return sp.getDouble(getLetterHeightKey(),1.35);
+  }
+
+  double getLetterSpacing() {
+    return sp.getDouble(getLetterSpacingKey(),1.35);
   }
 
 //  int getReadBrightness() {
@@ -135,7 +147,8 @@ class SettingManager {
   }
 
   bool isUserChooseSex() {
-    if (sp.getString("userChooseSex", null) == null || sp.getString("userChooseSex", null).toString().length == 0) {
+    if (sp.getString("userChooseSex", null) == null ||
+        sp.getString("userChooseSex", null).toString().length == 0) {
       return false;
     } else {
       return true;

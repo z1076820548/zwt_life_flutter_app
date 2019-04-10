@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'dart:collection';
 import 'package:connectivity/connectivity.dart';
 import 'package:zwt_life_flutter_app/common/local/LocalStorage.dart';
+import 'package:zwt_life_flutter_app/common/net/HeaderInterceptor.dart';
 import 'ResultData.dart';
 import 'Code.dart';
 import 'package:zwt_life_flutter_app/common/config/Config.dart';
@@ -72,6 +73,7 @@ class HttpManager {
     option.connectTimeout = 15000;
     Dio dio = new Dio();
     dio.options.baseUrl = baseUrl;
+    dio.interceptors.add(HeaderInterceptor());
     dio.interceptors.add(LogInterceptor(responseBody: true));
     dio.interceptors.add(CookieManager(CookieJar()));
     Response response;

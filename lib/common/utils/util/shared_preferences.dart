@@ -61,7 +61,6 @@ class SpUtil {
   Future<bool> putString(String key, String value) {
     if (_beforeCheck()) return null;
     return _spf.setString(key, value);
-
   }
 
   bool getBool(String key, bool defaultVal) {
@@ -92,9 +91,13 @@ class SpUtil {
     return _spf.setInt(key, value);
   }
 
-  double getDouble(String key) {
+  double getDouble(String key, double value) {
     if (_beforeCheck()) return null;
-    return _spf.getDouble(key);
+    if (_spf.getDouble(key) != null) {
+      return _spf.getDouble(key);
+    } else {
+      return value;
+    }
   }
 
   Future<bool> putDouble(String key, double value) {

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ReaderPageAgent.dart';
 import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ReaderView.dart';
 import 'package:zwt_life_flutter_app/public.dart';
 
@@ -37,31 +38,29 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   void initState() {
     // TODO: implement initState
     super.initState();
+    Future.delayed(Duration(seconds: 0), () async {
+      await setup();
+    });
     pageController.addListener(onScroll);
-    setup();
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return CupertinoPageScaffold(
-      child: DefaultTextStyle(
-          style: CupertinoTheme.of(context).textTheme.textStyle,
-          child: SafeArea(
-              child: Center(
-            child: Stack(
-              children: <Widget>[
-                Positioned(
-                    left: 0,
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: Image.asset('img/read_bg.png', fit: BoxFit.cover)),
-                buildPageView(),
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          Positioned(
+              left: 0,
+              top: 0,
+              right: 0,
+              bottom: 0,
+              child:
+                  Image.asset('static/images/read_bg.png', fit: BoxFit.cover)),
+          buildPageView(),
 //                buildMenu(),
-              ],
-            ),
-          ))),
+        ],
+      ),
     );
   }
 
@@ -73,47 +72,79 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
 
     topSafeHeight = ScreenUtil2.topSafeHeight;
 
+    //先获取所要章节的链接
     Data data = await dioGetAToc(widget.bookId, "chapters");
     if (data.result && data.data.toString().length > 0) {
       MixToc mixToc = data.data;
       chaptersList = mixToc.chapters;
     }
 
-    Data data2 =
-        await dioGetChapterBody(chaptersList[currentChapterIndex].link);
-    if (data2.result && data2.data.toString().length > 0) {
-      chapterL.add(data2.data);
-    }
+    await resetContent(currentChapterIndex);
   }
+
+  resetContent(int currentChapterIndex) async {
+    currentChapter = await fetchChapter(currentChapterIndex);
+    if (currentChapterIndex > 0) {
+      preChapter = await fetchChapter(currentChapterIndex - 1);
+    } else {
+      preChapter = null;
+    }
+    if (chaptersList.length >= (currentChapterIndex + 1)) {
+      nextChapter = await fetchChapter(currentChapterIndex + 1);
+    } else {
+      nextChapter = null;
+    }
+    setState(() {});
+  }
+
+  Future<Chapter> fetchChapter(int index) async {
+    Data data = await dioGetChapterBody(
+        chaptersList[index].link, chaptersList[index].title);
+    if (data.data == null) {
+      return null;
+    }
+    Chapter article = data.data;
+    var contentHeight = ScreenUtil2.height / 2;
+    var contentWidth = ScreenUtil2.width - 15 - 10;
+    article.pageOffsets = ReaderPageAgent.getPageOffsets(
+        StringUtils.formatContent(article.body),
+        contentHeight,
+        contentWidth,
+        ScreenUtil().setSp(SettingManager().getReadFontSize()));
+    return article;
+  }
+
   onScroll() {
     var page = pageController.offset / ScreenUtil2.width;
 
-    var nextArtilePage = currentChapter.pageCount + (preChapter != null ? preChapter.pageCount : 0);
+    var nextArtilePage = currentChapter.pageCount +
+        (preChapter != null ? preChapter.pageCount : 0);
     if (page >= nextArtilePage) {
       print('到达下个章节了');
-      currentChapterIndex ++;
+      currentChapterIndex++;
       preChapter = currentChapter;
       currentChapter = nextChapter;
       nextChapter = null;
       pageIndex = 0;
       pageController.jumpToPage(preChapter.pageCount);
-      fetchNextChapter(chaptersList[currentChapterIndex].link);
+      fetchNextChapter(currentChapterIndex + 1);
       setState(() {});
     }
     if (preChapter != null && page <= preChapter.pageCount - 1) {
+      currentChapterIndex--;
       print('到达上个章节了');
-
       nextChapter = currentChapter;
       currentChapter = preChapter;
       preChapter = null;
       pageIndex = currentChapter.pageCount - 1;
       pageController.jumpToPage(currentChapter.pageCount - 1);
-      fetchPreviousArticle(currentChapter.preChapterId);
+      fetchPreviousChapter(currentChapterIndex - 1);
       setState(() {});
     }
   }
+
   buildPageView() {
-    if (chapterL == null || chapterL.length == 0) {
+    if (currentChapter == null) {
       return Container();
     }
 
@@ -127,6 +158,17 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
       itemBuilder: buildPage,
       onPageChanged: onPageChanged,
     );
+  }
+
+  fetchPreviousChapter(int index) async {
+    if (preChapter != null || isLoading || index < 0) {
+      return;
+    }
+    isLoading = true;
+    preChapter = chapterL[index];
+    pageController.jumpToPage(preChapter.pageCount + pageIndex);
+    isLoading = false;
+    setState(() {});
   }
 
   Widget buildPage(BuildContext context, int index) {
@@ -151,6 +193,21 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
       child: ReaderView(
           article: article, page: page, topSafeHeight: topSafeHeight),
     );
+  }
+
+  fetchNextChapter(int index) async {
+    Data data2 = await dioGetChapterBody(
+        chaptersList[index].link, chaptersList[index].title);
+    if (data2.result && data2.data.toString().length > 0) {
+      chapterL.add(data2.data);
+    }
+    if (nextChapter != null || isLoading) {
+      return;
+    }
+    isLoading = true;
+    nextChapter = chapterL[index];
+    isLoading = false;
+    setState(() {});
   }
 
   onPageChanged(int index) {
