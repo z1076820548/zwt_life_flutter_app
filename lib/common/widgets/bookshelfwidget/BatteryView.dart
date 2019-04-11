@@ -3,7 +3,6 @@ import 'package:battery/battery.dart';
 import 'package:device_info/device_info.dart';
 import 'dart:io';
 
-
 class BatteryView extends StatefulWidget {
   @override
   _BatteryViewState createState() => _BatteryViewState();
@@ -11,11 +10,11 @@ class BatteryView extends StatefulWidget {
 
 class _BatteryViewState extends State<BatteryView> {
   double batteryLevel = 0;
+
   @override
   void initState() {
     getBatteryLevel();
     super.initState();
-
   }
 
   getBatteryLevel() async {
@@ -32,6 +31,10 @@ class _BatteryViewState extends State<BatteryView> {
         return;
       }
     }
+
+    Battery().onBatteryStateChanged.listen((BatteryState state) {
+      // Do something with new state
+    });
 
     var level = await Battery().batteryLevel;
     setState(() {

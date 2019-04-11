@@ -27,10 +27,10 @@ class ReaderOverlayer extends StatelessWidget {
             children: <Widget>[
               BatteryView(),
               SizedBox(width: 10),
-              Text(time, style: TextStyle(fontSize: ScreenUtil().setSp(11))),
+              Text(time, style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(11))),
               Expanded(child: Container()),
               Text('第${page + 1}页',
-                  style: TextStyle(fontSize: ScreenUtil().setSp(11))),
+                  style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(11))),
             ],
           ),
         ],

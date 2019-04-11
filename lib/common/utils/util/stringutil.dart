@@ -21,7 +21,7 @@ class StringUtils {
     str = str.replaceAll("[ ]*", ""); //
     str = str.replaceAll("\n\n", "\n");
     str = str.replaceAll("\n", "\n" + getTwoSpaces());
-    str = getTwoSpaces() + str;
+//    str = getTwoSpaces() + str;
 //        str = convertToSBC(str);
     return str;
   }

@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:zwt_life_flutter_app/common/utils/util/stringutil.dart';
 
 part 'Chapter.g.dart';
 
@@ -18,7 +19,7 @@ class Chapter {
 
   String stringAtPageIndex(int index) {
     var offset = pageOffsets[index];
-    return this.body.substring(offset['start'], offset['end']);
+    return StringUtils.formatContent(this.body).substring(offset['start'], offset['end']);
   }
 
   int get pageCount {

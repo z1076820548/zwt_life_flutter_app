@@ -41,4 +41,8 @@ class ScreenUtil2 {
   static updateStatusBarStyle(SystemUiOverlayStyle style) {
     SystemChrome.setSystemUIOverlayStyle(style);
   }
+
+  static fixedFontSize(double fontSize) {
+    return fontSize / textScaleFactor;
+  }
 }

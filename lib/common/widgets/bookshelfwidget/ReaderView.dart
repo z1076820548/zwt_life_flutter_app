@@ -27,8 +27,11 @@ class ReaderView extends StatelessWidget {
   }
 
   buildContent(Chapter article, int page) {
-    var content = StringUtils.formatContent(article.stringAtPageIndex(page));
-
+    var content = article.stringAtPageIndex(page);
+//    content=  StringUtils.formatContent(content);
+//    if (content.startsWith('\n')) {
+//      content = content.substring(1);
+//    }
     return Container(
       color: Colors.transparent,
       margin: EdgeInsets.fromLTRB(15, topSafeHeight + ReaderUtils.topOffset, 10,
@@ -37,14 +40,15 @@ class ReaderView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(article.title,
-              style: TextStyle(fontSize: ScreenUtil().setSp(12))),
+              style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(12))),
           Text.rich(
             TextSpan(children: [
               TextSpan(
                   text: content,
                   style: TextStyle(
-                      fontSize: ScreenUtil()
-                          .setSp(SettingManager().getReadFontSize())))
+                      fontSize: ScreenUtil2.fixedFontSize(SettingManager().getReadFontSize().toDouble()),height: SettingManager.getInstance().getLetterHeight(),
+                  letterSpacing: SettingManager.getInstance().getLetterSpacing())
+              )
             ]),
             textAlign: TextAlign.justify,
           )

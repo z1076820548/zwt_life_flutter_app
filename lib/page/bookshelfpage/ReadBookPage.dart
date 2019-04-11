@@ -104,13 +104,14 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
       return null;
     }
     Chapter article = data.data;
-    var contentHeight = ScreenUtil2.height / 2;
-    var contentWidth = ScreenUtil2.width - 15 - 10;
+    var contentHeight = ScreenUtil.screenHeight - topSafeHeight -
+        ReaderUtils.topOffset - ScreenUtil2.bottomSafeHeight - ReaderUtils.bottomOffset - 20;
+    var contentWidth = ScreenUtil.screenWidth - 15 - 10;
     article.pageOffsets = ReaderPageAgent.getPageOffsets(
         StringUtils.formatContent(article.body),
         contentHeight,
         contentWidth,
-        ScreenUtil().setSp(SettingManager().getReadFontSize()));
+        ScreenUtil2.fixedFontSize(SettingManager().getReadFontSize().toDouble()));
     return article;
   }
 

@@ -45,11 +45,11 @@ class SettingManager {
   }
 
   double getLetterHeight() {
-    return sp.getDouble(getLetterHeightKey(),1.35);
+    return sp.getDouble(getLetterHeightKey(),1.25);
   }
 
   double getLetterSpacing() {
-    return sp.getDouble(getLetterSpacingKey(),1.35);
+    return sp.getDouble(getLetterSpacingKey(),1.25);
   }
 
 //  int getReadBrightness() {
