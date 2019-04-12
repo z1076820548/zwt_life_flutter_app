@@ -5,6 +5,9 @@ import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ReaderPageAg
 import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ReaderView.dart';
 import 'package:zwt_life_flutter_app/public.dart';
 
+enum Todo { toPre, toNext }
+enum PageJumpType { stay, firstPage, lastPage }
+
 class ReadBookPage extends StatefulWidget {
   final String bookId;
   static final String sName = "ReadBook";
@@ -23,6 +26,8 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   bool startRead = false;
 
   int pageIndex = 0;
+
+  //当前的章节  第一章
   int currentChapterIndex = 0;
   bool isMenuVisiable = false;
   PageController pageController = PageController(keepPage: false);
@@ -34,6 +39,9 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   Chapter currentChapter;
   Chapter nextChapter;
 
+  //缓存3章
+  int catchChapterIndex = 3;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -42,6 +50,14 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
       await setup();
     });
     pageController.addListener(onScroll);
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setEnabledSystemUIOverlays(
+        [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -78,22 +94,62 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
       MixToc mixToc = data.data;
       chaptersList = mixToc.chapters;
     }
-
-    await resetContent(currentChapterIndex);
+    await resetContent(currentChapterIndex, Todo.toNext, PageJumpType.stay);
   }
 
-  resetContent(int currentChapterIndex) async {
-    currentChapter = await fetchChapter(currentChapterIndex);
+  //获取内容
+  resetContent(
+      int currentChapterIndex, Todo todo, PageJumpType jumpType) async {
+    if (todo == Todo.toNext) {
+      if (nextChapter != null) {
+        currentChapter = nextChapter;
+      } else {
+        currentChapter = await fetchChapter(currentChapterIndex);
+      }
+      chapterL.add(currentChapter);
+    } else if (todo == Todo.toPre) {
+      if (preChapter != null) {
+        currentChapter = preChapter;
+      } else {
+//        currentChapter = await fetchChapter(currentChapterIndex);
+      }
+    }
+
     if (currentChapterIndex > 0) {
-      preChapter = await fetchChapter(currentChapterIndex - 1);
+      if (chapterL[currentChapterIndex - 1] != null) {
+        preChapter = chapterL[currentChapterIndex - 1];
+      } else {
+        preChapter = await fetchChapter(currentChapterIndex - 1);
+      }
     } else {
       preChapter = null;
     }
+
+    //缓存下三章
     if (chaptersList.length >= (currentChapterIndex + 1)) {
-      nextChapter = await fetchChapter(currentChapterIndex + 1);
+      if (((chapterL.length - 1) < (currentChapterIndex + 1))) {
+        for (int i = 0; i < catchChapterIndex; i++) {
+          var chapter = await fetchChapter(currentChapterIndex + i + 1);
+          chapterL.add(chapter);
+        }
+        nextChapter = chapterL[currentChapterIndex + 1];
+      } else {
+        nextChapter = chapterL[currentChapterIndex + 1];
+      }
     } else {
       nextChapter = null;
     }
+
+    if (jumpType == PageJumpType.firstPage) {
+      pageIndex = 0;
+    } else if (jumpType == PageJumpType.lastPage) {
+      pageIndex = currentChapter.pageCount - 1;
+    }
+    if (jumpType != PageJumpType.stay) {
+      pageController.jumpToPage(
+          (preChapter != null ? preChapter.pageCount : 0) + pageIndex);
+    }
+
     setState(() {});
   }
 
@@ -104,42 +160,40 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
       return null;
     }
     Chapter article = data.data;
-    var contentHeight = ScreenUtil.screenHeight - topSafeHeight -
-        ReaderUtils.topOffset - ScreenUtil2.bottomSafeHeight - ReaderUtils.bottomOffset - 20;
+    var contentHeight = ScreenUtil.screenHeight -
+        topSafeHeight -
+        ReaderUtils.topOffset -
+        ScreenUtil2.bottomSafeHeight -
+        ReaderUtils.bottomOffset -
+        40;
     var contentWidth = ScreenUtil.screenWidth - 15 - 10;
     article.pageOffsets = ReaderPageAgent.getPageOffsets(
         StringUtils.formatContent(article.body),
         contentHeight,
         contentWidth,
-        ScreenUtil2.fixedFontSize(SettingManager().getReadFontSize().toDouble()));
+        ScreenUtil2.fixedFontSize(
+            SettingManager().getReadFontSize().toDouble()));
     return article;
   }
 
-  onScroll() {
+  onScroll() async {
     var page = pageController.offset / ScreenUtil2.width;
 
     var nextArtilePage = currentChapter.pageCount +
         (preChapter != null ? preChapter.pageCount : 0);
     if (page >= nextArtilePage) {
-      print('到达下个章节了');
       currentChapterIndex++;
-      preChapter = currentChapter;
-      currentChapter = nextChapter;
-      nextChapter = null;
-      pageIndex = 0;
+      print('到达下个章节了' + currentChapterIndex.toString());
+
+      await resetContent(currentChapterIndex, Todo.toNext,PageJumpType.firstPage);
       pageController.jumpToPage(preChapter.pageCount);
-      fetchNextChapter(currentChapterIndex + 1);
       setState(() {});
     }
     if (preChapter != null && page <= preChapter.pageCount - 1) {
       currentChapterIndex--;
-      print('到达上个章节了');
-      nextChapter = currentChapter;
-      currentChapter = preChapter;
-      preChapter = null;
-      pageIndex = currentChapter.pageCount - 1;
+      print('到达上个章节了' + currentChapterIndex.toString());
+      await resetContent(currentChapterIndex, Todo.toPre,PageJumpType.lastPage);
       pageController.jumpToPage(currentChapter.pageCount - 1);
-      fetchPreviousChapter(currentChapterIndex - 1);
       setState(() {});
     }
   }
@@ -197,18 +251,17 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   }
 
   fetchNextChapter(int index) async {
-    Data data2 = await dioGetChapterBody(
-        chaptersList[index].link, chaptersList[index].title);
-    if (data2.result && data2.data.toString().length > 0) {
-      chapterL.add(data2.data);
-    }
-    if (nextChapter != null || isLoading) {
-      return;
-    }
     isLoading = true;
-    nextChapter = chapterL[index];
-    isLoading = false;
-    setState(() {});
+    Data data = await dioGetChapterBody(
+        chaptersList[index].link, chaptersList[index].title);
+    if (data.result && data.data.toString().length > 0) {
+      if (nextChapter != null) {
+        return;
+      }
+      nextChapter = data.data;
+      isLoading = false;
+      setState(() {});
+    }
   }
 
   onPageChanged(int index) {
@@ -223,31 +276,38 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   onTap(Offset position) async {
     double xRate = position.dx / ScreenUtil2.width;
     if (xRate > 0.33 && xRate < 0.66) {
-      SystemChrome.setEnabledSystemUIOverlays(
-          [SystemUiOverlay.top, SystemUiOverlay.bottom]);
-      setState(() {
-        isMenuVisiable = true;
-      });
+      if (!isMenuVisiable) {
+        SystemChrome.setEnabledSystemUIOverlays(
+            [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+        setState(() {
+          isMenuVisiable = true;
+        });
+      } else {
+        SystemChrome.setEnabledSystemUIOverlays([]);
+        setState(() {
+          isMenuVisiable = false;
+        });
+      }
     } else if (xRate >= 0.66) {
       nextPage();
-    } else {
+    } else if (xRate <= 0.33) {
       previousPage();
     }
   }
 
   nextPage() {
-    if (pageIndex >= currentChapter.pageCount - 1) {
-      return;
-    }
+//    if (pageIndex >= currentChapter.pageCount - 1) {
+//      return;
+//    }
     pageController.nextPage(
-        duration: Duration(milliseconds: 0), curve: Curves.linear);
+        duration: Duration(milliseconds: 1), curve: Curves.linear);
   }
 
   previousPage() {
-    if (pageIndex == 0) {
+    if (currentChapterIndex == 0 && pageIndex == 0) {
       return;
     }
     pageController.previousPage(
-        duration: Duration(milliseconds: 0), curve: Curves.linear);
+        duration: Duration(milliseconds: 1), curve: Curves.linear);
   }
 }

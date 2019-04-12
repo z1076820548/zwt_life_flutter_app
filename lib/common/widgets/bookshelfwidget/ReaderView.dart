@@ -46,9 +46,12 @@ class ReaderView extends StatelessWidget {
               TextSpan(
                   text: content,
                   style: TextStyle(
-                      fontSize: ScreenUtil2.fixedFontSize(SettingManager().getReadFontSize().toDouble()),height: SettingManager.getInstance().getLetterHeight(),
-                  letterSpacing: SettingManager.getInstance().getLetterSpacing())
-              )
+                      fontSize: ScreenUtil2.fixedFontSize(
+                          SettingManager().getReadFontSize().toDouble()),
+//                      height: SettingManager.getInstance().getLetterHeight(),
+//                      letterSpacing:
+//                          SettingManager.getInstance().getLetterSpacing()
+                  ))
             ]),
             textAlign: TextAlign.justify,
           )
