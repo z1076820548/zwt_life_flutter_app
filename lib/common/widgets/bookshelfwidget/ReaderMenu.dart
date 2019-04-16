@@ -120,22 +120,22 @@ class _ReaderMenuState extends State<ReaderMenu>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
-        buildBottomItem('目录', 'static/images/read_icon_catalog.png'),
-        buildBottomItem('亮度', 'static/images/read_icon_brightness.png'),
-        buildBottomItem('字体', 'static/images/read_icon_font.png'),
-        buildBottomItem('设置', 'static/images/read_icon_setting.png'),
+        buildBottomItem('目录', Icon(Icons.view_list)),
+        buildBottomItem('亮度', Icon(Icons.brightness_4)),
+        buildBottomItem('字体', Icon(Icons.font_download)),
+        buildBottomItem('设置', Icon(Icons.settings)),
       ],
     );
   }
 
-  buildBottomItem(String title, String icon) {
+  buildBottomItem(String title, Icon icon) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 7),
       child: Listener(
         onPointerDown: (PointerDownEvent event) => tap(title),
         child: Column(
           children: <Widget>[
-            Image.asset(icon),
+            icon,
             SizedBox(height: 5),
             Text(title,
                 style: TextStyle(
@@ -175,11 +175,12 @@ class _ReaderMenuState extends State<ReaderMenu>
   }
 
   buildCatlog() {
+    var chap = widget.chaptersList.reversed;
     Navigator.push(
         context,
         MaterialPageRoute(
           builder: (BuildContext context) =>
-              ReaderCatlog(widget.book, widget.chaptersList),
+              ReaderCatlog(widget.book, chap),
           fullscreenDialog: true,
         ));
   }

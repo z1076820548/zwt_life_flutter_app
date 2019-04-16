@@ -21,7 +21,6 @@ class ReaderOverlayer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-
           Expanded(child: Container()),
           Row(
             children: <Widget>[

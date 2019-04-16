@@ -1,15 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'dart:async';
 
 import 'package:zwt_life_flutter_app/public.dart';
 
 class ReaderCatlog extends StatefulWidget {
-  final String book;
+  final String bookTitle;
   final List<Chapters> chaptersList;
 
-  ReaderCatlog(this.book, this.chaptersList);
+  ReaderCatlog(this.bookTitle, this.chaptersList);
 
   @override
   _ReaderCatlogState createState() => _ReaderCatlogState();
@@ -19,9 +20,7 @@ class _ReaderCatlogState extends State<ReaderCatlog>
     with SingleTickerProviderStateMixin {
   AnimationController animationController;
   Animation<double> animation;
-
-  double progressValue;
-  bool isTipVisible = false;
+  ScrollController _scrollController;
 
   static List<BoxShadow> get borderShadow {
     return [BoxShadow(color: Color(0x22000000), blurRadius: 8)];
@@ -30,6 +29,7 @@ class _ReaderCatlogState extends State<ReaderCatlog>
   @override
   initState() {
     super.initState();
+    _scrollController = new ScrollController();
     SystemChrome.setEnabledSystemUIOverlays(
         [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     animationController = AnimationController(
@@ -56,9 +56,6 @@ class _ReaderCatlogState extends State<ReaderCatlog>
   hide() {
     animationController.reverse();
     Timer(Duration(milliseconds: 200), () {});
-    setState(() {
-      isTipVisible = false;
-    });
   }
 
   buildTopView(BuildContext context) {
@@ -161,18 +158,20 @@ class _ReaderCatlogState extends State<ReaderCatlog>
             Navigator.pop(context);
           },
         ),
-        middle: Text("1241"),
+        middle: Text(widget.bookTitle),
       ),
       child: DefaultTextStyle(
         style: CupertinoTheme.of(context).textTheme.textStyle,
         child: SafeArea(
             child: Center(
-          child: Stack(
-            alignment:Alignment.center,
-            children: <Widget>[
-
-            ],
-          ),
+          child: ListView.separated(
+              separatorBuilder: (context, index) => Divider(height: .0),
+              reverse: true,
+              controller: _scrollController,
+              itemCount: widget.chaptersList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListItem(widget.chaptersList[index], index);
+              }),
         )),
       ),
     );
@@ -183,5 +182,10 @@ class _ReaderCatlogState extends State<ReaderCatlog>
       case '目录':
         break;
     }
+  }
+
+  Widget ListItem(Chapters item, int index) {
+    return Text(item.title);
+
   }
 }

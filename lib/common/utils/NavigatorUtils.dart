@@ -220,7 +220,7 @@ class NavigatorUtils {
   static gotoReadBookPage(
       BuildContext context,String bookTitle,String bookId) {
     NavigatorRouter(
-        context, new ReadBookPage(bookId: bookId,));
+        context, new ReadBookPage(bookId: bookId,bookTitle: bookTitle,));
   }
 
   ///聊天
