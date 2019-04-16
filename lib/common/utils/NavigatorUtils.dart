@@ -218,7 +218,7 @@ class NavigatorUtils {
 
   ///阅读界面
   static gotoReadBookPage(
-      BuildContext context,String bookId) {
+      BuildContext context,String bookTitle,String bookId) {
     NavigatorRouter(
         context, new ReadBookPage(bookId: bookId,));
   }

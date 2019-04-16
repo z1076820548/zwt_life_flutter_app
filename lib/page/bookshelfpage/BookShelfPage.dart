@@ -55,7 +55,7 @@ class _BookShelfPageState extends State<BookShelfPage>
           child: InkWell(
             splashColor: Colors.grey,
             onTap: () {
-              NavigatorUtils.gotoReadBookPage(context,item.id);
+              NavigatorUtils.gotoReadBookPage(context,item.title,item.id);
             },
             child: new ListTile(
               leading: new ClipRRect(
@@ -221,6 +221,7 @@ class _BookShelfPageState extends State<BookShelfPage>
           }
         }
       }else{
+        //选择性别
         CommonUtils.showLickeDialog(context, () {
           setSex(Constant.MALE);
         }, () {

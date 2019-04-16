@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ReaderMenu.dart';
 import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ReaderPageAgent.dart';
 import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ReaderView.dart';
 import 'package:zwt_life_flutter_app/public.dart';
@@ -11,8 +12,8 @@ enum PageJumpType { stay, firstPage, lastPage }
 class ReadBookPage extends StatefulWidget {
   final String bookId;
   static final String sName = "ReadBook";
-
-  const ReadBookPage({Key key, this.bookId}) : super(key: key);
+  final String bookTitle;
+  const ReadBookPage({Key key, this.bookTitle, this.bookId}) : super(key: key);
 
   @override
   _ReadBookPageState createState() {
@@ -26,7 +27,6 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   bool startRead = false;
 
   int pageIndex = 0;
-
   //当前的章节  第一章
   int currentChapterIndex = 0;
   bool isMenuVisiable = false;
@@ -34,7 +34,7 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   bool isLoading = false;
   double topSafeHeight = .0;
   List<Chapters> chaptersList = [];
-  List<Chapter> chapterL = [];
+  List<Chapter> chapterL = new List();
   Chapter preChapter;
   Chapter currentChapter;
   Chapter nextChapter;
@@ -74,7 +74,7 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
               child:
                   Image.asset('static/images/read_bg.png', fit: BoxFit.cover)),
           buildPageView(),
-//                buildMenu(),
+          buildMenu(),
         ],
       ),
     );
@@ -105,8 +105,8 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
         currentChapter = nextChapter;
       } else {
         currentChapter = await fetchChapter(currentChapterIndex);
+        chapterL.add(currentChapter);
       }
-      chapterL.add(currentChapter);
     } else if (todo == Todo.toPre) {
       if (preChapter != null) {
         currentChapter = preChapter;
@@ -127,6 +127,10 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
 
     //缓存下三章
     if (chaptersList.length >= (currentChapterIndex + 1)) {
+      print('缓存长度' +
+          chapterL.length.toString() +
+          ' ' +
+          currentChapterIndex.toString());
       if (((chapterL.length - 1) < (currentChapterIndex + 1))) {
         for (int i = 0; i < catchChapterIndex; i++) {
           var chapter = await fetchChapter(currentChapterIndex + i + 1);
@@ -165,7 +169,7 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
         ReaderUtils.topOffset -
         ScreenUtil2.bottomSafeHeight -
         ReaderUtils.bottomOffset -
-        40;
+        50;
     var contentWidth = ScreenUtil.screenWidth - 15 - 10;
     article.pageOffsets = ReaderPageAgent.getPageOffsets(
         StringUtils.formatContent(article.body),
@@ -185,15 +189,18 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
       currentChapterIndex++;
       print('到达下个章节了' + currentChapterIndex.toString());
 
-      await resetContent(currentChapterIndex, Todo.toNext,PageJumpType.firstPage);
-      pageController.jumpToPage(preChapter.pageCount);
+      await resetContent(
+          currentChapterIndex, Todo.toNext, PageJumpType.firstPage);
+//      pageController.jumpToPage(preChapter.pageCount);
       setState(() {});
     }
     if (preChapter != null && page <= preChapter.pageCount - 1) {
       currentChapterIndex--;
       print('到达上个章节了' + currentChapterIndex.toString());
-      await resetContent(currentChapterIndex, Todo.toPre,PageJumpType.lastPage);
-      pageController.jumpToPage(currentChapter.pageCount - 1);
+      await resetContent(
+          currentChapterIndex, Todo.toPre, PageJumpType.lastPage);
+
+//      pageController.jumpToPage(currentChapter.pageCount -1);
       setState(() {});
     }
   }
@@ -282,11 +289,6 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
         setState(() {
           isMenuVisiable = true;
         });
-      } else {
-        SystemChrome.setEnabledSystemUIOverlays([]);
-        setState(() {
-          isMenuVisiable = false;
-        });
       }
     } else if (xRate >= 0.66) {
       nextPage();
@@ -299,15 +301,38 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
 //    if (pageIndex >= currentChapter.pageCount - 1) {
 //      return;
 //    }
+    if (pageIndex >= currentChapter.pageCount - 1 && nextChapter == null) {
+      print('已经是最后一页了');
+      return;
+    }
     pageController.nextPage(
         duration: Duration(milliseconds: 1), curve: Curves.linear);
   }
 
   previousPage() {
     if (currentChapterIndex == 0 && pageIndex == 0) {
+      print('已经是第一页了');
       return;
     }
     pageController.previousPage(
         duration: Duration(milliseconds: 1), curve: Curves.linear);
+  }
+
+  buildMenu() {
+    if (!isMenuVisiable) {
+      return Container();
+    }
+    return ReaderMenu(
+      onTap: hideMenu,
+      book: widget.bookTitle,
+      chaptersList: chaptersList,
+    );
+  }
+
+  hideMenu() {
+    SystemChrome.setEnabledSystemUIOverlays([]);
+    setState(() {
+      this.isMenuVisiable = false;
+    });
   }
 }

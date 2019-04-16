@@ -8,13 +8,14 @@ class BatteryView extends StatefulWidget {
   _BatteryViewState createState() => _BatteryViewState();
 }
 
-class _BatteryViewState extends State<BatteryView> {
+class _BatteryViewState extends State<BatteryView>{
   double batteryLevel = 0;
-
+  Color batteryColor = Colors.green;
   @override
   void initState() {
-    getBatteryLevel();
     super.initState();
+    getBatteryLevel();
+
   }
 
   getBatteryLevel() async {
@@ -32,14 +33,12 @@ class _BatteryViewState extends State<BatteryView> {
       }
     }
 
-    Battery().onBatteryStateChanged.listen((BatteryState state) {
-      // Do something with new state
-    });
-
+    Battery().onBatteryStateChanged.listen((BatteryState state) {});
     var level = await Battery().batteryLevel;
-    setState(() {
-      this.batteryLevel = level / 100.0;
-    });
+      setState(() {
+        this.batteryLevel = level / 100.0;
+      });
+
   }
 
   @override
@@ -47,15 +46,23 @@ class _BatteryViewState extends State<BatteryView> {
     return Container(
       width: 27,
       height: 12,
-      child: Stack(
+      child: Row(
         children: <Widget>[
-          Image.asset('static/images/reader_battery.png'),
-          Container(
-            margin: EdgeInsets.fromLTRB(2, 2, 2, 2),
-            width: 20 * batteryLevel,
-          )
+          Stack(
+            children: <Widget>[
+              Image.asset('static/images/reader_battery.png',color: Colors.black54,),
+              Container(
+                color: Colors.black54,
+                margin: EdgeInsets.fromLTRB(2, 2, 2, 2),
+                width: 20 * batteryLevel,
+              )
+            ],
+          ),
+
         ],
       ),
     );
   }
+
+
 }

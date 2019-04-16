@@ -19,7 +19,8 @@ class Chapter {
 
   String stringAtPageIndex(int index) {
     var offset = pageOffsets[index];
-    return StringUtils.formatContent(this.body).substring(offset['start'], offset['end']);
+    String s = StringUtils.formatContent(this.body);
+    return s.substring(offset['start'], offset['end']);
   }
 
   int get pageCount {

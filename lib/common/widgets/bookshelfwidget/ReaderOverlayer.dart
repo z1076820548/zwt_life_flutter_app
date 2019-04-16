@@ -29,7 +29,7 @@ class ReaderOverlayer extends StatelessWidget {
               SizedBox(width: 10),
               Text(time, style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(11))),
               Expanded(child: Container()),
-              Text('第${page + 1}页',
+              Text('第${page + 1}'+'/'+'${article.pageCount}'+'页',
                   style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(11))),
             ],
           ),

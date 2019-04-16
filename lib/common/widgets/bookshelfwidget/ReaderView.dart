@@ -35,7 +35,7 @@ class ReaderView extends StatelessWidget {
     return Container(
       color: Colors.transparent,
       margin: EdgeInsets.fromLTRB(15, topSafeHeight + ReaderUtils.topOffset, 10,
-          ScreenUtil2.bottomSafeHeight + ReaderUtils.bottomOffset),
+           ReaderUtils.bottomOffset),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[

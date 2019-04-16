@@ -114,7 +114,10 @@ flutter:
   - static/images/gender.png
   - static/images/read_bg.png
   - static/images/reader_battery.png
-
+  - static/images/read_icon_brightness.png
+  - static/images/read_icon_catalog.png
+  - static/images/read_icon_font.png
+  - static/images/read_icon_setting.png
 
 
   fonts:
