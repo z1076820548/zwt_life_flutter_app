@@ -13,6 +13,7 @@ class ReadBookPage extends StatefulWidget {
   final String bookId;
   static final String sName = "ReadBook";
   final String bookTitle;
+
   const ReadBookPage({Key key, this.bookTitle, this.bookId}) : super(key: key);
 
   @override
@@ -27,6 +28,7 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   bool startRead = false;
 
   int pageIndex = 0;
+
   //当前的章节  第一章
   int currentChapterIndex = 0;
   bool isMenuVisiable = false;
@@ -39,8 +41,10 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   Chapter currentChapter;
   Chapter nextChapter;
 
-  //缓存3章
-  int catchChapterIndex = 3;
+  //缓存10章
+  int catchChapterIndex = 9;
+  int pointNextCatch = 0;
+  List<Chapter> catchChaptersList = [];
 
   @override
   void initState() {
@@ -101,47 +105,33 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   resetContent(
       int currentChapterIndex, Todo todo, PageJumpType jumpType) async {
     if (todo == Todo.toNext) {
+      preChapter = currentChapter;
+
       if (nextChapter != null) {
         currentChapter = nextChapter;
+        chapterL.add(currentChapter);
       } else {
         currentChapter = await fetchChapter(currentChapterIndex);
         chapterL.add(currentChapter);
       }
+      if (chaptersList.length >= (currentChapterIndex + 1)) {
+        nextChapter = await fetchChapter(currentChapterIndex + 1);
+      } else {
+        nextChapter = null;
+      }
     } else if (todo == Todo.toPre) {
+
       if (preChapter != null) {
+        nextChapter = currentChapter;
         currentChapter = preChapter;
+        if (currentChapterIndex > 0) {
+          preChapter = await fetchChapter(currentChapterIndex - 1);
+        } else {
+          preChapter = null;
+        }
       } else {
 //        currentChapter = await fetchChapter(currentChapterIndex);
       }
-    }
-
-    if (currentChapterIndex > 0) {
-      if (chapterL[currentChapterIndex - 1] != null) {
-        preChapter = chapterL[currentChapterIndex - 1];
-      } else {
-        preChapter = await fetchChapter(currentChapterIndex - 1);
-      }
-    } else {
-      preChapter = null;
-    }
-
-    //缓存下三章
-    if (chaptersList.length >= (currentChapterIndex + 1)) {
-      print('缓存长度' +
-          chapterL.length.toString() +
-          ' ' +
-          currentChapterIndex.toString());
-      if (((chapterL.length - 1) < (currentChapterIndex + 1))) {
-        for (int i = 0; i < catchChapterIndex; i++) {
-          var chapter = await fetchChapter(currentChapterIndex + i + 1);
-          chapterL.add(chapter);
-        }
-        nextChapter = chapterL[currentChapterIndex + 1];
-      } else {
-        nextChapter = chapterL[currentChapterIndex + 1];
-      }
-    } else {
-      nextChapter = null;
     }
 
     if (jumpType == PageJumpType.firstPage) {
