@@ -17,11 +17,12 @@ class ReaderOverlayer extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.fromLTRB(
-          15, 10 + topSafeHeight, 15, 10 + ScreenUtil2.bottomSafeHeight),
+          15,  5+ topSafeHeight, 15, 10 + ScreenUtil2.bottomSafeHeight),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Expanded(child: Container()),
+      Text(article.title,style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(12))),
+    Expanded(child: Container()),
           Row(
             children: <Widget>[
               BatteryView(),

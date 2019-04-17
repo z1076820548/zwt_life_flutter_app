@@ -9,8 +9,8 @@ class ReaderMenu extends StatefulWidget {
   final VoidCallback onTap;
   final String book;
   final List<Chapters> chaptersList;
-
-  ReaderMenu({this.onTap, this.book, this.chaptersList});
+  final int currentIndex;
+  ReaderMenu({this.onTap, this.book, this.chaptersList, this.currentIndex});
 
   @override
   _ReaderMenuState createState() => _ReaderMenuState();
@@ -175,12 +175,13 @@ class _ReaderMenuState extends State<ReaderMenu>
   }
 
   buildCatlog() {
-    var chap = widget.chaptersList.reversed;
+    var chap = widget.chaptersList.reversed.toList();
+    int currentChapterIndex = chap.length - widget.currentIndex -1;
     Navigator.push(
         context,
         MaterialPageRoute(
           builder: (BuildContext context) =>
-              ReaderCatlog(widget.book, chap),
+              ReaderCatlog(widget.book, chap,currentChapterIndex),
           fullscreenDialog: true,
         ));
   }

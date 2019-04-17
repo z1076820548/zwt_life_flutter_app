@@ -34,13 +34,11 @@ class ReaderView extends StatelessWidget {
 //    }
     return Container(
       color: Colors.transparent,
-      margin: EdgeInsets.fromLTRB(15, topSafeHeight + ReaderUtils.topOffset, 10,
+      margin: EdgeInsets.fromLTRB(15, topSafeHeight + ReaderUtils.topOffset + 20, 10,
            ReaderUtils.bottomOffset),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(article.title,
-              style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(12))),
+      child:
+//          Text(article.title,
+//              style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(12))),
           Text.rich(
             TextSpan(children: [
               TextSpan(
@@ -54,8 +52,6 @@ class ReaderView extends StatelessWidget {
                   ))
             ]),
             textAlign: TextAlign.justify,
-          )
-        ],
       ),
     );
   }

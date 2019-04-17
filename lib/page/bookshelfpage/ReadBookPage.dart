@@ -1,19 +1,23 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:zwt_life_flutter_app/common/event/ChatEvent.dart';
+import 'package:zwt_life_flutter_app/common/event/ReaderMenuEvent.dart';
+import 'package:zwt_life_flutter_app/common/net/Code.dart';
 import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ReaderMenu.dart';
 import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ReaderPageAgent.dart';
 import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ReaderView.dart';
 import 'package:zwt_life_flutter_app/public.dart';
 
-enum Todo { toPre, toNext }
+enum Todo { toPre, toNext , toOther}
 enum PageJumpType { stay, firstPage, lastPage }
 
 class ReadBookPage extends StatefulWidget {
   final String bookId;
   static final String sName = "ReadBook";
   final String bookTitle;
-
   const ReadBookPage({Key key, this.bookTitle, this.bookId}) : super(key: key);
 
   @override
@@ -46,6 +50,8 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   int pointNextCatch = 0;
   List<Chapter> catchChaptersList = [];
 
+  StreamSubscription stream;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -54,6 +60,20 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
       await setup();
     });
     pageController.addListener(onScroll);
+
+    stream = Code.eventBus.on<ReaderMenuEvent>().listen((event) {
+      var data = event.data;
+
+      switch(event.readerMenuType){
+        case ReaderMenuType.catlog:
+             print('22222222222');
+             currentChapterIndex = int.parse(data.toString());
+             resetContent(data, Todo.toOther, PageJumpType.firstPage);
+          break;
+         default:
+
+      }
+    });
   }
 
   @override
@@ -106,8 +126,7 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
       int currentChapterIndex, Todo todo, PageJumpType jumpType) async {
     if (todo == Todo.toNext) {
       preChapter = currentChapter;
-
-      if (nextChapter != null) {
+      if (nextChapter != null && jumpType != PageJumpType.stay) {
         currentChapter = nextChapter;
         chapterL.add(currentChapter);
       } else {
@@ -131,6 +150,18 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
         }
       } else {
 //        currentChapter = await fetchChapter(currentChapterIndex);
+      }
+    }else if(todo == Todo.toOther){
+      if (currentChapterIndex > 0) {
+        preChapter = await fetchChapter(currentChapterIndex - 1);
+      } else {
+        preChapter = null;
+      }
+      currentChapter = await fetchChapter(currentChapterIndex);
+      if (chaptersList.length > (currentChapterIndex + 1)) {
+        nextChapter = await fetchChapter(currentChapterIndex + 1);
+      } else {
+        nextChapter = null;
       }
     }
 
@@ -316,6 +347,7 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
       onTap: hideMenu,
       book: widget.bookTitle,
       chaptersList: chaptersList,
+      currentIndex: currentChapterIndex,
     );
   }
 
