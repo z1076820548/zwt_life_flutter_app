@@ -81,8 +81,7 @@ class BookShelfDbProvider extends BaseDbProvider {
       whereArgs: [bookId],
     );
     if (maps.length > 0) {
-      BookShelfDbProvider provider = BookShelfDbProvider.fromMap(maps.first);
-      return provider;
+      return maps;
     }
     return null;
   }

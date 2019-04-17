@@ -168,8 +168,8 @@ class _ReaderCatlogState extends State<ReaderCatlog>
         ),
         middle: Text(widget.bookTitle),
         trailing: Row(
-            mainAxisAlignment:MainAxisAlignment.end,
-            mainAxisSize:MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             CupertinoButton(
               child: const Text('顶'),
@@ -192,14 +192,16 @@ class _ReaderCatlogState extends State<ReaderCatlog>
         style: CupertinoTheme.of(context).textTheme.textStyle,
         child: SafeArea(
             child: Center(
-          child: ListView.builder(
-              reverse: false,
-              itemExtent: itemExtent,
-              controller: _scrollController,
-              itemCount: widget.chaptersList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListItem(widget.chaptersList[index], index);
-              }),
+          child: CupertinoScrollbar(
+            child: ListView.builder(
+                reverse: false,
+                itemExtent: itemExtent,
+                controller: _scrollController,
+                itemCount: widget.chaptersList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListItem(widget.chaptersList[index], index);
+                }),
+          ),
         )),
       ),
     );
@@ -279,9 +281,12 @@ class _ReaderCatlogState extends State<ReaderCatlog>
   }
 
   void toTop() {
-    _scrollController.animateTo(0,duration:Duration(seconds: 1),curve: Curves.ease);
+    _scrollController.animateTo(0,
+        duration: Duration(seconds: 1), curve: Curves.ease);
   }
-  void toBottom(){
-    _scrollController.animateTo(itemExtent * (widget.chaptersList.length - 10),duration:Duration(seconds: 1),curve: Curves.ease);
+
+  void toBottom() {
+    _scrollController.animateTo(itemExtent * (widget.chaptersList.length - 10),
+        duration: Duration(seconds: 1), curve: Curves.ease);
   }
 }

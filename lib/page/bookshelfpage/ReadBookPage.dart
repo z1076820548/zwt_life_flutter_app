@@ -11,13 +11,14 @@ import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ReaderPageAg
 import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ReaderView.dart';
 import 'package:zwt_life_flutter_app/public.dart';
 
-enum Todo { toPre, toNext , toOther}
+enum Todo { toPre, toNext, toOther }
 enum PageJumpType { stay, firstPage, lastPage }
 
 class ReadBookPage extends StatefulWidget {
   final String bookId;
   static final String sName = "ReadBook";
   final String bookTitle;
+
   const ReadBookPage({Key key, this.bookTitle, this.bookId}) : super(key: key);
 
   @override
@@ -31,10 +32,12 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   // 是否开始阅读章节
   bool startRead = false;
 
+  //当前第几页
   int pageIndex = 0;
 
   //当前的章节  第一章
   int currentChapterIndex = 0;
+
   bool isMenuVisiable = false;
   PageController pageController = PageController(keepPage: false);
   bool isLoading = false;
@@ -44,6 +47,7 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   Chapter preChapter;
   Chapter currentChapter;
   Chapter nextChapter;
+  ReadBookDbProvider readBookDbProvider = new ReadBookDbProvider();
 
   //缓存10章
   int catchChapterIndex = 9;
@@ -61,17 +65,16 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
     });
     pageController.addListener(onScroll);
 
+    //菜单栏监听
     stream = Code.eventBus.on<ReaderMenuEvent>().listen((event) {
       var data = event.data;
 
-      switch(event.readerMenuType){
+      switch (event.readerMenuType) {
         case ReaderMenuType.catlog:
-             print('22222222222');
-             currentChapterIndex = int.parse(data.toString());
-             resetContent(data, Todo.toOther, PageJumpType.firstPage);
+          currentChapterIndex = int.parse(data.toString());
+          resetContent(data, Todo.toOther, PageJumpType.firstPage);
           break;
-         default:
-
+        default:
       }
     });
   }
@@ -81,6 +84,10 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
     SystemChrome.setEnabledSystemUIOverlays(
         [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     // TODO: implement dispose
+    Future.delayed(Duration(seconds: 0), () async {
+      await readBookDbProvider
+          .insert(new ReadBooks(widget.bookId, currentChapterIndex, pageIndex));
+    });
     super.dispose();
   }
 
@@ -118,6 +125,18 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
       MixToc mixToc = data.data;
       chaptersList = mixToc.chapters;
     }
+
+    //从数据库中查询阅读记录
+    ReadBooks readBooks = await readBookDbProvider.getReadBooks(widget.bookId);
+    if (readBooks == null) {
+      print('111111111111数据库为查找该信息');
+      readBooks = new ReadBooks(widget.bookId, 0, 0);
+      await readBookDbProvider.insert(readBooks);
+    }
+    print('22222222数据库为查找该信息');
+    currentChapterIndex = readBooks.chapterIndex;
+    pageIndex = readBooks.pageIndex;
+
     await resetContent(currentChapterIndex, Todo.toNext, PageJumpType.stay);
   }
 
@@ -139,7 +158,6 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
         nextChapter = null;
       }
     } else if (todo == Todo.toPre) {
-
       if (preChapter != null) {
         nextChapter = currentChapter;
         currentChapter = preChapter;
@@ -151,7 +169,7 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
       } else {
 //        currentChapter = await fetchChapter(currentChapterIndex);
       }
-    }else if(todo == Todo.toOther){
+    } else if (todo == Todo.toOther) {
       if (currentChapterIndex > 0) {
         preChapter = await fetchChapter(currentChapterIndex - 1);
       } else {

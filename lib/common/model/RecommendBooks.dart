@@ -22,7 +22,6 @@ class RecommendBooks{
    String lastChapter;
    String recentReadingTime = "";
    bool noUpdate = true;
-
    RecommendBooks(this.id, this.author, this.cover, this.shortIntro,
        this.title, this.hasCp, this.isTop, this.isSeleted, this.showCheckBox,
        this.isFromSD, this.path, this.latelyFollower, this.retentionRatio,
