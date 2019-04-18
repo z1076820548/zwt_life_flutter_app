@@ -72,7 +72,10 @@ class ReaderPageAgent {
       Map<String, int> offset = {};
       offset['start'] = last;
       TextPainter textPainter = TextPainter(textDirection: TextDirection.ltr);
-      textPainter.text = TextSpan(text: tempStr, style: TextStyle(fontSize: fontSize));
+      textPainter.text = TextSpan(text: tempStr, style: TextStyle(fontSize: fontSize,
+          height: SettingManager.getInstance().getLetterHeight(),
+          letterSpacing:
+          SettingManager.getInstance().getLetterSpacing()));
       textPainter.layout(maxWidth: width);
       var end = textPainter.getPositionForOffset(Offset(width, height)).offset;
 

@@ -55,7 +55,7 @@ class _BookShelfPageState extends State<BookShelfPage>
           child: InkWell(
             splashColor: Colors.grey,
             onTap: () {
-              NavigatorUtils.gotoReadBookPage(context,item.title,item.id);
+              tap(item);
             },
             child: new ListTile(
               leading: new ClipRRect(
@@ -150,6 +150,8 @@ class _BookShelfPageState extends State<BookShelfPage>
                     enablePullUp: false,
                     onRefresh: (up) {
                       if (up) {
+                        //上拉刷新重新刷新数据
+                        checkNewUser(context);
                         new Future.delayed(const Duration(milliseconds: 2009))
                             .then((val) {
                           setState(() {
@@ -252,5 +254,20 @@ class _BookShelfPageState extends State<BookShelfPage>
             json.encode(recommendBooks.toJson()));
       }
     }
+  }
+
+  //点击阅读
+  void tap(RecommendBooks item) async{
+    NavigatorUtils.gotoReadBookPage(context,item.title,item.id);
+    //更新阅读时间
+    BookShelfDbProvider bookShelfDbProvider = new BookShelfDbProvider();
+    item.noUpdate = true;
+    await bookShelfDbProvider.insert(item.id, DateTime.now(),
+        json.encode(item.toJson()));
+    var data = await bookShelfDbProvider.getAllData();
+    setState(() {
+      recommendBooksList = data;
+    });
+
   }
 }

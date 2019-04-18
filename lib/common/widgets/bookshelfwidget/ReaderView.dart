@@ -37,8 +37,6 @@ class ReaderView extends StatelessWidget {
       margin: EdgeInsets.fromLTRB(15, topSafeHeight + ReaderUtils.topOffset + 20, 10,
            ReaderUtils.bottomOffset),
       child:
-//          Text(article.title,
-//              style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(12))),
           Text.rich(
             TextSpan(children: [
               TextSpan(
@@ -46,9 +44,9 @@ class ReaderView extends StatelessWidget {
                   style: TextStyle(
                       fontSize: ScreenUtil2.fixedFontSize(
                           SettingManager().getReadFontSize().toDouble()),
-//                      height: SettingManager.getInstance().getLetterHeight(),
-//                      letterSpacing:
-//                          SettingManager.getInstance().getLetterSpacing()
+                      height: SettingManager.getInstance().getLetterHeight(),
+                      letterSpacing:
+                          SettingManager.getInstance().getLetterSpacing()
                   ))
             ]),
             textAlign: TextAlign.justify,

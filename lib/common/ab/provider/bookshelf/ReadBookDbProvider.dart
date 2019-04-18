@@ -16,18 +16,19 @@ final String columnPageIndex = "pageIndex";
 class ReadBooks {
   int id;
   String bookId;
-  int chapterIndex = 0;
-  int pageIndex = 0;
+  int chapterIndex ;
+  int pageIndex ;
 
   ReadBooks(this.bookId, this.chapterIndex, this.pageIndex);
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap(String bookId,int chapterIndex,int pageIndex) {
     var map = <String, dynamic>{
+      columnBookId:bookId,
       columnChapterIndex: chapterIndex,
       columnPageIndex: pageIndex
     };
-    if (bookId != null) {
-      map[columnBookId] = bookId;
+    if (id != null) {
+      map[columnId] = id;
     }
     return map;
   }
@@ -79,10 +80,10 @@ class ReadBookDbProvider extends BaseDbProvider {
     Database db = await getDataBase();
     var provider = await getReadBooks(readBooks.bookId);
     if (provider != null) {
-      await db.update(name, readBooks.toMap(),
-          where: "$columnBookId = ?", whereArgs: [bookId]);
+      await db.update(tableName(), readBooks.toMap(readBooks.bookId,readBooks.chapterIndex,readBooks.pageIndex),
+          where: "$columnBookId = ?", whereArgs: [readBooks.bookId]);
     } else {
-      readBooks.id = await db.insert(name, readBooks.toMap());
+      readBooks.id = await db.insert(tableName(), readBooks.toMap(readBooks.bookId,readBooks.chapterIndex,readBooks.pageIndex));
     }
   }
 }

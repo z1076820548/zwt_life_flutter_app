@@ -21,8 +21,8 @@ class _ReaderMenuState extends State<ReaderMenu>
   AnimationController animationController;
   Animation<double> animation;
 
-  double progressValue;
-
+  double progressValue = 0.5;
+  bool showSetting = false;
   static List<BoxShadow> get borderShadow {
     return [BoxShadow(color: Color(0x22000000), blurRadius: 8)];
   }
@@ -52,10 +52,12 @@ class _ReaderMenuState extends State<ReaderMenu>
   }
 
   hide() async {
+
     animationController.reverse();
     Timer(Duration(milliseconds: 0), () {
       this.widget.onTap();
     });
+    showSetting = false;
   }
 
   buildTopView(BuildContext context) {
@@ -107,6 +109,7 @@ class _ReaderMenuState extends State<ReaderMenu>
             padding: EdgeInsets.only(bottom: ScreenUtil2.bottomSafeHeight),
             child: Column(
               children: <Widget>[
+                showSetting? buildSetting():Container(),
                 buildBottomMenus(),
               ],
             ),
@@ -120,9 +123,9 @@ class _ReaderMenuState extends State<ReaderMenu>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
+        buildBottomItem('夜间', Icon(Icons.brightness_2)),
         buildBottomItem('目录', Icon(Icons.view_list)),
-        buildBottomItem('亮度', Icon(Icons.brightness_4)),
-        buildBottomItem('字体', Icon(Icons.font_download)),
+        buildBottomItem('缓存', Icon(Icons.file_download)),
         buildBottomItem('设置', Icon(Icons.settings)),
       ],
     );
@@ -171,6 +174,11 @@ class _ReaderMenuState extends State<ReaderMenu>
         await hide();
         buildCatlog();
         break;
+      case '设置':
+        setState(() {
+          showSetting = !showSetting;
+        });
+        break;
     }
   }
 
@@ -185,4 +193,76 @@ class _ReaderMenuState extends State<ReaderMenu>
           fullscreenDialog: true,
         ));
   }
+
+
+
+  buildSetting() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+      child: Column(
+        children: <Widget>[
+         buildProgressView(),
+          Container(
+            child: Row(
+                mainAxisAlignment:MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 5,horizontal: 30),
+                    decoration:BoxDecoration(
+                      border: new Border.all(color: Colors.black, width: 2.5), // 边色与边宽度
+                       borderRadius: new BorderRadius.circular((5.0)), // 圆角度
+                    ),
+                  child: Text("Aa-",style: TextStyle(color: Colors.black,fontSize: 20),),
+                ),
+                 Padding(padding: EdgeInsets.symmetric(horizontal: 20)),
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 5,horizontal: 30),
+                  decoration:BoxDecoration(
+                    border: new Border.all(color: Colors.black, width: 2.5), // 边色与边宽度
+                    borderRadius: new BorderRadius.circular((5.0)), // 圆角度
+                  ),
+                  child: Text("Aa+",style: TextStyle(color: Colors.black,fontSize: 20),),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  buildProgressView() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+      child: Row(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(20),
+            child: Icon(Icons.brightness_medium),
+          ),
+          Expanded(
+            child: Slider(
+              value: progressValue,
+              onChanged: (double value) {
+                setState(() {
+                  progressValue = value;
+                });
+              },
+              onChangeEnd: (double value) {
+
+              },
+              activeColor: GlobalColors.themeColor,
+              inactiveColor: Colors.grey,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(20),
+            child: Icon(Icons.wb_sunny),
+
+    )
+        ],
+      ),
+    );
+  }
 }
+

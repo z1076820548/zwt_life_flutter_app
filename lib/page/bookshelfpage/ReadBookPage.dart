@@ -39,7 +39,7 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   int currentChapterIndex = 0;
 
   bool isMenuVisiable = false;
-  PageController pageController = PageController(keepPage: false);
+  PageController pageController ;
   bool isLoading = false;
   double topSafeHeight = .0;
   List<Chapters> chaptersList = [];
@@ -58,13 +58,14 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
+    // TODO: implement State
+    print('0');
     Future.delayed(Duration(seconds: 0), () async {
       await setup();
-    });
-    pageController.addListener(onScroll);
 
+    });
+    pageController = PageController(initialPage: pageIndex,keepPage: false);
+    pageController.addListener(onScroll);
     //菜单栏监听
     stream = Code.eventBus.on<ReaderMenuEvent>().listen((event) {
       var data = event.data;
@@ -77,12 +78,15 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
         default:
       }
     });
+    super.initState();
+
   }
 
   @override
   void dispose() {
     SystemChrome.setEnabledSystemUIOverlays(
         [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+    print('退出阅读');
     // TODO: implement dispose
     Future.delayed(Duration(seconds: 0), () async {
       await readBookDbProvider
@@ -112,6 +116,7 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   }
 
   void setup() async {
+    print('11111');
     await SystemChrome.setEnabledSystemUIOverlays([]);
     // 不延迟的话，安卓获取到的topSafeHeight是错的。
     await Future.delayed(const Duration(milliseconds: 100), () {});
@@ -129,11 +134,10 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
     //从数据库中查询阅读记录
     ReadBooks readBooks = await readBookDbProvider.getReadBooks(widget.bookId);
     if (readBooks == null) {
-      print('111111111111数据库为查找该信息');
       readBooks = new ReadBooks(widget.bookId, 0, 0);
       await readBookDbProvider.insert(readBooks);
     }
-    print('22222222数据库为查找该信息');
+    print('22222222数据库为查找该信息 应跳转到'+readBooks.chapterIndex.toString()+'章 第'+readBooks.pageIndex.toString()+'页');
     currentChapterIndex = readBooks.chapterIndex;
     pageIndex = readBooks.pageIndex;
 
@@ -191,6 +195,9 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
     if (jumpType != PageJumpType.stay) {
       pageController.jumpToPage(
           (preChapter != null ? preChapter.pageCount : 0) + pageIndex);
+    }else{
+//      pageController.jumpToPage(
+//          (preChapter != null ? preChapter.pageCount : 0) + pageIndex);
     }
 
     setState(() {});
@@ -225,7 +232,10 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
     var nextArtilePage = currentChapter.pageCount +
         (preChapter != null ? preChapter.pageCount : 0);
     if (page >= nextArtilePage) {
-      currentChapterIndex++;
+      setState(() {
+        currentChapterIndex++;
+
+      });
       print('到达下个章节了' + currentChapterIndex.toString());
 
       await resetContent(
@@ -234,7 +244,9 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
       setState(() {});
     }
     if (preChapter != null && page <= preChapter.pageCount - 1) {
-      currentChapterIndex--;
+      setState(() {
+        currentChapterIndex--;
+      });
       print('到达上个章节了' + currentChapterIndex.toString());
       await resetContent(
           currentChapterIndex, Todo.toPre, PageJumpType.lastPage);
