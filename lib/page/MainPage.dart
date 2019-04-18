@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:zwt_life_flutter_app/common/utils/CommonUtils.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/screen_util.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/BookShelfPage.dart';
+import 'package:zwt_life_flutter_app/page/bookshelfpage/FindBookPage.dart';
 import 'package:zwt_life_flutter_app/page/homepage/HomePage.dart';
 import 'package:zwt_life_flutter_app/page/messagepage/MessageContactsPage.dart';
 import 'package:zwt_life_flutter_app/page/messagepage/MessageTalkingPage.dart';
@@ -32,7 +33,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
-  var appBarTitles = ['书架', '消息', '购物车', '我的'];
+  var appBarTitles = ['书架', '找书', '购物车', '我的'];
   var tabImages;
 
   /*
@@ -75,7 +76,7 @@ class _MainPageState extends State<MainPage> {
      */
     tabImages = [
       [getTabImage('static/images/bookshelf1.png'), getTabImage('static/images/bookshelf2.png')],
-      [getTabImage('static/images/bookshelf1.png'), getTabImage('static/images/bookshelf2.png')],
+      [getTabImage('static/images/searchblack.png'), getTabImage('static/images/searchblue.png')],
       [getTabImage('static/images/bookshelf1.png'), getTabImage('static/images/bookshelf2.png')],
       [getTabImage('static/images/bookshelf1.png'), getTabImage('static/images/bookshelf2.png')],
 //      [Icon(Icons.message), Icon(Icons.message)],
@@ -85,7 +86,7 @@ class _MainPageState extends State<MainPage> {
 
     _bodys = [
        BookShelfPage(),
-       MessageContactsPage(),
+       FindBookPage(),
        HomePage(),
        HomePage(),
     ];

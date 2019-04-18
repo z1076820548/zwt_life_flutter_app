@@ -118,6 +118,14 @@ flutter:
   - static/images/read_icon_catalog.png
   - static/images/read_icon_font.png
   - static/images/read_icon_setting.png
+  - static/images/fontheight2.png
+  - static/images/fontheight3.png
+  - static/images/fontheight4.png
+  - static/images/searchblack.png
+  - static/images/searchblue.png
+  - static/images/booklist.png
+  - static/images/sortlist.png
+  - static/images/rankinglist.png
 
 
   fonts:

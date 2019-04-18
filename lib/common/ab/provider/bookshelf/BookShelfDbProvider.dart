@@ -7,9 +7,7 @@ import 'package:zwt_life_flutter_app/common/model/RecommendBooks.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/codeutil.dart';
 
 /**
- * 本地已读历史表
- * Created by guoshuyu
- * Date: 2018-08-07
+ * 书架收藏表
  */
 
 class BookShelfDbProvider extends BaseDbProvider {

@@ -39,7 +39,8 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   int currentChapterIndex = 0;
 
   bool isMenuVisiable = false;
-  PageController pageController ;
+  PageController pageController;
+
   bool isLoading = false;
   double topSafeHeight = .0;
   List<Chapters> chaptersList = [];
@@ -59,27 +60,48 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   @override
   void initState() {
     // TODO: implement State
-    print('0');
     Future.delayed(Duration(seconds: 0), () async {
       await setup();
-
     });
-    pageController = PageController(initialPage: pageIndex,keepPage: false);
+    pageController = PageController(initialPage: pageIndex, keepPage: false);
     pageController.addListener(onScroll);
     //菜单栏监听
     stream = Code.eventBus.on<ReaderMenuEvent>().listen((event) {
       var data = event.data;
 
       switch (event.readerMenuType) {
+
+        //目录
         case ReaderMenuType.catlog:
           currentChapterIndex = int.parse(data.toString());
           resetContent(data, Todo.toOther, PageJumpType.firstPage);
+          break;
+
+        //字体大小
+        case ReaderMenuType.fontsize:
+          SettingManager.getInstance().saveFontSize(int.parse(data.toString()));
+          Future.delayed(Duration(seconds: 0), () async {
+            await resetContent(currentChapterIndex, Todo.toNext, PageJumpType.stay);
+          });
+          pageController =
+              PageController(initialPage: pageIndex, keepPage: false);
+          pageController.addListener(onScroll);
+          break;
+
+          //行间距
+        case ReaderMenuType.rowSpacing:
+          SettingManager.getInstance().saveLetterHeight(double.parse(data.toString()));
+          Future.delayed(Duration(seconds: 0), () async {
+            await resetContent(currentChapterIndex, Todo.toNext, PageJumpType.stay);
+          });
+          pageController =
+              PageController(initialPage: pageIndex, keepPage: false);
+          pageController.addListener(onScroll);
           break;
         default:
       }
     });
     super.initState();
-
   }
 
   @override
@@ -116,7 +138,6 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   }
 
   void setup() async {
-    print('11111');
     await SystemChrome.setEnabledSystemUIOverlays([]);
     // 不延迟的话，安卓获取到的topSafeHeight是错的。
     await Future.delayed(const Duration(milliseconds: 100), () {});
@@ -137,7 +158,6 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
       readBooks = new ReadBooks(widget.bookId, 0, 0);
       await readBookDbProvider.insert(readBooks);
     }
-    print('22222222数据库为查找该信息 应跳转到'+readBooks.chapterIndex.toString()+'章 第'+readBooks.pageIndex.toString()+'页');
     currentChapterIndex = readBooks.chapterIndex;
     pageIndex = readBooks.pageIndex;
 
@@ -195,7 +215,7 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
     if (jumpType != PageJumpType.stay) {
       pageController.jumpToPage(
           (preChapter != null ? preChapter.pageCount : 0) + pageIndex);
-    }else{
+    } else {
 //      pageController.jumpToPage(
 //          (preChapter != null ? preChapter.pageCount : 0) + pageIndex);
     }
@@ -234,7 +254,6 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
     if (page >= nextArtilePage) {
       setState(() {
         currentChapterIndex++;
-
       });
       print('到达下个章节了' + currentChapterIndex.toString());
 

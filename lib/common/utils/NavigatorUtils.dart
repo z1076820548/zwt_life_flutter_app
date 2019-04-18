@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:zwt_life_flutter_app/page/MainPage.dart';
 import 'package:zwt_life_flutter_app/page/LoginPage.dart';
+import 'package:zwt_life_flutter_app/page/bookshelfpage/FindBookPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/ReadBookPage.dart';
 import 'package:zwt_life_flutter_app/page/messagepage/ChatCameraHomePage.dart';
 import 'package:zwt_life_flutter_app/page/messagepage/ImageHudPage.dart';
@@ -222,7 +223,12 @@ class NavigatorUtils {
     NavigatorRouter(
         context, new ReadBookPage(bookId: bookId,bookTitle: bookTitle,));
   }
-
+  ///找书
+  static gotoFindBookPage(
+      BuildContext context) {
+    NavigatorRouter(
+        context, new FindBookPage());
+  }
   ///聊天
   static gotoMessageTalkingPage(
       BuildContext context) {
