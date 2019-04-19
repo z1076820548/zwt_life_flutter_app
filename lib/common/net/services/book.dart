@@ -64,3 +64,17 @@ dioGetChapterBody(String link, String title) async {
     return Data("", false);
   }
 }
+
+//获取排行榜
+dioGetTopBank() async {
+  String url = Constant.API_BASE_URL;
+  String path = "/ranking/gender";
+  Map<String, String> requestParams = {};
+  ResultData res = await HttpManager.netFetch(url, path, requestParams, method: 'GET');
+  if (res != null && res.result) {
+    Map map = json.decode(res.data.toString());
+    return Data(map, true);
+  } else {
+    return Data("", false);
+  }
+}

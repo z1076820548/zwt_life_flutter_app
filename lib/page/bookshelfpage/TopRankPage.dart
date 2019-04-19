@@ -5,23 +5,19 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:zwt_life_flutter_app/common/manager/settingmanager.dart';
 import 'package:zwt_life_flutter_app/public.dart';
 
-class FindBookPage extends StatefulWidget {
-  static final String sName = "FindBookPage";
+//排行榜
+class TopRankPage extends StatefulWidget {
+  static final String sName = "TopRankPage";
 
   @override
-  _FindBookPageState createState() {
+  _TopRankPageState createState() {
     // TODO: implement createState
-    return _FindBookPageState();
+    return _TopRankPageState();
   }
 }
 
-class _FindBookPageState extends State<FindBookPage> {
-  RefreshController _refreshController;
+class _TopRankPageState extends State<TopRankPage> with RouteAware{
   ScrollController _scrollController;
-  var tabList = [
-  ['static/images/rankinglist.png', '排行榜'],
-  ['static/images/sortlist.png', "分类",],
-  ['static/images/booklist.png', "主题书单",]];
 
   Image getTabImage(path) {
     return new Image.asset(path, width: 20.0, height: 20.0);
@@ -29,8 +25,10 @@ class _FindBookPageState extends State<FindBookPage> {
 
   @override
   void initState() {
-    _refreshController = new RefreshController();
     _scrollController = new ScrollController();
+    Future.delayed(const Duration(microseconds: 0),()async{
+      await initGetRank();
+    });
     super.initState();
   }
 
@@ -51,13 +49,13 @@ class _FindBookPageState extends State<FindBookPage> {
               leading: new ClipRRect(
                 borderRadius: BorderRadius.circular(5.0),
                 child: Image(
-                  image: AssetImage(tabList[index][0]),
+//                  image: AssetImage(tabList[index][0]),
                   width: ScreenUtil.getInstance().L(25),
                   height: ScreenUtil.getInstance().L(25),
                   color: Colors.green[800],
                 ),
               ),
-              title: Text('${tabList[index][1]}'),
+//              title: Text('${tabList[index][1]}'),
               trailing: Icon(
                 Icons.keyboard_arrow_right, color: Colors.grey,),
             ),
@@ -72,14 +70,9 @@ class _FindBookPageState extends State<FindBookPage> {
     // TODO: implement build
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text('找书'),
+        middle: Text('排行榜'),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: Semantics(
-            child: IconButton(
-                onPressed: () => {},
-                icon: Icon(CupertinoIcons.search, color: Colors.black)),
-          ),
         ),
       ),
       child: DefaultTextStyle(
@@ -90,17 +83,13 @@ class _FindBookPageState extends State<FindBookPage> {
         child: SafeArea(
           child: Center(
             child: CupertinoScrollbar(
-                child: SmartRefresher(
-                    controller: _refreshController,
-                    enablePullDown: false,
-                    enablePullUp: false,
-                    child: new ListView.builder(
-                        reverse: true,
-                        controller: _scrollController,
-                        itemCount: tabList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return returnItem(index);
-                        }))),
+                child: new ListView.builder(
+                    reverse: true,
+                    controller: _scrollController,
+                    itemCount: 2,
+                    itemBuilder: (BuildContext context, int index) {
+                      return returnItem(index);
+                    })),
           ),
         ),
       ),
@@ -111,10 +100,15 @@ class _FindBookPageState extends State<FindBookPage> {
   //点击阅读
   void tap(int position) async {
     switch(position){
-      //排行榜
-      case 0:
-        NavigatorUtils.gotoTopRankPage(context);
-        break;
+
+    }
+  }
+
+  initGetRank() async{
+    ResultData res = await dioGetTopBank();
+    if(res.data != null){
+      Map map  = res.data;
+
     }
   }
 }

@@ -47,49 +47,52 @@ class _BookShelfPageState extends State<BookShelfPage>
         controller: slidableController,
         delegate: new SlidableDrawerDelegate(),
         actionExtentRatio: 0.1,
-        child: new Container(
-          decoration: new BoxDecoration(
-              border: new BorderDirectional(
-                  bottom:
-                      new BorderSide(color: Color(0xFFe1e1e1), width: 1.0))),
-          child: InkWell(
-            splashColor: Colors.grey,
-            onTap: () {
-              tap(item);
-            },
-            child: new ListTile(
-              leading: new ClipRRect(
-                borderRadius: BorderRadius.circular(5.0),
-                child: Image(
-                  image: NetworkImage(Constant.IMG_BASE_URL + '${item.cover}'),
-                  width: ScreenUtil.getInstance().L(50),
-                  height: ScreenUtil.getInstance().L(50),
+        child: Material(
+          child: Ink(
+            child: InkWell(
+              onTap: () {
+                tap(item);
+              },
+              child: new Container(
+                decoration: new BoxDecoration(
+                    border: new BorderDirectional(
+                        bottom:
+                            new BorderSide(color: Color(0xFFe1e1e1), width: 1.0))),
+                child: new ListTile(
+                  leading: new ClipRRect(
+                    borderRadius: BorderRadius.circular(5.0),
+                    child: Image(
+                      image: NetworkImage(Constant.IMG_BASE_URL + '${item.cover}'),
+                      width: ScreenUtil.getInstance().L(50),
+                      height: ScreenUtil.getInstance().L(50),
+                    ),
+                  ),
+                  title: Row(
+                    children: <Widget>[
+                      new Text('${item.title}'),
+                      Container(
+                        width: 5,
+                      ),
+                      Offstage(
+                        offstage: item.noUpdate == null ? true:item.noUpdate,
+                        child: new Container(
+                          color: Colors.red,
+                          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+                          child: Text(
+                            "更新",
+                            style: TextStyle(color: Colors.white, fontSize: 10),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  subtitle: new Text(
+                    '${item.lastChapter}',
+                    style: TextStyle(fontSize: 11),
+                  ),
+//              trailing: new Text('${item.updated}'),
                 ),
               ),
-              title: Row(
-                children: <Widget>[
-                  new Text('${item.title}'),
-                  Container(
-                    width: 5,
-                  ),
-                  Offstage(
-                    offstage: item.noUpdate == null ? true:item.noUpdate,
-                    child: new Container(
-                      color: Colors.red,
-                      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-                      child: Text(
-                        "更新",
-                        style: TextStyle(color: Colors.white, fontSize: 10),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              subtitle: new Text(
-                '${item.lastChapter}',
-                style: TextStyle(fontSize: 11),
-              ),
-//              trailing: new Text('${item.updated}'),
             ),
           ),
         ),

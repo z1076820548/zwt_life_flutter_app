@@ -6,6 +6,7 @@ import 'package:zwt_life_flutter_app/page/MainPage.dart';
 import 'package:zwt_life_flutter_app/page/LoginPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/FindBookPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/ReadBookPage.dart';
+import 'package:zwt_life_flutter_app/page/bookshelfpage/TopRankPage.dart';
 import 'package:zwt_life_flutter_app/page/messagepage/ChatCameraHomePage.dart';
 import 'package:zwt_life_flutter_app/page/messagepage/ImageHudPage.dart';
 import 'package:zwt_life_flutter_app/page/messagepage/MessageTalkingPage.dart';
@@ -215,6 +216,13 @@ class NavigatorUtils {
       BuildContext context) {
     NavigatorRouter(
         context, new ChatCameraHomePage());
+  }
+
+  ///排行榜
+  static gotoTopRankPage(
+      BuildContext context) {
+    NavigatorRouter(
+        context, new TopRankPage());
   }
 
   ///阅读界面
