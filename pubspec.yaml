@@ -122,7 +122,7 @@ flutter:
   - static/images/fontheight3.png
   - static/images/fontheight4.png
   - static/images/searchblack.png
-  - static/images/searchblue.png
+  - static/images/ic_find_in_page.png
   - static/images/booklist.png
   - static/images/sortlist.png
   - static/images/rankinglist.png

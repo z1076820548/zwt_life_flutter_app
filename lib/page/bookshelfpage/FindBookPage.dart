@@ -72,6 +72,7 @@ class _FindBookPageState extends State<FindBookPage> {
     // TODO: implement build
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
+        backgroundColor: GlobalColors.appbarColor,
         middle: Text('找书'),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,

@@ -16,7 +16,7 @@ class BookShelfPage extends StatefulWidget {
 }
 
 class _BookShelfPageState extends State<BookShelfPage>
-    with AutomaticKeepAliveClientMixin {
+    with RouteAware {
   static List<RecommendBooks> recommendBooksList = new List();
   RefreshController _refreshController;
   ScrollController _scrollController;
@@ -24,12 +24,12 @@ class _BookShelfPageState extends State<BookShelfPage>
 
   @override
   void initState() {
+    super.initState();
     _refreshController = new RefreshController();
     _scrollController = new ScrollController();
     Future.delayed(Duration(seconds: 0), () {
       checkNewUser(context);
     });
-    super.initState();
   }
 
   void scrollTop() {
@@ -132,6 +132,7 @@ class _BookShelfPageState extends State<BookShelfPage>
     // TODO: implement build
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
+        backgroundColor:GlobalColors.appbarColor,
         middle: Text('书架'),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
@@ -198,7 +199,8 @@ class _BookShelfPageState extends State<BookShelfPage>
       BookShelfDbProvider bookShelfDbProvider = new BookShelfDbProvider();
       var data = await bookShelfDbProvider.getAllData();
       setState(() {
-        recommendBooksList = data;
+        recommendBooksList.clear();
+        recommendBooksList.addAll(data);
       });
       RecommendBooks recommendBooks;
       if(recommendBooksList?.length != null ){
@@ -237,9 +239,6 @@ class _BookShelfPageState extends State<BookShelfPage>
     }
   }
 
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
 
   setSex(String sex) async {
     Navigator.pop(context);

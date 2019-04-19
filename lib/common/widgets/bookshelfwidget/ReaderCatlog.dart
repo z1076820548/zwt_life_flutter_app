@@ -159,6 +159,7 @@ class _ReaderCatlogState extends State<ReaderCatlog>
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
+        backgroundColor:GlobalColors.appbarColor,
         leading: CupertinoButton(
           child: const Text('取消'),
           padding: EdgeInsets.zero,

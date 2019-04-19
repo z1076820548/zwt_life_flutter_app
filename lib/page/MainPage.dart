@@ -40,10 +40,12 @@ class _MainPageState extends State<MainPage> {
    * 根据image路径获取图片
    * 这个图片的路径需要在 pubspec.yaml 中去定义
    */
-  Image getTabImage(path) {
-    return new Image.asset(path, width: 20.0, height: 20.0);
+  Image getTabImage1(path) {
+    return new Image.asset(path, width: 20.0, height: 20.0,color: Colors.black,);
   }
-
+  Image getTabImage2(path) {
+    return new Image.asset(path, width: 20.0, height: 20.0,color: GlobalColors.themeColor,);
+  }
   /*
    * 根据索引获得对应的normal或是press的icon
    */
@@ -75,10 +77,10 @@ class _MainPageState extends State<MainPage> {
       bottom的按压图片
      */
     tabImages = [
-      [getTabImage('static/images/bookshelf1.png'), getTabImage('static/images/bookshelf2.png')],
-      [getTabImage('static/images/searchblack.png'), getTabImage('static/images/searchblue.png')],
-      [getTabImage('static/images/bookshelf1.png'), getTabImage('static/images/bookshelf2.png')],
-      [getTabImage('static/images/bookshelf1.png'), getTabImage('static/images/bookshelf2.png')],
+      [getTabImage1('static/images/bookshelf1.png'), getTabImage2('static/images/bookshelf2.png')],
+      [getTabImage1('static/images/searchblack.png'), getTabImage2('static/images/ic_find_in_page.png')],
+      [getTabImage1('static/images/bookshelf1.png'), getTabImage2('static/images/bookshelf2.png')],
+      [getTabImage1('static/images/bookshelf1.png'), getTabImage2('static/images/bookshelf2.png')],
 //      [Icon(Icons.message), Icon(Icons.message)],
 //      [Icon(Icons.shopping_cart), Icon(Icons.shopping_cart)],
 //      [Icon(Icons.person_outline), Icon(Icons.person_outline)]
@@ -108,7 +110,7 @@ class _MainPageState extends State<MainPage> {
 //        ],
 //      ),
       bottomNavigationBar: CupertinoTabBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[100],
         activeColor: GlobalColors.themeColor,
         // 底部导航
         items: <BottomNavigationBarItem>[
