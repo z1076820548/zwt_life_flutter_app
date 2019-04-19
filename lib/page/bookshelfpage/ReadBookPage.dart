@@ -63,36 +63,36 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
     Future.delayed(Duration(seconds: 0), () async {
       await setup();
     });
-    pageController = PageController(initialPage: pageIndex, keepPage: false);
-    pageController.addListener(onScroll);
+
     //菜单栏监听
     stream = Code.eventBus.on<ReaderMenuEvent>().listen((event) {
       var data = event.data;
 
       switch (event.readerMenuType) {
-
         //目录
         case ReaderMenuType.catlog:
           currentChapterIndex = int.parse(data.toString());
           resetContent(data, Todo.toOther, PageJumpType.firstPage);
           break;
-
         //字体大小
         case ReaderMenuType.fontsize:
           SettingManager.getInstance().saveFontSize(int.parse(data.toString()));
           Future.delayed(Duration(seconds: 0), () async {
-            await resetContent(currentChapterIndex, Todo.toNext, PageJumpType.stay);
+            await resetContent(
+                currentChapterIndex, Todo.toNext, PageJumpType.stay);
           });
           pageController =
               PageController(initialPage: pageIndex, keepPage: false);
           pageController.addListener(onScroll);
           break;
 
-          //行间距
+        //行间距
         case ReaderMenuType.rowSpacing:
-          SettingManager.getInstance().saveLetterHeight(double.parse(data.toString()));
+          SettingManager.getInstance()
+              .saveLetterHeight(double.parse(data.toString()));
           Future.delayed(Duration(seconds: 0), () async {
-            await resetContent(currentChapterIndex, Todo.toNext, PageJumpType.stay);
+            await resetContent(
+                currentChapterIndex, Todo.toNext, PageJumpType.stay);
           });
           pageController =
               PageController(initialPage: pageIndex, keepPage: false);
@@ -160,13 +160,25 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
     }
     currentChapterIndex = readBooks.chapterIndex;
     pageIndex = readBooks.pageIndex;
+    bool needPre = false;
 
     await resetContent(currentChapterIndex, Todo.toNext, PageJumpType.stay);
+    pageController = PageController(initialPage: pageIndex, keepPage: true);
+    pageController.addListener(onScroll);
+    //第一次必须加载上一章节
+    if (currentChapterIndex != 0) {
+      preChapter = await fetchChapter(currentChapterIndex - 1);
+      pageController.jumpToPage(
+          (preChapter != null ? preChapter.pageCount : 0) + pageIndex);
+    }
   }
 
   //获取内容
   resetContent(
-      int currentChapterIndex, Todo todo, PageJumpType jumpType) async {
+    int currentChapterIndex,
+    Todo todo,
+    PageJumpType jumpType,
+  ) async {
     if (todo == Todo.toNext) {
       preChapter = currentChapter;
       if (nextChapter != null && jumpType != PageJumpType.stay) {
@@ -194,7 +206,7 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
 //        currentChapter = await fetchChapter(currentChapterIndex);
       }
     } else if (todo == Todo.toOther) {
-      if (currentChapterIndex > 0) {
+      if (currentChapterIndex != 0) {
         preChapter = await fetchChapter(currentChapterIndex - 1);
       } else {
         preChapter = null;
@@ -368,9 +380,6 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   }
 
   nextPage() {
-//    if (pageIndex >= currentChapter.pageCount - 1) {
-//      return;
-//    }
     if (pageIndex >= currentChapter.pageCount - 1 && nextChapter == null) {
       print('已经是最后一页了');
       return;
