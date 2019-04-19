@@ -99,6 +99,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "6.3.2"
+  cached_network_image:
+    dependency: "direct main"
+    description:
+      name: cached_network_image
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.7.0"
   camera:
     dependency: "direct main"
     description:

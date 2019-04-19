@@ -14,6 +14,7 @@ import 'package:zwt_life_flutter_app/public.dart';
 enum Todo { toPre, toNext, toOther }
 enum PageJumpType { stay, firstPage, lastPage }
 
+//小说阅读界面
 class ReadBookPage extends StatefulWidget {
   final String bookId;
   static final String sName = "ReadBook";
