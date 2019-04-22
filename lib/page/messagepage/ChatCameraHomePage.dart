@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:zwt_life_flutter_app/main.dart';
 
+//拍摄界面
 class ChatCameraHomePage extends StatefulWidget {
   static final String sName = "ChatCameraHome";
 

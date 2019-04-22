@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
+//表情包查看界面
 class ImageHudPage extends StatefulWidget {
   static final String sName = "ImageHud";
   final ImageProvider imageProvider;

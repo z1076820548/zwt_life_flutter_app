@@ -3,6 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:zwt_life_flutter_app/public.dart';
 
+//消息界面
 class MessageContactsPage extends StatefulWidget {
   static final String sName = "MessageContacts";
 

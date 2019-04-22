@@ -23,6 +23,7 @@ import 'package:zwt_life_flutter_app/public.dart';
 var currentUserEmail;
 var _scaffoldContext;
 
+//私聊界面
 class MessageTalkingPage extends StatefulWidget {
   static final String sName = "MessageTalkingPage";
 
