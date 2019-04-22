@@ -15,8 +15,7 @@ class BookShelfPage extends StatefulWidget {
   }
 }
 
-class _BookShelfPageState extends State<BookShelfPage>
-    with RouteAware {
+class _BookShelfPageState extends State<BookShelfPage> with RouteAware {
   static List<RecommendBooks> recommendBooksList = new List();
   RefreshController _refreshController;
   ScrollController _scrollController;
@@ -56,13 +55,14 @@ class _BookShelfPageState extends State<BookShelfPage>
               child: new Container(
                 decoration: new BoxDecoration(
                     border: new BorderDirectional(
-                        bottom:
-                            new BorderSide(color: Color(0xFFe1e1e1), width: 1.0))),
+                        bottom: new BorderSide(
+                            color: Color(0xFFe1e1e1), width: 1.0))),
                 child: new ListTile(
                   leading: new ClipRRect(
                     borderRadius: BorderRadius.circular(5.0),
                     child: Image(
-                      image: NetworkImage(Constant.IMG_BASE_URL + '${item.cover}'),
+                      image:
+                          NetworkImage(Constant.IMG_BASE_URL + '${item.cover}'),
                       width: ScreenUtil.getInstance().L(50),
                       height: ScreenUtil.getInstance().L(50),
                     ),
@@ -74,10 +74,11 @@ class _BookShelfPageState extends State<BookShelfPage>
                         width: 5,
                       ),
                       Offstage(
-                        offstage: item.noUpdate == null ? true:item.noUpdate,
+                        offstage: item.noUpdate == null ? true : item.noUpdate,
                         child: new Container(
                           color: Colors.red,
-                          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 4, vertical: 0),
                           child: Text(
                             "更新",
                             style: TextStyle(color: Colors.white, fontSize: 10),
@@ -132,7 +133,7 @@ class _BookShelfPageState extends State<BookShelfPage>
     // TODO: implement build
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        backgroundColor:GlobalColors.appbarColor,
+        backgroundColor: GlobalColors.appbarColor,
         middle: Text('书架'),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
@@ -150,6 +151,17 @@ class _BookShelfPageState extends State<BookShelfPage>
             child: CupertinoScrollbar(
                 child: SmartRefresher(
                     controller: _refreshController,
+                    headerBuilder: (context, mode) {
+                      return new ClassicIndicator(
+                          mode: mode,
+                          releaseText: '释放刷新',
+                          refreshingText: '正在刷新...',
+                          completeText: '刷新完成',
+                          noDataText: '没有更多数据了',
+                          failedText: '刷新失败',
+                          idleText: '下拉刷新',
+                          height: 40);
+                    },
                     enablePullDown: true,
                     enablePullUp: false,
                     onRefresh: (up) {
@@ -203,7 +215,7 @@ class _BookShelfPageState extends State<BookShelfPage>
         recommendBooksList.addAll(data);
       });
       RecommendBooks recommendBooks;
-      if(recommendBooksList?.length != null ){
+      if (recommendBooksList?.length != null) {
         for (int i = 0; i < recommendBooksList.length; i++) {
           recommendBooks = recommendBooksList[i];
           Data data = await dioGetAToc(recommendBooks.id, "chapters");
@@ -211,7 +223,9 @@ class _BookShelfPageState extends State<BookShelfPage>
             MixToc mixToc = data.data;
             List<Chapters> chaptersList = mixToc.chapters;
             //章节是否更新
-            if (!recommendBooks.lastChapter.trim().contains(chaptersList.last.title.trim())) {
+            if (!recommendBooks.lastChapter
+                .trim()
+                .contains(chaptersList.last.title.trim())) {
               //是
               //数据库插入
               recommendBooks.noUpdate = false;
@@ -227,7 +241,7 @@ class _BookShelfPageState extends State<BookShelfPage>
             }
           }
         }
-      }else{
+      } else {
         //选择性别
         CommonUtils.showLickeDialog(context, () {
           setSex(Constant.MALE);
@@ -235,10 +249,8 @@ class _BookShelfPageState extends State<BookShelfPage>
           setSex(Constant.FEMALE);
         });
       }
-
     }
   }
-
 
   setSex(String sex) async {
     Navigator.pop(context);
@@ -259,17 +271,16 @@ class _BookShelfPageState extends State<BookShelfPage>
   }
 
   //点击阅读
-  void tap(RecommendBooks item) async{
-    NavigatorUtils.gotoReadBookPage(context,item.title,item.id);
+  void tap(RecommendBooks item) async {
+    NavigatorUtils.gotoReadBookPage(context, item.title, item.id);
     //更新阅读时间
     BookShelfDbProvider bookShelfDbProvider = new BookShelfDbProvider();
     item.noUpdate = true;
-    await bookShelfDbProvider.insert(item.id, DateTime.now(),
-        json.encode(item.toJson()));
+    await bookShelfDbProvider.insert(
+        item.id, DateTime.now(), json.encode(item.toJson()));
     var data = await bookShelfDbProvider.getAllData();
     setState(() {
       recommendBooksList = data;
     });
-
   }
 }
