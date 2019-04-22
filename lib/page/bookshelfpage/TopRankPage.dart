@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:zwt_life_flutter_app/public.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 
 //排行榜
 class TopRankPage extends StatefulWidget {
@@ -15,10 +15,13 @@ class TopRankPage extends StatefulWidget {
 }
 
 class _TopRankPageState extends State<TopRankPage> with RouteAware {
+  String othertitle = '别人家的排行榜';
   ScrollController _scrollController;
-  List<MaleBean> maleList = [];
-  List<MaleBean> femaleList = [];
+  List<MaleBean> maleGroups = [];
   List<List<MaleBean>> maleChilds = [];
+
+  List<MaleBean> femaleGroups = [];
+  List<List<MaleBean>> femaleChildes = [];
 
   Image getTabImage(path) {
     return new Image.asset(path, width: 20.0, height: 20.0);
@@ -34,51 +37,82 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
     });
   }
 
-  returnItem(List<MaleBean> mylist, int index) {
-    return new ListTile(
-      onTap: () {},
-      leading: new ClipRRect(
-        borderRadius: BorderRadius.circular(5.0),
-        child: CachedNetworkImage(
-          imageUrl: (Constant.IMG_BASE_URL + mylist[index].cover),
-          width: ScreenUtil.getInstance().L(25),
-          height: ScreenUtil.getInstance().L(25),
-          placeholder: (context, url) => new CircularProgressIndicator(),
-          errorWidget: (context, url, error) => new Icon(Icons.error),
+  returnItem(
+      List<MaleBean> myGroups, List<List<MaleBean>> myChilds, int index) {
+    //别人家的排行榜
+    if (myGroups[index].title.contains(othertitle)) {
+      return ExpansionTile(
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(5.0),
+          child: Icon(Icons.more, color: Colors.orange),
         ),
-      ),
-      title: Text('${mylist[index].title}'),
-      trailing: Icon(
-        Icons.keyboard_arrow_right,
-        color: Colors.grey,
-      ),
-    );
+        title: Text(myGroups[index].title),
+        children: returnExpandItem(myChilds[0], index),
+      );
+    } else {
+      return ListTile(
+        onTap: () {},
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(5.0),
+          child: ExtendedImage.network(
+            (Constant.IMG_BASE_URL + myGroups[index].cover),
+            width: ScreenUtil.getInstance().L(25),
+            height: ScreenUtil.getInstance().L(25),
+            cache: true,
+          ),
+        ),
+        title: Text('${myGroups[index].title}'),
+      );
+    }
+  }
+
+  List<Widget> returnExpandItem(List<MaleBean> myGroups, int index) {
+    List<Widget> childs = new List();
+    for (MaleBean bean in myGroups) {
+      childs.add(ListTile(
+          onTap: () {},
+          title: Text('${bean.title}'),
+          leading: Container(
+            width: 20,
+          )));
+    }
+    return childs;
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        appBar: AppBar(
-          title: Text('排行榜'),
-        ),
-        body: Column(
-          children: <Widget>[
-            Container(
-              child: ListTile(title: Text('男生')),
-              color: Colors.grey[200],
-            ),
-            Expanded(
-              child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: maleList.length,
-                  itemExtent: 50,
-                  itemBuilder: (BuildContext context, int index) {
-                    return returnItem(maleList, index);
-                  }),
-            ),
-          ],
-        ));
+      appBar: AppBar(
+        title: Text('排行榜'),
+      ),
+      body: Column(
+        children: <Widget>[
+          Container(
+            child: ListTile(title: Text('男生')),
+            color: Colors.grey[200],
+          ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: maleGroups.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return returnItem(maleGroups, maleChilds, index);
+                }),
+          ),
+          Container(
+            child: ListTile(title: Text('女生')),
+            color: Colors.grey[200],
+          ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: maleGroups.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return returnItem(femaleGroups, femaleChildes, index);
+                }),
+          ),
+        ],
+      ),
+    );
 //        Center(
 //          child: Container(
 //            child: Column(
@@ -119,14 +153,33 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
           noCollapseMale.add(maleBean);
         }
       }
-      if(isCollapseMale.length > 0){
-        noCollapseMale.add(new MaleBean(id, title, cover, collapse, monthRank, totalRank))
+      if (isCollapseMale.length > 0) {
+        noCollapseMale.add(new MaleBean("", othertitle, "", false, "", ""));
       }
 
+      List<MaleBean> isCollapseFemale = [];
+      List<MaleBean> noCollapseFemale = [];
       List<MaleBean> female = (map['female'] as List)
           ?.map((e) =>
               e == null ? null : MaleBean.fromJson(e as Map<String, dynamic>))
           ?.toList();
+      for (MaleBean maleBean in female) {
+        if (maleBean.collapse) {
+          isCollapseFemale.add(maleBean);
+        } else {
+          noCollapseFemale.add(maleBean);
+        }
+      }
+      if (isCollapseMale.length > 0) {
+        noCollapseFemale.add(new MaleBean("", othertitle, "", false, "", ""));
+      }
+      setState(() {
+        maleGroups = noCollapseMale;
+        maleChilds.add(isCollapseMale);
+
+        femaleGroups = noCollapseFemale;
+        femaleChildes.add(isCollapseFemale);
+      });
     }
   }
 }
