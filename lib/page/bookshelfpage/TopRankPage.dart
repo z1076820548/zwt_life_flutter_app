@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:zwt_life_flutter_app/public.dart';
 import 'package:extended_image/extended_image.dart';
 
@@ -22,6 +23,7 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
 
   List<MaleBean> femaleGroups = [];
   List<List<MaleBean>> femaleChildes = [];
+  List sliveTitle = ['男生', '女生'];
 
   Image getTabImage(path) {
     return new Image.asset(path, width: 20.0, height: 20.0);
@@ -37,8 +39,8 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
     });
   }
 
-  returnItem(
-      List<MaleBean> myGroups, List<List<MaleBean>> myChilds, int index) {
+  returnItem(List<MaleBean> myGroups, List<List<MaleBean>> myChilds,
+      int index) {
     //别人家的排行榜
     if (myGroups[index].title.contains(othertitle)) {
       return ExpansionTile(
@@ -50,18 +52,24 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
         children: returnExpandItem(myChilds[0], index),
       );
     } else {
-      return ListTile(
-        onTap: () {},
-        leading: ClipRRect(
-          borderRadius: BorderRadius.circular(5.0),
-          child: ExtendedImage.network(
-            (Constant.IMG_BASE_URL + myGroups[index].cover),
-            width: ScreenUtil.getInstance().L(25),
-            height: ScreenUtil.getInstance().L(25),
-            cache: true,
+      return Container(
+        decoration: new BoxDecoration(
+            border: new BorderDirectional(
+                bottom:
+                new BorderSide(color: Color(0xFFe1e1e1), width: 0.5))),
+        child: ListTile(
+          onTap: () {},
+          leading: ClipRRect(
+            borderRadius: BorderRadius.circular(5.0),
+            child: ExtendedImage.network(
+              (Constant.IMG_BASE_URL + myGroups[index].cover),
+              width: ScreenUtil.getInstance().L(25),
+              height: ScreenUtil.getInstance().L(25),
+              cache: true,
+            ),
           ),
+          title: Text('${myGroups[index].title}'),
         ),
-        title: Text('${myGroups[index].title}'),
       );
     }
   }
@@ -86,48 +94,72 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
       appBar: AppBar(
         title: Text('排行榜'),
       ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            child: ListTile(title: Text('男生')),
-            color: Colors.grey[200],
-          ),
-          Expanded(
-            child: ListView.builder(
-                itemCount: maleGroups.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return returnItem(maleGroups, maleChilds, index);
-                }),
-          ),
-          Container(
-            child: ListTile(title: Text('女生')),
-            color: Colors.grey[200],
-          ),
-          Expanded(
-            child: ListView.builder(
-                itemCount: maleGroups.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return returnItem(femaleGroups, femaleChildes, index);
-                }),
-          ),
-        ],
+      body: CupertinoScrollbar(
+        child: CustomScrollView(
+          slivers: _buildSlivers(context),
+//            Container(
+//              child: ListTile(title: Text('男生')),
+//              color: Colors.grey[200],
+//            ),
+//            Expanded(
+//              child: ListView.builder(
+//                  itemCount: maleGroups.length,
+//                  itemBuilder: (BuildContext context, int index) {
+//                    return returnItem(maleGroups, maleChilds, index);
+//                  }),
+//            ),
+//            Container(
+//              child: ListTile(title: Text('女生')),
+//              color: Colors.grey[200],
+//            ),
+//            Expanded(
+//              child: ListView.builder(
+//                  itemCount: maleGroups.length,
+//                  itemBuilder: (BuildContext context, int index) {
+//                    return returnItem(femaleGroups, femaleChildes, index);
+//                  }),
+//            ),
+        ),
       ),
     );
-//        Center(
-//          child: Container(
-//            child: Column(
-//                children: <Widget>[
-//              Container(
-//                color: Colors.grey[200],
-//                padding: EdgeInsets.all(10),
-//                child: Row(
-//                  children: <Widget>[Text('男生')],
-//                ),
-//              ),
-//
-//            ]),
-//          ),
-//        ));
+  }
+
+  List<Widget> _buildSlivers(BuildContext context) {
+    List<Widget> slivers = new List<Widget>();
+
+    for (int i = 0; i < 2; i++) {
+      slivers.add(_buildHeaderBuilderLists(context, i));
+    }
+
+    return slivers;
+  }
+
+  Widget _buildHeaderBuilderLists(BuildContext context, int count) {
+    var groups,childs;
+    if(count == 0){
+      groups = maleGroups;
+      childs = maleChilds;
+    }else if(count == 1){
+      groups = femaleGroups;
+      childs = femaleChildes;
+    }
+
+    return SliverStickyHeaderBuilder(
+      builder: (context, state) {
+        return Container(
+          child: ListTile(title: Text('${sliveTitle[count]}')),
+          color: Colors.grey[100],
+        );
+      },
+      sliver: new SliverList(
+        delegate: new SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            return returnItem(groups, childs, index);
+          },
+          childCount: groups.length
+        ),
+      ),
+    );
   }
 
   //点击阅读
@@ -144,7 +176,7 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
       List<MaleBean> noCollapseMale = [];
       List<MaleBean> male = (map['male'] as List)
           ?.map((e) =>
-              e == null ? null : MaleBean.fromJson(e as Map<String, dynamic>))
+      e == null ? null : MaleBean.fromJson(e as Map<String, dynamic>))
           ?.toList();
       for (MaleBean maleBean in male) {
         if (maleBean.collapse) {
@@ -161,7 +193,7 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
       List<MaleBean> noCollapseFemale = [];
       List<MaleBean> female = (map['female'] as List)
           ?.map((e) =>
-              e == null ? null : MaleBean.fromJson(e as Map<String, dynamic>))
+      e == null ? null : MaleBean.fromJson(e as Map<String, dynamic>))
           ?.toList();
       for (MaleBean maleBean in female) {
         if (maleBean.collapse) {
