@@ -17,22 +17,22 @@ BooksBean _$BooksBeanFromJson(Map<String, dynamic> json) {
       json['majorCate'] as String,
       json['banned'] as int,
       json['latelyFollower'] as int,
-      json['latelyFollowerBase'] as int,
-      json['minRetentionRatio'] as String,
-      json['retentionRatio'] as String);
+      json['retentionRatio'].toString(),
+      json['minorCate'] as String,
+      json['allowMonthly'] as bool);
 }
 
 Map<String, dynamic> _$BooksBeanToJson(BooksBean instance) => <String, dynamic>{
       '_id': instance.id,
-      'title': instance.title,
-      'author': instance.author,
       'cover': instance.cover,
-      'shortIntro': instance.shortIntro,
       'site': instance.site,
+      'author': instance.author,
       'majorCate': instance.majorCate,
+      'minorCate': instance.minorCate,
+      'title': instance.title,
+      'shortIntro': instance.shortIntro,
+      'allowMonthly': instance.allowMonthly,
       'banned': instance.banned,
       'latelyFollower': instance.latelyFollower,
-      'latelyFollowerBase': instance.latelyFollowerBase,
-      'minRetentionRatio': instance.minRetentionRatio,
       'retentionRatio': instance.retentionRatio
     };

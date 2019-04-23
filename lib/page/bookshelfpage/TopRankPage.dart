@@ -62,8 +62,8 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
             borderRadius: BorderRadius.circular(5.0),
             child: ExtendedImage.network(
               (Constant.IMG_BASE_URL + myGroups[index].cover),
-              width: ScreenUtil.getInstance().L(25),
               height: ScreenUtil.getInstance().L(25),
+              fit: BoxFit.fitHeight,
               cache: true,
             ),
           ),

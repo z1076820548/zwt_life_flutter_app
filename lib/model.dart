@@ -13,4 +13,3 @@ export 'package:zwt_life_flutter_app/common/model/Chapter.dart';
 export 'package:zwt_life_flutter_app/common/model/MaleBean.dart';
 export 'package:zwt_life_flutter_app/common/model/RankingBean.dart';
 export 'package:zwt_life_flutter_app/common/model/BooksBean.dart';
-export 'package:zwt_life_flutter_app/common/model/BooksBean2.dart';
