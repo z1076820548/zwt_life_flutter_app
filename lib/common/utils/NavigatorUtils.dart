@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:zwt_life_flutter_app/page/MainPage.dart';
 import 'package:zwt_life_flutter_app/page/LoginPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/FindBookPage.dart';
+import 'package:zwt_life_flutter_app/page/bookshelfpage/RankingPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/ReadBookPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/TopRankPage.dart';
 import 'package:zwt_life_flutter_app/page/messagepage/ChatCameraHomePage.dart';
@@ -223,6 +224,13 @@ class NavigatorUtils {
       BuildContext context) {
     NavigatorRouter(
         context, new TopRankPage());
+  }
+
+  ///排行榜详情
+  static gotoRankingPage(
+      BuildContext context, String week,String month,String all,String title) {
+    NavigatorRouter(
+        context, new RankingPage( week: week,month: month,all: all,title: title,));
   }
 
   ///阅读界面

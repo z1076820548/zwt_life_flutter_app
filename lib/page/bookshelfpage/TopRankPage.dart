@@ -17,7 +17,6 @@ class TopRankPage extends StatefulWidget {
 
 class _TopRankPageState extends State<TopRankPage> with RouteAware {
   String othertitle = '别人家的排行榜';
-  ScrollController _scrollController;
   List<MaleBean> maleGroups = [];
   List<List<MaleBean>> maleChilds = [];
 
@@ -25,28 +24,27 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
   List<List<MaleBean>> femaleChildes = [];
   List sliveTitle = ['男生', '女生'];
 
-  Image getTabImage(path) {
-    return new Image.asset(path, width: 20.0, height: 20.0);
-  }
-
   @override
   void initState() {
     super.initState();
 
-    _scrollController = new ScrollController();
     Future.delayed(const Duration(milliseconds: 100), () async {
       await initGetRank();
     });
   }
 
-  returnItem(List<MaleBean> myGroups, List<List<MaleBean>> myChilds,
-      int index) {
+  returnItem(
+      List<MaleBean> myGroups, List<List<MaleBean>> myChilds, int index) {
     //别人家的排行榜
     if (myGroups[index].title.contains(othertitle)) {
       return ExpansionTile(
         leading: ClipRRect(
           borderRadius: BorderRadius.circular(5.0),
-          child: Icon(Icons.more, color: Colors.orange),
+          child: Icon(
+            Icons.more,
+            color: Colors.orange,
+            size: ScreenUtil.getInstance().L(25),
+          ),
         ),
         title: Text(myGroups[index].title),
         children: returnExpandItem(myChilds[0], index),
@@ -55,10 +53,11 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
       return Container(
         decoration: new BoxDecoration(
             border: new BorderDirectional(
-                bottom:
-                new BorderSide(color: Color(0xFFe1e1e1), width: 0.5))),
+                bottom: new BorderSide(color: Color(0xFFe1e1e1), width: 0.5))),
         child: ListTile(
-          onTap: () {},
+          onTap: () {
+            tap(myGroups[index]);
+          },
           leading: ClipRRect(
             borderRadius: BorderRadius.circular(5.0),
             child: ExtendedImage.network(
@@ -77,12 +76,23 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
   List<Widget> returnExpandItem(List<MaleBean> myGroups, int index) {
     List<Widget> childs = new List();
     for (MaleBean bean in myGroups) {
-      childs.add(ListTile(
-          onTap: () {},
-          title: Text('${bean.title}'),
-          leading: Container(
-            width: 20,
-          )));
+      childs.add(Material(
+        child: Ink(
+          child: InkWell(
+            onTap: () {},
+            child: Container(
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 25, horizontal: 40),
+                  ),
+                  Text(bean.title)
+                ],
+              ),
+            ),
+          ),
+        ),
+      ));
     }
     return childs;
   }
@@ -97,28 +107,6 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
       body: CupertinoScrollbar(
         child: CustomScrollView(
           slivers: _buildSlivers(context),
-//            Container(
-//              child: ListTile(title: Text('男生')),
-//              color: Colors.grey[200],
-//            ),
-//            Expanded(
-//              child: ListView.builder(
-//                  itemCount: maleGroups.length,
-//                  itemBuilder: (BuildContext context, int index) {
-//                    return returnItem(maleGroups, maleChilds, index);
-//                  }),
-//            ),
-//            Container(
-//              child: ListTile(title: Text('女生')),
-//              color: Colors.grey[200],
-//            ),
-//            Expanded(
-//              child: ListView.builder(
-//                  itemCount: maleGroups.length,
-//                  itemBuilder: (BuildContext context, int index) {
-//                    return returnItem(femaleGroups, femaleChildes, index);
-//                  }),
-//            ),
         ),
       ),
     );
@@ -135,11 +123,11 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
   }
 
   Widget _buildHeaderBuilderLists(BuildContext context, int count) {
-    var groups,childs;
-    if(count == 0){
+    var groups, childs;
+    if (count == 0) {
       groups = maleGroups;
       childs = maleChilds;
-    }else if(count == 1){
+    } else if (count == 1) {
       groups = femaleGroups;
       childs = femaleChildes;
     }
@@ -152,20 +140,18 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
         );
       },
       sliver: new SliverList(
-        delegate: new SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            return returnItem(groups, childs, index);
-          },
-          childCount: groups.length
-        ),
+        delegate:
+            new SliverChildBuilderDelegate((BuildContext context, int index) {
+          return returnItem(groups, childs, index);
+        }, childCount: groups.length),
       ),
     );
   }
 
   //点击阅读
-  void tap(int position) async {
-    switch (position) {
-    }
+  void tap(MaleBean maleBean) async {
+    NavigatorUtils.gotoRankingPage(context, maleBean.id, maleBean.monthRank,
+        maleBean.totalRank, maleBean.title);
   }
 
   initGetRank() async {
@@ -176,7 +162,7 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
       List<MaleBean> noCollapseMale = [];
       List<MaleBean> male = (map['male'] as List)
           ?.map((e) =>
-      e == null ? null : MaleBean.fromJson(e as Map<String, dynamic>))
+              e == null ? null : MaleBean.fromJson(e as Map<String, dynamic>))
           ?.toList();
       for (MaleBean maleBean in male) {
         if (maleBean.collapse) {
@@ -193,7 +179,7 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
       List<MaleBean> noCollapseFemale = [];
       List<MaleBean> female = (map['female'] as List)
           ?.map((e) =>
-      e == null ? null : MaleBean.fromJson(e as Map<String, dynamic>))
+              e == null ? null : MaleBean.fromJson(e as Map<String, dynamic>))
           ?.toList();
       for (MaleBean maleBean in female) {
         if (maleBean.collapse) {

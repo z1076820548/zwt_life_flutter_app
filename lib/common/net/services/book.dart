@@ -78,3 +78,18 @@ dioGetTopBank() async {
     return Data("", false);
   }
 }
+
+//获取排行榜详情
+dioGetRankingDetail(String rankingId) async {
+  String url = Constant.API_BASE_URL;
+  String path = "/ranking/$rankingId";
+  Map<String, String> requestParams = {};
+  ResultData res = await HttpManager.netFetch(url, path, requestParams, method: 'GET');
+  if (res != null && res.result) {
+    Map map = json.decode(res.data.toString());
+    RankingBean rankingBean =  RankingBean.fromJson(map['ranking']);
+    return Data(rankingBean, true);
+  } else {
+    return Data("", false);
+  }
+}
