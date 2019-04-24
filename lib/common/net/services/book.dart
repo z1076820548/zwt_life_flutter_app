@@ -103,8 +103,8 @@ dioGetBookDetail(String bookId) async {
   ResultData res = await HttpManager.netFetch(url, path, requestParams, method: 'GET');
   if (res != null && res.result) {
     Map map = json.decode(res.data.toString());
-    RankingBean rankingBean =  RankingBean.fromJson(map);
-    return Data(rankingBean, true);
+    BookDetailBean bookDetailBean =  BookDetailBean.fromJson(map);
+    return Data(bookDetailBean, true);
   } else {
     return Data("", false);
   }

@@ -89,21 +89,19 @@ class _FindBookPageState extends State<FindBookPage> {
             .of(context)
             .textTheme
             .textStyle,
-        child: SafeArea(
-          child: Center(
-            child: CupertinoScrollbar(
-                child: SmartRefresher(
-                    controller: _refreshController,
-                    enablePullDown: false,
-                    enablePullUp: false,
-                    child: new ListView.builder(
-                        reverse: true,
-                        controller: _scrollController,
-                        itemCount: tabList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return returnItem(index);
-                        }))),
-          ),
+        child: Center(
+          child: CupertinoScrollbar(
+              child: SmartRefresher(
+                  controller: _refreshController,
+                  enablePullDown: false,
+                  enablePullUp: false,
+                  child: new ListView.builder(
+                      reverse: true,
+                      controller: _scrollController,
+                      itemCount: tabList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return returnItem(index);
+                      }))),
         ),
       ),
     );

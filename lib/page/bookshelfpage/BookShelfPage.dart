@@ -145,53 +145,51 @@ class _BookShelfPageState extends State<BookShelfPage> with RouteAware {
       ),
       child: DefaultTextStyle(
         style: CupertinoTheme.of(context).textTheme.textStyle,
-        child: SafeArea(
-          child: Center(
-            child: CupertinoScrollbar(
-                child: SmartRefresher(
-                    controller: _refreshController,
-                    headerBuilder: (context, mode) {
-                      return new ClassicIndicator(
-                          mode: mode,
-                          releaseText: '释放刷新',
-                          refreshingText: '正在刷新...',
-                          completeText: '刷新完成',
-                          noDataText: '没有更多数据了',
-                          failedText: '刷新失败',
-                          idleText: '下拉刷新',
-                          height: 40);
-                    },
-                    enablePullDown: true,
-                    enablePullUp: false,
-                    onRefresh: (up) {
-                      if (up) {
-                        //上拉刷新重新刷新数据
-                        checkNewUser(context);
-                        new Future.delayed(const Duration(milliseconds: 2009))
-                            .then((val) {
-                          setState(() {
-                            _refreshController.sendBack(
-                                true, RefreshStatus.completed);
-                          });
+        child: Center(
+          child: CupertinoScrollbar(
+              child: SmartRefresher(
+                  controller: _refreshController,
+                  headerBuilder: (context, mode) {
+                    return new ClassicIndicator(
+                        mode: mode,
+                        releaseText: '释放刷新',
+                        refreshingText: '正在刷新...',
+                        completeText: '刷新完成',
+                        noDataText: '没有更多数据了',
+                        failedText: '刷新失败',
+                        idleText: '下拉刷新',
+                        height: 40);
+                  },
+                  enablePullDown: true,
+                  enablePullUp: false,
+                  onRefresh: (up) {
+                    if (up) {
+                      //上拉刷新重新刷新数据
+                      checkNewUser(context);
+                      new Future.delayed(const Duration(milliseconds: 2009))
+                          .then((val) {
+                        setState(() {
+                          _refreshController.sendBack(
+                              true, RefreshStatus.completed);
                         });
-                      } else {
-                        new Future.delayed(const Duration(milliseconds: 2009))
-                            .then((val) {
-                          setState(() {
-                            _refreshController.sendBack(
-                                false, RefreshStatus.idle);
-                          });
+                      });
+                    } else {
+                      new Future.delayed(const Duration(milliseconds: 2009))
+                          .then((val) {
+                        setState(() {
+                          _refreshController.sendBack(
+                              false, RefreshStatus.idle);
                         });
-                      }
-                    },
-                    child: new ListView.builder(
-                        reverse: true,
-                        controller: _scrollController,
-                        itemCount: recommendBooksList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return returnUserItem(recommendBooksList[index]);
-                        }))),
-          ),
+                      });
+                    }
+                  },
+                  child: new ListView.builder(
+                      reverse: true,
+                      controller: _scrollController,
+                      itemCount: recommendBooksList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return returnUserItem(recommendBooksList[index]);
+                      }))),
         ),
       ),
     );

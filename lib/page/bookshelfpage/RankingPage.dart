@@ -115,49 +115,37 @@ class _RankingPageState extends State<RankingPage> with RouteAware {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverOverlapAbsorber(
-                handle:
-                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                child: SliverAppBar(
-                  centerTitle: true,
-                  title: Text(widget.title),
-                  pinned: true,
-                  expandedHeight: 0.0,
-                  forceElevated: innerBoxIsScrolled,
-                  bottom: TabBar(
-                    tabs: <Widget>[
-                      Tab(
-                        text: '周榜',
-                      ),
-                      Tab(
-                        text: '月榜',
-                      ),
-                      Tab(
-                        text: '总榜',
-                      )
-                    ],
-                  ),
-                ),
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(widget.title),
+          elevation: 0,
+          bottom: TabBar(
+            tabs: <Widget>[
+              Tab(
+                text: '周榜',
               ),
-            ];
-          },
-          body: CupertinoScrollbar(
-            child: TabBarView(
-              children: <Widget>[
-                Center(
-                  child: _buildTabView(booksWeek),
-                ),
-                Center(
-                  child: _buildTabView(booksMonth),
-                ),
-                Center(
-                  child: _buildTabView(booksAll),
-                )
-              ],
-            ),
+              Tab(
+                text: '月榜',
+              ),
+              Tab(
+                text: '总榜',
+              )
+            ],
+          ),
+        ),
+        body: CupertinoScrollbar(
+          child: TabBarView(
+            children: <Widget>[
+              Center(
+                child: _buildTabView(booksWeek),
+              ),
+              Center(
+                child: _buildTabView(booksMonth),
+              ),
+              Center(
+                child: _buildTabView(booksAll),
+              )
+            ],
           ),
         ),
       ),
@@ -195,7 +183,6 @@ class _RankingPageState extends State<RankingPage> with RouteAware {
 
   _buildTabView(List<BooksBean> books) {
     return Container(
-      padding: EdgeInsets.only(top: 10),
       child: ListView.builder(
           itemCount: books.length,
           itemBuilder: (BuildContext context, int index) {

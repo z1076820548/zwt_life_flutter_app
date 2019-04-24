@@ -159,7 +159,7 @@ class _ReaderCatlogState extends State<ReaderCatlog>
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        backgroundColor:GlobalColors.appbarColor,
+        backgroundColor: GlobalColors.appbarColor,
         leading: CupertinoButton(
           child: const Text('取消'),
           padding: EdgeInsets.zero,
@@ -191,8 +191,7 @@ class _ReaderCatlogState extends State<ReaderCatlog>
       ),
       child: DefaultTextStyle(
         style: CupertinoTheme.of(context).textTheme.textStyle,
-        child: SafeArea(
-            child: Center(
+        child: Center(
           child: CupertinoScrollbar(
             child: ListView.builder(
                 reverse: false,
@@ -203,7 +202,7 @@ class _ReaderCatlogState extends State<ReaderCatlog>
                   return ListItem(widget.chaptersList[index], index);
                 }),
           ),
-        )),
+        ),
       ),
     );
   }
