@@ -43,7 +43,7 @@ class _ChipsTile extends State<ChipsTile> {
         backgroundColor: _nameToColor(name),
         label: Text(
           _capitalize(name),
-          style: TextStyle(color: Colors.white, fontSize: 13),
+          style: TextStyle(color: Colors.white, fontSize: ScreenUtil.getInstance().setSp(12)),
         ),
         selected: _selectedMaterial == name,
         onSelected: (bool value) {

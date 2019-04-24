@@ -259,7 +259,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
           indent: ScreenUtil.getInstance().L(20),
         ),
         buildChips(),
-        buildShortInfo(),
+        buildLongInfo(),
       ],
     ));
   }
@@ -285,9 +285,11 @@ class _BookDetailPageState extends State<BookDetailPage> {
     }
   }
 
-  buildShortInfo() {
+  buildLongInfo() {
     return Wrap(
-
+      children: <Widget>[
+        Text(bookDetailBean.longIntro,overflow:TextOverflow.ellipsis,),
+      ],
     );
   }
 }
