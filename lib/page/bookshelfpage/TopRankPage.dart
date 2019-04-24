@@ -104,6 +104,7 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         centerTitle: true,
         title: Text('排行榜'),
       ),

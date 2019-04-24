@@ -101,11 +101,11 @@ dioGetBookDetail(String bookId) async {
   String path = "/book/$bookId";
   Map<String, String> requestParams = {};
   ResultData res = await HttpManager.netFetch(url, path, requestParams, method: 'GET');
-//  if (res != null && res.result) {
-//    Map map = json.decode(res.data.toString());
-//    RankingBean rankingBean =  RankingBean.fromJson(map['ranking']);
-//    return Data(rankingBean, true);
-//  } else {
-//    return Data("", false);
-//  }
+  if (res != null && res.result) {
+    Map map = json.decode(res.data.toString());
+    RankingBean rankingBean =  RankingBean.fromJson(map);
+    return Data(rankingBean, true);
+  } else {
+    return Data("", false);
+  }
 }
