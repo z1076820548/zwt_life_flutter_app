@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:zwt_life_flutter_app/page/MainPage.dart';
 import 'package:zwt_life_flutter_app/page/LoginPage.dart';
+import 'package:zwt_life_flutter_app/page/bookshelfpage/BookDetailPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/FindBookPage.dart';
+import 'package:zwt_life_flutter_app/page/bookshelfpage/OtherRankingPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/RankingPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/ReadBookPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/TopRankPage.dart';
@@ -232,7 +234,12 @@ class NavigatorUtils {
     NavigatorRouter(
         context, new RankingPage( week: week,month: month,all: all,title: title,));
   }
-
+  ///其他家排行榜详情
+  static gotoOtherRankingPage(
+      BuildContext context, String bookId,String title) {
+    NavigatorRouter(
+        context, new OtherRankingPage(title: title,bookId: bookId,));
+  }
   ///阅读界面
   static gotoReadBookPage(
       BuildContext context,String bookTitle,String bookId) {
@@ -244,6 +251,13 @@ class NavigatorUtils {
       BuildContext context) {
     NavigatorRouter(
         context, new FindBookPage());
+  }
+
+  ///小说详情
+  static gotoBookDetailPage(
+      BuildContext context,String bookId) {
+    NavigatorRouter(
+        context, new BookDetailPage(bookId: bookId,));
   }
   ///聊天
   static gotoMessageTalkingPage(

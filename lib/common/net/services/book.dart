@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:zwt_life_flutter_app/common/model/BookDetailBean.dart';
 import 'package:zwt_life_flutter_app/common/net/Api.dart';
 import 'package:zwt_life_flutter_app/public.dart';
 
@@ -92,4 +93,19 @@ dioGetRankingDetail(String rankingId) async {
   } else {
     return Data("", false);
   }
+}
+
+//获取小说详情
+dioGetBookDetail(String bookId) async {
+  String url = Constant.API_BASE_URL;
+  String path = "/book/$bookId";
+  Map<String, String> requestParams = {};
+  ResultData res = await HttpManager.netFetch(url, path, requestParams, method: 'GET');
+//  if (res != null && res.result) {
+//    Map map = json.decode(res.data.toString());
+//    RankingBean rankingBean =  RankingBean.fromJson(map['ranking']);
+//    return Data(rankingBean, true);
+//  } else {
+//    return Data("", false);
+//  }
 }

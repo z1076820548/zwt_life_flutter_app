@@ -79,7 +79,9 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
       childs.add(Material(
         child: Ink(
           child: InkWell(
-            onTap: () {},
+            onTap: () {
+              tap2(bean);
+            },
             child: Container(
               child: Row(
                 children: <Widget>[
@@ -102,6 +104,7 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text('排行榜'),
       ),
       body: CupertinoScrollbar(
@@ -199,5 +202,9 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
         femaleChildes.add(isCollapseFemale);
       });
     }
+  }
+
+  void tap2(MaleBean bean) {
+    NavigatorUtils.gotoOtherRankingPage(context,bean.id,bean.title);
   }
 }

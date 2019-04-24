@@ -40,7 +40,9 @@ class _RankingPageState extends State<RankingPage> with RouteAware {
     return Material(
       child: Ink(
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            tap(book);
+          },
           child: Container(
             child: Row(
               children: <Widget>[
@@ -120,9 +122,10 @@ class _RankingPageState extends State<RankingPage> with RouteAware {
                 handle:
                     NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 child: SliverAppBar(
+                  centerTitle: true,
                   title: Text(widget.title),
                   pinned: true,
-                  expandedHeight: 150.0,
+                  expandedHeight: 0.0,
                   forceElevated: innerBoxIsScrolled,
                   bottom: TabBar(
                     tabs: <Widget>[
@@ -199,5 +202,9 @@ class _RankingPageState extends State<RankingPage> with RouteAware {
             return returnItem(books[index]);
           }),
     );
+  }
+
+  void tap(BooksBean book) {
+    NavigatorUtils.gotoBookDetailPage(context, book.id);
   }
 }

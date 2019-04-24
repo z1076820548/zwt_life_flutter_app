@@ -17,7 +17,7 @@ BooksBean _$BooksBeanFromJson(Map<String, dynamic> json) {
       json['majorCate'] as String,
       json['banned'] as int,
       json['latelyFollower'] as int,
-      json['retentionRatio'].toString(),
+      json['retentionRatio'],
       json['minorCate'] as String,
       json['allowMonthly'] as bool);
 }

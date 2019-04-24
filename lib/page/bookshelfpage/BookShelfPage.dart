@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -58,14 +59,12 @@ class _BookShelfPageState extends State<BookShelfPage> with RouteAware {
                         bottom: new BorderSide(
                             color: Color(0xFFe1e1e1), width: 1.0))),
                 child: new ListTile(
-                  leading: new ClipRRect(
-                    borderRadius: BorderRadius.circular(5.0),
-                    child: Image(
-                      image:
-                          NetworkImage(Constant.IMG_BASE_URL + '${item.cover}'),
-                      width: ScreenUtil.getInstance().L(50),
-                      height: ScreenUtil.getInstance().L(50),
-                    ),
+                  leading: ExtendedImage.network(
+                    (Constant.IMG_BASE_URL + '${item.cover}'),
+                    height: ScreenUtil.getInstance().L(50),
+                    fit: BoxFit.fitHeight,
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    cache: true,
                   ),
                   title: Row(
                     children: <Widget>[

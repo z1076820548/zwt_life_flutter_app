@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-
 part 'BooksBean.g.dart';
 
 @JsonSerializable()
@@ -16,7 +15,7 @@ class BooksBean {
   bool allowMonthly;
   int banned;
   int latelyFollower;
-  String retentionRatio;
+  dynamic retentionRatio;
 
   BooksBean(this.id, this.title, this.author, this.cover, this.shortIntro,
       this.site, this.majorCate, this.banned, this.latelyFollower,
@@ -27,3 +26,4 @@ class BooksBean {
 
   Map<String, dynamic> toJson() => _$BooksBeanToJson(this);
 }
+
