@@ -6,6 +6,7 @@ import 'package:zwt_life_flutter_app/page/MainPage.dart';
 import 'package:zwt_life_flutter_app/page/LoginPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/BookDetailPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/BooksByTagPage.dart';
+import 'package:zwt_life_flutter_app/page/bookshelfpage/CatoryListDetailPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/FindBookPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/OtherRankingPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/RankingPage.dart';
@@ -287,6 +288,17 @@ class NavigatorUtils {
   //小说分类
   static gotoTopCategoryPage(BuildContext context) {
     NavigatorRouter(context, new TopCategoryPage());
+  }
+
+  //小说二级分类
+  static gotoCatoryListDetailPage(
+      BuildContext context, String cate, String gender) {
+    NavigatorRouter(
+        context,
+        new CatoryListDetailPage(
+          cate: cate,
+          gender: gender,
+        ));
   }
 
   ///聊天

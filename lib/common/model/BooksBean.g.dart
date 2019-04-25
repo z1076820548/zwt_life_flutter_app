@@ -8,6 +8,7 @@ part of 'BooksBean.dart';
 
 BooksBean _$BooksBeanFromJson(Map<String, dynamic> json) {
   return BooksBean(
+      (json['tags'] as List)?.map((e) => e as String)?.toList(),
       json['_id'] as String,
       json['title'] as String,
       json['author'] as String,
@@ -34,5 +35,6 @@ Map<String, dynamic> _$BooksBeanToJson(BooksBean instance) => <String, dynamic>{
       'allowMonthly': instance.allowMonthly,
       'banned': instance.banned,
       'latelyFollower': instance.latelyFollower,
-      'retentionRatio': instance.retentionRatio
+      'retentionRatio': instance.retentionRatio,
+      'tags': instance.tags
     };

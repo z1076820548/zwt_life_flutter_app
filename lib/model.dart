@@ -17,4 +17,4 @@ export 'package:zwt_life_flutter_app/common/model/BookDetailBean.dart';
 export 'package:zwt_life_flutter_app/common/model/Rating.dart';
 export 'package:zwt_life_flutter_app/common/model/TagBookBean.dart';
 export 'package:zwt_life_flutter_app/common/model/CategoryList.dart';
-export 'package:zwt_life_flutter_app/common/model/Male.dart';
+export 'package:zwt_life_flutter_app/common/model/CategoryList2.dart';

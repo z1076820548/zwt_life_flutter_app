@@ -73,18 +73,23 @@ class _TopCategoryPageState extends State<TopCategoryPage> {
 
   _buildGridView(int count) {
     List<Male> list;
+    String type;
     switch (count) {
       case 0:
         list = categoryList.male;
+        type = 'male';
         break;
       case 1:
         list = categoryList.female;
+        type = 'female';
         break;
       case 2:
         list = categoryList.picture;
+        type = 'picture';
         break;
       case 3:
         list = categoryList.press;
+        type = 'press';
         break;
     }
 
@@ -98,39 +103,48 @@ class _TopCategoryPageState extends State<TopCategoryPage> {
       ),
       delegate: new SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          return returnItem(list[index]);
+          return returnItem(list[index], type);
         },
         childCount: list.length,
       ),
     );
   }
 
-  returnItem(Male item) {
-    return Container(
-        decoration: BoxDecoration(
-          border: new Border.all( color: Color(0xFFe1e1e1), width: 0.2),
+  returnItem(Male item, String type) {
+    return Material(
+      child: Ink(
+        child: InkWell(
+          onTap: () {
+            tap(item, type);
+          },
+          child: Container(
+              decoration: BoxDecoration(
+                border: new Border.all(color: Color(0xFFe1e1e1), width: 0.2),
+              ),
+              padding: EdgeInsets.symmetric(vertical: 5),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    child: Text(
+                      item.name,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: ScreenUtil.getInstance().setSp(16)),
+                    ),
+                  ),
+                  Container(
+                    child: Text(
+                      item.bookCount.toString() + "本",
+                      style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: ScreenUtil.getInstance().setSp(12)),
+                    ),
+                  )
+                ],
+              )),
         ),
-        padding: EdgeInsets.symmetric(vertical: 5),
-        child: Column(
-          children: <Widget>[
-            Container(
-              child: Text(
-                item.name,
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: ScreenUtil.getInstance().setSp(16)),
-              ),
-            ),
-            Container(
-              child: Text(
-                item.bookCount.toString() + "本",
-                style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: ScreenUtil.getInstance().setSp(12)),
-              ),
-            )
-          ],
-        ));
+      ),
+    );
   }
 
   _buildView() {
@@ -141,5 +155,9 @@ class _TopCategoryPageState extends State<TopCategoryPage> {
     } else {
       return Container();
     }
+  }
+
+  void tap(Male item, String type) {
+    NavigatorUtils.gotoCatoryListDetailPage(context, item.name, type);
   }
 }

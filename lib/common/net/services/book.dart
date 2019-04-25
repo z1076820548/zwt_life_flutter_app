@@ -141,14 +141,56 @@ dioGetBookByTags(String tags, String start, String limit) async {
 dioGetCategoryList() async {
   String url = Constant.API_BASE_URL;
   String path = "/cats/lv2/statistics";
-  Map<String, String> requestParams = {
-  };
+  Map<String, String> requestParams = {};
   ResultData res =
-  await HttpManager.netFetch(url, path, requestParams, method: 'GET');
+      await HttpManager.netFetch(url, path, requestParams, method: 'GET');
   if (res != null && res.result) {
     Map map = json.decode(res.data.toString());
     CategoryList categoryList = new CategoryList.fromJsonMap(map);
     return Data(categoryList, true);
+  } else {
+    return Data("", false);
+  }
+}
+
+//获取二级分类
+dioGetCategoryList2() async {
+  String url = Constant.API_BASE_URL;
+  String path = "/cats/lv2";
+  Map<String, String> requestParams = {};
+  ResultData res =
+      await HttpManager.netFetch(url, path, requestParams, method: 'GET');
+  if (res != null && res.result) {
+    Map map = json.decode(res.data.toString());
+    CategoryList2 categoryList2 = new CategoryList2.fromJsonMap(map);
+    return Data(categoryList2, true);
+  } else {
+    return Data("", false);
+  }
+}
+
+//分类详情
+dioGetBooksByCats(String gender, final String major, String minor, String type,
+    final int start, int limit) async {
+  String url = Constant.API_BASE_URL;
+  String path = "/book/by-categories";
+  Map<String, String> requestParams = {
+    "gender": '$gender',
+    "major": '$major',
+    "minor": '$minor',
+    "type": '$type',
+    "start": '$start',
+    "limit": '$limit',
+  };
+  ResultData res =
+      await HttpManager.netFetch(url, path, requestParams, method: 'GET');
+  if (res != null && res.result) {
+    Map map = json.decode(res.data.toString());
+    List<BooksBean> list = (map['books'] as List)
+        ?.map((e) =>
+            e == null ? null : BooksBean.fromJson(e as Map<String, dynamic>))
+        ?.toList();
+    return Data(list, true);
   } else {
     return Data("", false);
   }
