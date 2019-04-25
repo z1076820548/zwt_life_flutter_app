@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:zwt_life_flutter_app/page/MainPage.dart';
 import 'package:zwt_life_flutter_app/page/LoginPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/BookDetailPage.dart';
+import 'package:zwt_life_flutter_app/page/bookshelfpage/BooksByTagPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/FindBookPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/OtherRankingPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/RankingPage.dart';
@@ -215,55 +216,76 @@ class NavigatorUtils {
   }
 
   ///聊天拍摄
-  static gotoChatCameraHomePage(
-      BuildContext context) {
-    NavigatorRouter(
-        context, new ChatCameraHomePage());
+  static gotoChatCameraHomePage(BuildContext context) {
+    NavigatorRouter(context, new ChatCameraHomePage());
   }
 
   ///排行榜
-  static gotoTopRankPage(
-      BuildContext context) {
-    NavigatorRouter(
-        context, new TopRankPage());
+  static gotoTopRankPage(BuildContext context) {
+    NavigatorRouter(context, new TopRankPage());
   }
 
   ///排行榜详情
-  static gotoRankingPage(
-      BuildContext context, String week,String month,String all,String title) {
+  static gotoRankingPage(BuildContext context, String week, String month,
+      String all, String title) {
     NavigatorRouter(
-        context, new RankingPage( week: week,month: month,all: all,title: title,));
+        context,
+        new RankingPage(
+          week: week,
+          month: month,
+          all: all,
+          title: title,
+        ));
   }
+
   ///其他家排行榜详情
   static gotoOtherRankingPage(
-      BuildContext context, String bookId,String title) {
+      BuildContext context, String bookId, String title) {
     NavigatorRouter(
-        context, new OtherRankingPage(title: title,bookId: bookId,));
+        context,
+        new OtherRankingPage(
+          title: title,
+          bookId: bookId,
+        ));
   }
+
   ///阅读界面
   static gotoReadBookPage(
-      BuildContext context,String bookTitle,String bookId) {
+      BuildContext context, String bookTitle, String bookId) {
     NavigatorRouter(
-        context, new ReadBookPage(bookId: bookId,bookTitle: bookTitle,));
+        context,
+        new ReadBookPage(
+          bookId: bookId,
+          bookTitle: bookTitle,
+        ));
   }
+
   ///找书
-  static gotoFindBookPage(
-      BuildContext context) {
-    NavigatorRouter(
-        context, new FindBookPage());
+  static gotoFindBookPage(BuildContext context) {
+    NavigatorRouter(context, new FindBookPage());
   }
 
   ///小说详情
-  static gotoBookDetailPage(
-      BuildContext context,String bookId) {
+  static gotoBookDetailPage(BuildContext context, String bookId) {
     NavigatorRouter(
-        context, new BookDetailPage(bookId: bookId,));
+        context,
+        new BookDetailPage(
+          bookId: bookId,
+        ));
   }
-  ///聊天
-  static gotoMessageTalkingPage(
-      BuildContext context) {
+
+  ///小说标签
+  static gotoBookByTagsPage(BuildContext context, String tag) {
     NavigatorRouter(
-        context, new MessageTalkingPage());
+        context,
+        new BooksByTagPage(
+          tag: tag,
+        ));
+  }
+
+  ///聊天
+  static gotoMessageTalkingPage(BuildContext context) {
+    NavigatorRouter(context, new MessageTalkingPage());
   }
 
   static NavigatorRouter(BuildContext context, Widget widget) {

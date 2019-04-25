@@ -9,6 +9,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:redux/redux.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_statusbar/flutter_statusbar.dart';
@@ -376,7 +377,8 @@ class CommonUtils {
   }
 
 //选择喜好
-  static Future<Null> showLickeDialog(BuildContext context,VoidCallback onPressedleft,VoidCallback onPressedright) {
+  static Future<Null> showLickeDialog(BuildContext context,
+      VoidCallback onPressedleft, VoidCallback onPressedright) {
     return showCupertinoDialog(
         context: context,
         builder: (BuildContext context) {
@@ -399,7 +401,9 @@ class CommonUtils {
                       new Container(height: 10.0),
                       new Container(child: Text("请选择您的喜好")),
                       new Container(height: 10.0),
-                      Image(image:AssetImage("static/images/gender.png"),),
+                      Image(
+                        image: AssetImage("static/images/gender.png"),
+                      ),
                       new Container(height: 10.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -434,5 +438,28 @@ class CommonUtils {
                 ),
               ));
         });
+  }
+
+  static Widget headerCtreate(BuildContext context, RefreshStatus mode) {
+    return new ClassicIndicator(
+        mode: mode,
+        releaseText: '释放刷新',
+        refreshingText: '正在刷新...',
+        completeText: '刷新完成',
+        noDataText: '没有更多数据了',
+        failedText: '刷新失败',
+        idleText: '下拉刷新',
+        height: 40);
+  }
+
+  static Widget footerCreate(BuildContext context, RefreshStatus mode) {
+    return new ClassicIndicator(
+      mode: mode,
+      refreshingText: '加载中...',
+      idleIcon: const Icon(Icons.arrow_upward),
+      idleText: '上拉加载更多...',
+      noDataText: '我是有底线的...',
+        noMoreIcon:Icon(Icons.airport_shuttle,color:Colors.grey),
+    );
   }
 }

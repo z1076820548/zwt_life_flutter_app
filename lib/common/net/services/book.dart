@@ -71,7 +71,8 @@ dioGetTopBank() async {
   String url = Constant.API_BASE_URL;
   String path = "/ranking/gender";
   Map<String, String> requestParams = {};
-  ResultData res = await HttpManager.netFetch(url, path, requestParams, method: 'GET');
+  ResultData res =
+      await HttpManager.netFetch(url, path, requestParams, method: 'GET');
   if (res != null && res.result) {
     Map map = json.decode(res.data.toString());
     return Data(map, true);
@@ -85,10 +86,11 @@ dioGetRankingDetail(String rankingId) async {
   String url = Constant.API_BASE_URL;
   String path = "/ranking/$rankingId";
   Map<String, String> requestParams = {};
-  ResultData res = await HttpManager.netFetch(url, path, requestParams, method: 'GET');
+  ResultData res =
+      await HttpManager.netFetch(url, path, requestParams, method: 'GET');
   if (res != null && res.result) {
     Map map = json.decode(res.data.toString());
-    RankingBean rankingBean =  RankingBean.fromJson(map['ranking']);
+    RankingBean rankingBean = RankingBean.fromJson(map['ranking']);
     return Data(rankingBean, true);
   } else {
     return Data("", false);
@@ -100,11 +102,36 @@ dioGetBookDetail(String bookId) async {
   String url = Constant.API_BASE_URL;
   String path = "/book/$bookId";
   Map<String, String> requestParams = {};
-  ResultData res = await HttpManager.netFetch(url, path, requestParams, method: 'GET');
+  ResultData res =
+      await HttpManager.netFetch(url, path, requestParams, method: 'GET');
   if (res != null && res.result) {
     Map map = json.decode(res.data.toString());
-    BookDetailBean bookDetailBean =  BookDetailBean.fromJson(map);
+    BookDetailBean bookDetailBean = BookDetailBean.fromJson(map);
     return Data(bookDetailBean, true);
+  } else {
+    return Data("", false);
+  }
+}
+
+//获取小说详情
+dioGetBookByTags(String tags, String start, String limit) async {
+  String url = Constant.API_BASE_URL;
+  String path = "/book/by-tags";
+  Map<String, String> requestParams = {
+    'tags': tags,
+    'start': start,
+    'limit': limit,
+  };
+  ResultData res =
+      await HttpManager.netFetch(url, path, requestParams, method: 'GET');
+  if (res != null && res.result) {
+    Map map = json.decode(res.data.toString());
+    List<TagBookBean> list = new List();
+    list = (map['books'] as List)
+        ?.map((e) =>
+            e == null ? null : TagBookBean.fromJson(e as Map<String, dynamic>))
+        ?.toList();
+    return Data(list, true);
   } else {
     return Data("", false);
   }

@@ -149,17 +149,7 @@ class _BookShelfPageState extends State<BookShelfPage> with RouteAware {
           child: CupertinoScrollbar(
               child: SmartRefresher(
                   controller: _refreshController,
-                  headerBuilder: (context, mode) {
-                    return new ClassicIndicator(
-                        mode: mode,
-                        releaseText: '释放刷新',
-                        refreshingText: '正在刷新...',
-                        completeText: '刷新完成',
-                        noDataText: '没有更多数据了',
-                        failedText: '刷新失败',
-                        idleText: '下拉刷新',
-                        height: 40);
-                  },
+                  headerBuilder: CommonUtils.headerCtreate,
                   enablePullDown: true,
                   enablePullUp: false,
                   onRefresh: (up) {

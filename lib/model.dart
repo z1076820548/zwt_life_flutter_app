@@ -15,3 +15,4 @@ export 'package:zwt_life_flutter_app/common/model/RankingBean.dart';
 export 'package:zwt_life_flutter_app/common/model/BooksBean.dart';
 export 'package:zwt_life_flutter_app/common/model/BookDetailBean.dart';
 export 'package:zwt_life_flutter_app/common/model/Rating.dart';
+export 'package:zwt_life_flutter_app/common/model/TagBookBean.dart';

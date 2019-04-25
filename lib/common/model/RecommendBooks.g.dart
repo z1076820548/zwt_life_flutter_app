@@ -20,7 +20,7 @@ RecommendBooks _$RecommendBooksFromJson(Map<String, dynamic> json) {
       json['isFromSD'] as bool,
       json['path'] as String,
       json['latelyFollower'] as int,
-      (json['retentionRatio'] as num)?.toDouble(),
+      json['retentionRatio'],
       json['updated'] as String,
       json['chaptersCount'] as int,
       json['lastChapter'] as String,

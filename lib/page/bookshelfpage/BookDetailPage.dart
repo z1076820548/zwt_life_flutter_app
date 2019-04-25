@@ -19,8 +19,11 @@ class BookDetailPage extends StatefulWidget {
 }
 
 class _BookDetailPageState extends State<BookDetailPage> {
+  BookShelfDbProvider bookShelfDbProvider = new BookShelfDbProvider();
   BookDetailBean bookDetailBean;
   TapGestureRecognizer tapRecognizer = new TapGestureRecognizer();
+  bool noShowCollapseLongIntro = true;
+  bool isCollect = false;
 
   @override
   void initState() {
@@ -51,8 +54,8 @@ class _BookDetailPageState extends State<BookDetailPage> {
           ))
         ],
       ),
-      body: Center(
-        child: CupertinoScrollbar(
+      body: CupertinoScrollbar(
+        child: SingleChildScrollView(
           child: _buildView(),
         ),
       ),
@@ -66,10 +69,20 @@ class _BookDetailPageState extends State<BookDetailPage> {
         bookDetailBean = res.data;
       });
     }
+    List<RecommendBooks> list =
+        await bookShelfDbProvider.getOneData(bookDetailBean.id);
+    if (list.length != 0) {
+      setState(() {
+        isCollect = true;
+      });
+    }
   }
 
-  //富文本点击
-  void richTap() {}
+  //富文本点击  作者
+  void richTap() {
+    NavigatorUtils.gotoBookByTagsPage(
+        context, bookDetailBean.author.replaceAll(" ", ""));
+  }
 
   _buildView() {
     if (bookDetailBean == null) {
@@ -154,7 +167,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
               Material(
                 child: Ink(
                   child: InkWell(
-                    onTap: () => {},
+                    onTap: () => {joinCollection()},
                     child: Container(
                       padding:
                           EdgeInsets.symmetric(vertical: 10, horizontal: 40),
@@ -163,7 +176,12 @@ class _BookDetailPageState extends State<BookDetailPage> {
                         // 边色与边宽度
                         borderRadius: new BorderRadius.circular((5.0)), // 圆角度
                       ),
-                      child: Text(
+                      child: isCollect?Text(
+                        "- 不追了",
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: ScreenUtil.getInstance().setSp(15)),
+                      ):Text(
                         "+ 追更新",
                         style: TextStyle(
                             color: Colors.black,
@@ -179,7 +197,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
               Material(
                 child: Ink(
                   child: InkWell(
-                    onTap: () => {},
+                    onTap: () => {startRead()},
                     child: Container(
                       padding:
                           EdgeInsets.symmetric(vertical: 10, horizontal: 40),
@@ -260,6 +278,10 @@ class _BookDetailPageState extends State<BookDetailPage> {
         ),
         buildChips(),
         buildLongInfo(),
+        Container(
+          color: Colors.grey[200],
+          padding: EdgeInsets.symmetric(vertical: 3),
+        ),
       ],
     ));
   }
@@ -286,10 +308,55 @@ class _BookDetailPageState extends State<BookDetailPage> {
   }
 
   buildLongInfo() {
-    return Wrap(
-      children: <Widget>[
-        Text(bookDetailBean.longIntro,overflow:TextOverflow.ellipsis,),
-      ],
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          noShowCollapseLongIntro = !noShowCollapseLongIntro;
+        });
+      },
+      child: Column(
+        children: <Widget>[
+          Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                bookDetailBean.longIntro,
+                maxLines: (noShowCollapseLongIntro ? 4 : 20),
+                overflow: TextOverflow.ellipsis,
+              )),
+          Container(
+              child: Icon(noShowCollapseLongIntro
+                  ? Icons.keyboard_arrow_up
+                  : Icons.keyboard_arrow_down))
+        ],
+      ),
     );
+  }
+
+  //追更新
+  joinCollection() {
+    if (isCollect) {
+      setState(() {
+        isCollect = false;
+      });
+      ToastUtils.info(context, "已取消追更");
+      bookShelfDbProvider.delete(bookDetailBean.id);
+    } else {
+      setState(() {
+        isCollect = true;
+      });
+      ToastUtils.info(context, "添加成功");
+
+      RecommendBooks recommendBooks =
+          RecommendBooks.fromJson(bookDetailBean.toJson());
+      bookShelfDbProvider.insert(recommendBooks.id, DateTime.now(),
+          json.encode(recommendBooks.toJson()));
+
+    }
+  }
+
+  //开始阅读
+  startRead() {
+    NavigatorUtils.gotoReadBookPage(
+        context, bookDetailBean.title, bookDetailBean.id);
   }
 }

@@ -55,8 +55,8 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
             border: new BorderDirectional(
                 bottom: new BorderSide(color: Color(0xFFe1e1e1), width: 0.5))),
         child: ListTile(
-          onTap: () {
-            tap(myGroups[index]);
+          onTap: () async{
+           await tap(myGroups[index]);
           },
           leading: ClipRRect(
             borderRadius: BorderRadius.circular(5.0),
@@ -206,6 +206,6 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
   }
 
   void tap2(MaleBean bean) {
-    NavigatorUtils.gotoOtherRankingPage(context,bean.id,bean.title);
+    NavigatorUtils.gotoOtherRankingPage(context, bean.id, bean.title);
   }
 }

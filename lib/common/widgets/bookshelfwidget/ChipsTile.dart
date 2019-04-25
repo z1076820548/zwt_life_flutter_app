@@ -38,20 +38,23 @@ class _ChipsTile extends State<ChipsTile> {
     _materials.clear();
     _materials.addAll(widget.defaultMaterials);
     List<Widget> choiceChips = _materials.map<Widget>((String name) {
-      return ChoiceChip(
-        key: ValueKey<String>(name),
-        backgroundColor: _nameToColor(name),
-        label: Text(
-          _capitalize(name),
-          style: TextStyle(color: Colors.white, fontSize: ScreenUtil.getInstance().setSp(12)),
-        ),
-        selected: _selectedMaterial == name,
-        onSelected: (bool value) {
-          setState(() {
-            _selectedMaterial = value ? name : '';
-          });
-        },
-      );
+      if(name.isNotEmpty){
+        return ChoiceChip(
+          key: ValueKey<String>(name),
+          backgroundColor: _nameToColor(name),
+          label: Text(
+            _capitalize(name),
+            style: TextStyle(color: Colors.white, fontSize: ScreenUtil.getInstance().setSp(12)),
+          ),
+          selected: _selectedMaterial == name,
+          onSelected: (bool value) {
+            setState(() {
+              _selectedMaterial = value ? name : '';
+            });
+            NavigatorUtils.gotoBookByTagsPage(context, name);
+          },
+        );
+      }
     }).toList();
 
     children = choiceChips;

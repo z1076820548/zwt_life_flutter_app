@@ -98,6 +98,11 @@ class BookShelfDbProvider extends BaseDbProvider {
     }
   }
 
+  Future<int> delete(String bookId) async {
+    Database db = await getDataBase();
+    return await db.delete(name, where: '$columnBookId = ?', whereArgs: [bookId]);
+  }
+
   ///获取所有事件数据
   Future<List<RecommendBooks>> getAllData() async {
     Database db = await getDataBase();

@@ -16,7 +16,7 @@ class RecommendBooks{
    bool isFromSD = false;
    String path = "";
    int latelyFollower;
-   double retentionRatio;
+   dynamic retentionRatio;
    String updated = "";
    int chaptersCount;
    String lastChapter;
