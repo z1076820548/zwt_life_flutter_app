@@ -136,3 +136,20 @@ dioGetBookByTags(String tags, String start, String limit) async {
     return Data("", false);
   }
 }
+
+//获取分类
+dioGetCategoryList() async {
+  String url = Constant.API_BASE_URL;
+  String path = "/cats/lv2/statistics";
+  Map<String, String> requestParams = {
+  };
+  ResultData res =
+  await HttpManager.netFetch(url, path, requestParams, method: 'GET');
+  if (res != null && res.result) {
+    Map map = json.decode(res.data.toString());
+    CategoryList categoryList = new CategoryList.fromJsonMap(map);
+    return Data(categoryList, true);
+  } else {
+    return Data("", false);
+  }
+}

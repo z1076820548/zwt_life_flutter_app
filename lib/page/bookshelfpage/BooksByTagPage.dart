@@ -21,7 +21,7 @@ class BooksByTagPage extends StatefulWidget {
 
 class _BooksByTagPageState extends State<BooksByTagPage> {
   List<TagBookBean> tagList = [];
-  RefreshController _refreshController;
+  RefreshController _refreshController = new RefreshController();
   int currentStart = 0;
   int currentLimit = 10;
   bool isLoadeMore = false;
@@ -29,11 +29,7 @@ class _BooksByTagPageState extends State<BooksByTagPage> {
   @override
   void initState() {
     super.initState();
-
-    Future.delayed(const Duration(milliseconds: 100), () async {
-      await initData();
-    });
-    _refreshController = new RefreshController();
+    initData();
   }
 
   returnItem(TagBookBean book) {
@@ -134,7 +130,7 @@ class _BooksByTagPageState extends State<BooksByTagPage> {
       setState(() {
         tagList = list;
         currentStart = tagList.length;
-        if (list.length > 9) {
+        if (list.length >= currentLimit) {
           isLoadeMore = true;
         }
       });

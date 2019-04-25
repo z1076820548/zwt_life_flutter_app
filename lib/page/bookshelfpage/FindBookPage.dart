@@ -115,6 +115,10 @@ class _FindBookPageState extends State<FindBookPage> {
       case 0:
         NavigatorUtils.gotoTopRankPage(context);
         break;
+       //分类
+      case 1:
+        NavigatorUtils.gotoTopCategoryPage(context);
+        break;
     }
   }
 }

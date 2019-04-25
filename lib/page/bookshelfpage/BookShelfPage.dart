@@ -27,9 +27,7 @@ class _BookShelfPageState extends State<BookShelfPage> with RouteAware {
     super.initState();
     _refreshController = new RefreshController();
     _scrollController = new ScrollController();
-    Future.delayed(Duration(seconds: 0), () {
-      checkNewUser(context);
-    });
+    checkNewUser(context);
   }
 
   void scrollTop() {

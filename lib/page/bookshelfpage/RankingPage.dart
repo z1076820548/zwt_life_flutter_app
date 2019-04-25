@@ -4,7 +4,7 @@ import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:zwt_life_flutter_app/public.dart';
 import 'package:extended_image/extended_image.dart';
 
-//排行榜细节
+//排行榜
 class RankingPage extends StatefulWidget {
   static final String sName = "RankingPage";
   final String week;
@@ -30,10 +30,7 @@ class _RankingPageState extends State<RankingPage>  {
   @override
   void initState() {
     super.initState();
-
-    Future.delayed(const Duration(milliseconds: 100), () async {
-      await initGetRank();
-    });
+     initGetRank();
   }
 
   returnItem(BooksBean book) {

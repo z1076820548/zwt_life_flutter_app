@@ -27,10 +27,7 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
   @override
   void initState() {
     super.initState();
-
-    Future.delayed(const Duration(milliseconds: 100), () async {
-      await initGetRank();
-    });
+    initGetRank();
   }
 
   returnItem(
@@ -55,8 +52,8 @@ class _TopRankPageState extends State<TopRankPage> with RouteAware {
             border: new BorderDirectional(
                 bottom: new BorderSide(color: Color(0xFFe1e1e1), width: 0.5))),
         child: ListTile(
-          onTap: () async{
-           await tap(myGroups[index]);
+          onTap: () async {
+            await tap(myGroups[index]);
           },
           leading: ClipRRect(
             borderRadius: BorderRadius.circular(5.0),

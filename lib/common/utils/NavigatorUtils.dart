@@ -10,6 +10,7 @@ import 'package:zwt_life_flutter_app/page/bookshelfpage/FindBookPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/OtherRankingPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/RankingPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/ReadBookPage.dart';
+import 'package:zwt_life_flutter_app/page/bookshelfpage/TopCategoryPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/TopRankPage.dart';
 import 'package:zwt_life_flutter_app/page/messagepage/ChatCameraHomePage.dart';
 import 'package:zwt_life_flutter_app/page/messagepage/ImageHudPage.dart';
@@ -281,6 +282,11 @@ class NavigatorUtils {
         new BooksByTagPage(
           tag: tag,
         ));
+  }
+
+  //小说分类
+  static gotoTopCategoryPage(BuildContext context) {
+    NavigatorRouter(context, new TopCategoryPage());
   }
 
   ///聊天
