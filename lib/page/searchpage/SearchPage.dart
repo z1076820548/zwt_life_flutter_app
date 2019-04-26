@@ -5,9 +5,10 @@ import 'package:zwt_life_flutter_app/common/utils/NavigatorUtils.dart';
 import 'package:zwt_life_flutter_app/common/widgets/searchwidget/hotSug.dart';
 import 'package:zwt_life_flutter_app/common/widgets/searchwidget/recomend.dart';
 import 'package:zwt_life_flutter_app/common/widgets/searchwidget/topbar.dart';
+import 'package:zwt_life_flutter_app/public.dart';
 
 class SearchPage extends StatefulWidget {
-  static final String sName = "Search";
+  static final String sName = "SearchPage";
 
   @override
   _SearchPageState createState() {
@@ -17,7 +18,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  List hotWords = [];
+  List<String> hotWords = [];
   List<String> recomendWords = [];
   TextEditingController controller = new TextEditingController();
 
@@ -48,17 +49,17 @@ class _SearchPageState extends State<SearchPage> {
             controller: controller,
           )),
       body: recomendWords.length == 0
-          ? HotSugWidget(
+          ? ((hotWords.length == 0)?Container():HotSugWidget(
               hotWords: hotWords,
               goSearchList: goSearchList,
-            )
+            ))
           : RecomendListWidget(items: recomendWords, onItemTap: goSearchList),
     );
   }
 
   goSearchList(String keyWord) {
     if (keyWord.trim().isNotEmpty) {
-      NavigatorUtils.goSearchResultListPage(context,keyWord);
+      NavigatorUtils.goSearchResultListPage(context, keyWord);
     }
   }
 
@@ -78,9 +79,10 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void initData() async {
-    List querys = await dioGetHotSugs();
+    Data data = await dioGetHotSugs();
+    HotWordBean hotWordBean = data.data;
     setState(() {
-      hotWords = querys;
+      hotWords = hotWordBean.hotWords;
     });
   }
 }

@@ -39,21 +39,7 @@ dioGetSearchResult(String keyworld, [int page = 0]) async {
   return json['data']['searchm']['Paragraph'] as List;
 }
 
-dioGetHotSugs() async {
-  String url = Address.baseUrl2;
-  String path = "/sug";
-  Map<String, String> requestParams = {
-    "area": "sug_hot",
-    "wireless": "2",
-  };
-  ResultData res = await HttpManager.netFetch(url, path, requestParams);
-  if (res != null && res.result) {
-    List querys = jsonDecode(res.data)['querys'] as List;
-    return querys;
-  } else {
-    return [];
-  }
-}
+
 
 dioGetSuggest(String q) async {
   String url = Address.baseUrl2;

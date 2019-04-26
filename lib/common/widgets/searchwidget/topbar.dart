@@ -29,8 +29,7 @@ class SearchTopBarActionWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 5),
         child: Text(
           "搜索",
-          style: TextStyle(
-              color: GlobalColors.themeColor),
+          style: TextStyle(color: GlobalColors.themeColor),
         ),
       ),
     );
@@ -77,7 +76,7 @@ class SearchTopBarTitleWidget extends StatelessWidget {
               cursorColor: GlobalColors.floorTitleColor,
               decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(0),
-                  hintText: "输入商品名称",
+                  hintText: "输入书名或作者名",
                   hintStyle: TextStyle(fontSize: 14),
                   border: InputBorder.none),
             ),

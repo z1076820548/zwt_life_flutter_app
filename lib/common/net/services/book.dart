@@ -170,8 +170,13 @@ dioGetCategoryList2() async {
 }
 
 //分类详情
-dioGetBooksByCats({String gender,  String major, String minor, String type,
-     int start, int limit}) async {
+dioGetBooksByCats(
+    {String gender,
+    String major,
+    String minor,
+    String type,
+    int start,
+    int limit}) async {
   String url = Constant.API_BASE_URL;
   String path = "/book/by-categories";
   Map<String, String> requestParams = {
@@ -191,6 +196,21 @@ dioGetBooksByCats({String gender,  String major, String minor, String type,
             e == null ? null : BooksBean.fromJson(e as Map<String, dynamic>))
         ?.toList();
     return Data(list, true);
+  } else {
+    return Data("", false);
+  }
+}
+
+//搜索热词
+dioGetHotSugs() async {
+  String url = Constant.API_BASE_URL;
+  String path = "/book/hot-word";
+  Map<String, String> requestParams = {};
+  ResultData res = await HttpManager.netFetch(url, path, requestParams);
+  if (res != null && res.result) {
+    Map map = json.decode(res.data.toString());
+    HotWordBean hotWordBean = HotWordBean.fromJsonMap(map);
+    return Data(hotWordBean, true);
   } else {
     return Data("", false);
   }

@@ -18,3 +18,4 @@ export 'package:zwt_life_flutter_app/common/model/Rating.dart';
 export 'package:zwt_life_flutter_app/common/model/TagBookBean.dart';
 export 'package:zwt_life_flutter_app/common/model/CategoryList.dart';
 export 'package:zwt_life_flutter_app/common/model/CategoryList2.dart';
+export 'package:zwt_life_flutter_app/common/model/HotWordBean.dart';

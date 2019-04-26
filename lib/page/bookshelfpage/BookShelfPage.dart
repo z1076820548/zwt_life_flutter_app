@@ -136,7 +136,9 @@ class _BookShelfPageState extends State<BookShelfPage> with RouteAware {
           padding: EdgeInsets.zero,
           child: Semantics(
             child: IconButton(
-                onPressed: () => {},
+                onPressed: () {
+                  NavigatorUtils.goSearchPage(context);
+                },
                 icon: Icon(CupertinoIcons.search, color: Colors.black)),
           ),
         ),
@@ -223,7 +225,6 @@ class _BookShelfPageState extends State<BookShelfPage> with RouteAware {
               recommendBooks.lastChapter = chaptersList.last.title;
               bookShelfDbProvider.insert(recommendBooks.id, DateTime.now(),
                   json.encode(recommendBooks.toJson()));
-
             }
           }
         }

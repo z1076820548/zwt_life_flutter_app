@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 //颜色
 class GlobalColors {
-  static const Color  themeColor = Colors.green;
-  static const Color  appbarColor =  Color(0xFFEEEEEE);
+  static const Color themeColor = Colors.green;
+  static const Color appbarColor = Color(0xFFEEEEEE);
   static const String primaryValueString = "#24292E";
   static const String primaryLightValueString = "#42464b";
   static const String primaryDarkValueString = "#121917";
@@ -72,6 +72,26 @@ class GlobalColors {
       900: const Color(primaryDarkValue),
     },
   );
+  static int random = 200;
+  static List<Color> randomColor = [
+    Colors.orange[200],
+    Colors.red[200],
+    Colors.pink[200],
+    Colors.purple[200],
+    Colors.deepPurple[200],
+    Colors.indigo[200],
+    Colors.blue[200],
+    Colors.lightBlue[200],
+    Colors.cyan[200],
+    Colors.teal[200],
+    Colors.green[200],
+    Colors.lightGreen[200],
+    Colors.lime[200],
+    Colors.yellow[200],
+    Colors.amber[200],
+    Colors.orange[200],
+    Colors.deepOrange[200],
+  ];
 }
 
 //文本样式
