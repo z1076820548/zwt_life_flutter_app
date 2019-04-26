@@ -10,6 +10,4 @@ class DateUtil {
     return DateFormat(newPattern).format(datetime);
   }
 
-
-
 }

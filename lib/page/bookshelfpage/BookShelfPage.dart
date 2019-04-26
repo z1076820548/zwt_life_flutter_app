@@ -211,18 +211,19 @@ class _BookShelfPageState extends State<BookShelfPage> with RouteAware {
             if (!recommendBooks.lastChapter
                 .trim()
                 .contains(chaptersList.last.title.trim())) {
-              //是
-              //数据库插入
-              recommendBooks.noUpdate = false;
-              recommendBooks.lastChapter = chaptersList.last.title;
-              bookShelfDbProvider.insert(recommendBooks.id, DateTime.now(),
-                  json.encode(recommendBooks.toJson()));
               //用户要点击阅读以后 更新才会清除 不然一直存在
               print("章节已更新");
               setState(() {
                 recommendBooksList[i].lastChapter = chaptersList.last.title;
                 recommendBooksList[i].noUpdate = false;
               });
+              //是
+              //数据库插入
+              recommendBooks.noUpdate = false;
+              recommendBooks.lastChapter = chaptersList.last.title;
+              bookShelfDbProvider.insert(recommendBooks.id, DateTime.now(),
+                  json.encode(recommendBooks.toJson()));
+
             }
           }
         }

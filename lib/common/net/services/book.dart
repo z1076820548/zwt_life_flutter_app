@@ -170,8 +170,8 @@ dioGetCategoryList2() async {
 }
 
 //分类详情
-dioGetBooksByCats(String gender, final String major, String minor, String type,
-    final int start, int limit) async {
+dioGetBooksByCats({String gender,  String major, String minor, String type,
+     int start, int limit}) async {
   String url = Constant.API_BASE_URL;
   String path = "/book/by-categories";
   Map<String, String> requestParams = {

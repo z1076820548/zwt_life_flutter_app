@@ -16,7 +16,7 @@ class TopCategoryPage extends StatefulWidget {
 
 class _TopCategoryPageState extends State<TopCategoryPage> {
   CategoryList categoryList;
-  List sliveTitle = ['男生', '女生', '其它', '出版'];
+  List sliveTitle = ['男生', '女生', '出版', '漫画'];
 
   @override
   void initState() {
@@ -53,7 +53,7 @@ class _TopCategoryPageState extends State<TopCategoryPage> {
 
   List<Widget> _buildSlivers(BuildContext context) {
     List<Widget> slivers = new List<Widget>();
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 3; i++) {
       slivers.add(_buildHeaderBuilderLists(context, i));
     }
     return slivers;
@@ -84,12 +84,13 @@ class _TopCategoryPageState extends State<TopCategoryPage> {
         type = 'female';
         break;
       case 2:
-        list = categoryList.picture;
-        type = 'picture';
-        break;
-      case 3:
         list = categoryList.press;
         type = 'press';
+
+        break;
+      case 3:
+        list = categoryList.picture;
+        type = 'picture';
         break;
     }
 
@@ -158,6 +159,6 @@ class _TopCategoryPageState extends State<TopCategoryPage> {
   }
 
   void tap(Male item, String type) {
-    NavigatorUtils.gotoCatoryListDetailPage(context, item.name, type);
+    NavigatorUtils.gotoCategoryListDetailPage(context, item.name, type);
   }
 }
