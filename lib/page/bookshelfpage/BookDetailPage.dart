@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ChipsTile.dart';
+import 'package:zwt_life_flutter_app/common/widgets/searchwidget/hotSug.dart';
 import 'package:zwt_life_flutter_app/public.dart';
 
 class BookDetailPage extends StatefulWidget {
@@ -176,17 +177,19 @@ class _BookDetailPageState extends State<BookDetailPage> {
                         // 边色与边宽度
                         borderRadius: new BorderRadius.circular((5.0)), // 圆角度
                       ),
-                      child: isCollect?Text(
-                        "- 不追了",
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: ScreenUtil.getInstance().setSp(15)),
-                      ):Text(
-                        "+ 追更新",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: ScreenUtil.getInstance().setSp(15)),
-                      ),
+                      child: isCollect
+                          ? Text(
+                              "- 不追了",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: ScreenUtil.getInstance().setSp(15)),
+                            )
+                          : Text(
+                              "+ 追更新",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: ScreenUtil.getInstance().setSp(15)),
+                            ),
                     ),
                   ),
                 ),
@@ -290,12 +293,10 @@ class _BookDetailPageState extends State<BookDetailPage> {
     if (bookDetailBean.tags.isNotEmpty && bookDetailBean.tags.length > 0) {
       return Column(
         children: <Widget>[
-          Wrap(
-            children: <Widget>[
-              ChipsTile(
-                defaultMaterials: bookDetailBean.tags,
-              )
-            ],
+          HotSugWidget(
+            isVisible: false,
+            hotWords: bookDetailBean.tags,
+            goSearchList: goSearchList,
           ),
           Divider(
             indent: ScreenUtil.getInstance().L(20),
@@ -350,7 +351,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
           RecommendBooks.fromJson(bookDetailBean.toJson());
       bookShelfDbProvider.insert(recommendBooks.id, DateTime.now(),
           json.encode(recommendBooks.toJson()));
-
     }
   }
 
@@ -358,5 +358,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
   startRead() {
     NavigatorUtils.gotoReadBookPage(
         context, bookDetailBean.title, bookDetailBean.id);
+  }
+
+  void goSearchList(String qery) {
+    NavigatorUtils.gotoBookByTagsPage(context, qery);
   }
 }

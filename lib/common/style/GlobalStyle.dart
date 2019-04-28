@@ -84,12 +84,12 @@ class GlobalColors {
     Colors.lightBlue[200],
     Colors.cyan[200],
     Colors.teal[200],
-    Colors.green[200],
-    Colors.lightGreen[200],
-    Colors.lime[200],
-    Colors.yellow[200],
-    Colors.amber[200],
-    Colors.orange[200],
+    Colors.green[300],
+    Colors.lightGreen[300],
+    Colors.lime[400],
+    Colors.yellow[600],
+    Colors.amber[300],
+    Colors.orange[300],
     Colors.deepOrange[200],
   ];
 }

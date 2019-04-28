@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:zwt_life_flutter_app/common/style/GlobalStyle.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/screen_util.dart';
@@ -17,6 +18,7 @@ class SearchTopBarLeadingWidget extends StatelessWidget {
 class SearchTopBarActionWidget extends StatelessWidget {
   final VoidCallback onActionTap;
 
+//输入框焦点变化
   const SearchTopBarActionWidget({Key key, this.onActionTap}) : super(key: key);
 
   @override
@@ -37,15 +39,17 @@ class SearchTopBarActionWidget extends StatelessWidget {
 }
 
 class SearchTopBarTitleWidget extends StatelessWidget {
-  final ValueChanged<String> searchTxtChanged;
+  final ValueChanged<String> textMessageSubmitted;
   final TextEditingController controller;
 
   const SearchTopBarTitleWidget(
-      {Key key, this.searchTxtChanged, this.controller})
+      {Key key, this.textMessageSubmitted, this.controller})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+
     // TODO: implement build
     return Container(
       height: ScreenUtil.searchTxtFieldHeight,
@@ -59,18 +63,19 @@ class SearchTopBarTitleWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Icon(
-            Icons.search,
+            CupertinoIcons.search,
             color: GlobalColors.floorTitleColor,
             size: 20,
           ),
           Expanded(
             child: TextField(
+              focusNode: FocusNode(),
               controller: controller,
               onSubmitted: (s) {
-                print(s);
+                textMessageSubmitted(s);
               },
-              //键盘回车
-              onChanged: searchTxtChanged,
+              textInputAction: TextInputAction.search,
+
               cursorWidth: 1.5,
               autofocus: true,
               cursorColor: GlobalColors.floorTitleColor,

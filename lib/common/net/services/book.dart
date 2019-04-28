@@ -113,7 +113,7 @@ dioGetBookDetail(String bookId) async {
   }
 }
 
-//获取小说详情
+//获取小说标签
 dioGetBookByTags(String tags, String start, String limit) async {
   String url = Constant.API_BASE_URL;
   String path = "/book/by-tags";
@@ -211,6 +211,65 @@ dioGetHotSugs() async {
     Map map = json.decode(res.data.toString());
     HotWordBean hotWordBean = HotWordBean.fromJsonMap(map);
     return Data(hotWordBean, true);
+  } else {
+    return Data("", false);
+  }
+}
+
+
+//关键字自动补全
+dioGetAutoComplete(String query) async {
+  String url = Constant.API_BASE_URL;
+  String path = "/book/auto-complete";
+  Map<String, String> requestParams = {
+    'query':query,
+  };
+  ResultData res = await HttpManager.netFetch(url, path, requestParams);
+  if (res != null && res.result) {
+    Map map = json.decode(res.data.toString());
+    List<String> list =(map['keywords'] as List)?.map((e) => e as String)?.toList();
+    return Data(list, true);
+  } else {
+    return Data("", false);
+  }
+}
+
+//书籍查询
+dioGetSearchBooks(String query) async {
+  String url = Constant.API_BASE_URL;
+  String path = "/book/fuzzy-search";
+  Map<String, String> requestParams = {
+    'query':query,
+  };
+  ResultData res = await HttpManager.netFetch(url, path, requestParams);
+  if (res != null && res.result) {
+    Map map = json.decode(res.data.toString());
+    List<BooksBean> list = (map['books'] as List)
+        ?.map((e) =>
+    e == null ? null : BooksBean.fromJson(e as Map<String, dynamic>))
+        ?.toList();
+    return Data(list, true);
+  } else {
+    return Data("", false);
+  }
+}
+
+
+//通过作者查询书籍
+dioGetSearchBooksByAuthor(String author) async {
+  String url = Constant.API_BASE_URL;
+  String path = "/book/accurate-search";
+  Map<String, String> requestParams = {
+    'author':author,
+  };
+  ResultData res = await HttpManager.netFetch(url, path, requestParams);
+  if (res != null && res.result) {
+    Map map = json.decode(res.data.toString());
+    List<BooksBean> list = (map['books'] as List)
+        ?.map((e) =>
+    e == null ? null : BooksBean.fromJson(e as Map<String, dynamic>))
+        ?.toList();
+    return Data(list, true);
   } else {
     return Data("", false);
   }
