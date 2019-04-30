@@ -6,6 +6,8 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:zwt_life_flutter_app/common/manager/settingmanager.dart';
 import 'package:zwt_life_flutter_app/public.dart';
 
+List<RecommendBooks> recommendBooksList = new List();
+
 class BookShelfPage extends StatefulWidget {
   static final String sName = "BookShelf";
 
@@ -16,11 +18,14 @@ class BookShelfPage extends StatefulWidget {
   }
 }
 
-class _BookShelfPageState extends State<BookShelfPage>  {
-  static List<RecommendBooks> recommendBooksList = new List();
+class _BookShelfPageState extends State<BookShelfPage> {
   RefreshController _refreshController;
   ScrollController _scrollController;
   final SlidableController slidableController = new SlidableController();
+  BookShelfDbProvider bookShelfDbProvider = new BookShelfDbProvider();
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {}
 
   @override
   void initState() {
@@ -39,12 +44,12 @@ class _BookShelfPageState extends State<BookShelfPage>  {
     _refreshController.requestRefresh(true);
   }
 
-  returnUserItem(RecommendBooks item) {
+  returnUserItem(RecommendBooks item, int index) {
     return new GestureDetector(
       child: new Slidable(
         controller: slidableController,
         delegate: new SlidableDrawerDelegate(),
-        actionExtentRatio: 0.1,
+        actionExtentRatio: 0.13,
         child: Material(
           child: Ink(
             child: InkWell(
@@ -101,25 +106,28 @@ class _BookShelfPageState extends State<BookShelfPage>  {
               caption: '缓存',
               icon: Icons.file_download,
               onTap: () {}),
-          new IconSlideAction(
-              foregroundColor: Colors.grey,
-              color: Colors.grey[50],
-              caption: '养肥',
-              icon: Icons.collections_bookmark,
-              onTap: () {}),
+//          new IconSlideAction(
+//              foregroundColor: Colors.grey,
+//              color: Colors.grey[50],
+//              caption: '养肥',
+//              icon: Icons.collections_bookmark,
+//              onTap: () {}),
           new IconSlideAction(
               foregroundColor: Colors.grey,
               color: Colors.grey[50],
               caption: '置顶',
               icon: Icons.vertical_align_top,
-              onTap: () {}),
+              onTap: () {
+                toTop(item, index);
+              }),
           new IconSlideAction(
-            caption: '删除',
-            foregroundColor: Colors.red,
-            color: Colors.grey[50],
-            icon: Icons.delete_outline,
-            onTap: () => ToastUtils.info(context, '成功删除'),
-          ),
+              caption: '删除',
+              foregroundColor: Colors.red,
+              color: Colors.grey[50],
+              icon: Icons.delete_outline,
+              onTap: () {
+                delete(item, index);
+              }),
         ],
       ),
     );
@@ -178,7 +186,7 @@ class _BookShelfPageState extends State<BookShelfPage>  {
                       controller: _scrollController,
                       itemCount: recommendBooksList.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return returnUserItem(recommendBooksList[index]);
+                        return returnUserItem(recommendBooksList[index], index);
                       }))),
         ),
       ),
@@ -188,60 +196,77 @@ class _BookShelfPageState extends State<BookShelfPage>  {
   void checkNewUser(BuildContext context) async {
     //第一次登录 选择性别
     if (!SettingManager.getInstance().isUserChooseSex()) {
-      Future.delayed(Duration(seconds: 1),(){
+      Future.delayed(Duration(seconds: 1), () {
         CommonUtils.showLickeDialog(context, () {
           setSex(Constant.MALE);
         }, () {
           setSex(Constant.FEMALE);
         });
       });
-
     } else {
       //否则 从数据库中读取书架
-      BookShelfDbProvider bookShelfDbProvider = new BookShelfDbProvider();
+
       var data = await bookShelfDbProvider.getAllData();
-      setState(() {
-        recommendBooksList.clear();
-        recommendBooksList.addAll(data);
-      });
-      RecommendBooks recommendBooks;
-      if (recommendBooksList?.length != null) {
-        for (int i = 0; i < recommendBooksList.length; i++) {
-          recommendBooks = recommendBooksList[i];
-          Data data = await dioGetAToc(recommendBooks.id, "chapters");
-          if (data.result && data.data.toString().length > 0) {
-            MixToc mixToc = data.data;
-            List<Chapters> chaptersList = mixToc.chapters;
-            //章节是否更新
-            if (!recommendBooks.lastChapter
-                .trim()
-                .contains(chaptersList.last.title.trim())) {
-              //用户要点击阅读以后 更新才会清除 不然一直存在
-              print("章节已更新");
-              setState(() {
-                recommendBooksList[i].lastChapter = chaptersList.last.title;
-                recommendBooksList[i].noUpdate = false;
-              });
-              //是
-              //数据库插入
-              recommendBooks.noUpdate = false;
-              recommendBooks.lastChapter = chaptersList.last.title;
-              bookShelfDbProvider.insert(recommendBooks.id, DateTime.now(),
-                  json.encode(recommendBooks.toJson()));
+      if (data != null) {
+        setState(() {
+          recommendBooksList.clear();
+          recommendBooksList.addAll(data);
+        });
+        RecommendBooks recommendBooks;
+        if (recommendBooksList?.length != null) {
+          for (int i = 0; i < recommendBooksList.length; i++) {
+            recommendBooks = recommendBooksList[i];
+            Data data = await dioGetAToc(recommendBooks.id, "chapters");
+            if (data.result && data.data.toString().length > 0) {
+              MixToc mixToc = data.data;
+              List<Chapters> chaptersList = mixToc.chapters;
+              //章节是否更新
+              if (!recommendBooks.lastChapter
+                  .trim()
+                  .contains(chaptersList.last.title.trim())) {
+                //用户要点击阅读以后 更新才会清除 不然一直存在
+                print("章节已更新");
+                setState(() {
+                  recommendBooksList[i].lastChapter = chaptersList.last.title;
+                  recommendBooksList[i].noUpdate = false;
+                });
+                //是
+                //数据库插入
+                recommendBooks.noUpdate = false;
+                recommendBooks.lastChapter = chaptersList.last.title;
+                bookShelfDbProvider.insert(recommendBooks.id, DateTime.now(),
+                    json.encode(recommendBooks.toJson()));
+              }
             }
           }
-        }
-      } else {
-        //选择性别
-        Future.delayed(Duration(seconds: 1),(){
-          CommonUtils.showLickeDialog(context, () {
-            setSex(Constant.MALE);
-          }, () {
-            setSex(Constant.FEMALE);
+        } else {
+          //选择性别
+          Future.delayed(Duration(seconds: 1), () {
+            CommonUtils.showLickeDialog(context, () {
+              setSex(Constant.MALE);
+            }, () {
+              setSex(Constant.FEMALE);
+            });
           });
-        });
+        }
       }
     }
+  }
+
+  toTop(RecommendBooks item, int index) {
+    setState(() {
+      recommendBooksList.removeAt(index);
+      recommendBooksList.insert(0, item);
+    });
+    bookShelfDbProvider.insert(
+        item.id, DateTime.now(), json.encode(item.toJson()));
+  }
+
+  delete(RecommendBooks item, int index) async {
+    setState(() {
+      recommendBooksList.removeAt(index);
+    });
+    bookShelfDbProvider.delete(item.id);
   }
 
   setSex(String sex) async {
@@ -252,7 +277,6 @@ class _BookShelfPageState extends State<BookShelfPage>  {
       setState(() {
         recommendBooksList = data.data;
       });
-      BookShelfDbProvider bookShelfDbProvider = new BookShelfDbProvider();
 
       for (RecommendBooks recommendBooks in data.data) {
         //将书架目录加入数据库
@@ -266,7 +290,6 @@ class _BookShelfPageState extends State<BookShelfPage>  {
   void tap(RecommendBooks item) async {
     NavigatorUtils.gotoReadBookPage(context, item.title, item.id);
     //更新阅读时间
-    BookShelfDbProvider bookShelfDbProvider = new BookShelfDbProvider();
     item.noUpdate = true;
     await bookShelfDbProvider.insert(
         item.id, DateTime.now(), json.encode(item.toJson()));

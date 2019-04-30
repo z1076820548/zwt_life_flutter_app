@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ChipsTile.dart';
 import 'package:zwt_life_flutter_app/common/widgets/searchwidget/hotSug.dart';
+import 'package:zwt_life_flutter_app/page/bookshelfpage/BookShelfPage.dart';
 import 'package:zwt_life_flutter_app/public.dart';
 
 class BookDetailPage extends StatefulWidget {
@@ -341,14 +342,22 @@ class _BookDetailPageState extends State<BookDetailPage> {
       });
       ToastUtils.info(context, "已取消追更");
       bookShelfDbProvider.delete(bookDetailBean.id);
+      //删除于书架
+      for (int i = 0; i < recommendBooksList.length; i++) {
+        if (recommendBooksList[i].id == bookDetailBean.id) {
+          recommendBooksList.removeAt(i);
+          break;
+        }
+      }
     } else {
       setState(() {
         isCollect = true;
       });
       ToastUtils.info(context, "添加成功");
-
+      //添加到书架
       RecommendBooks recommendBooks =
           RecommendBooks.fromJson(bookDetailBean.toJson());
+      recommendBooksList.add(recommendBooks);
       bookShelfDbProvider.insert(recommendBooks.id, DateTime.now(),
           json.encode(recommendBooks.toJson()));
     }
