@@ -10,7 +10,6 @@ class SettingManager {
   static SettingManager getInstance() {
     return _manager != null ? _manager : (_manager = new SettingManager());
   }
-
   /**
    * 保存全局生效的阅读字体大小
    *

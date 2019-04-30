@@ -244,9 +244,9 @@ dioGetSearchBooks(String query) async {
   ResultData res = await HttpManager.netFetch(url, path, requestParams);
   if (res != null && res.result) {
     Map map = json.decode(res.data.toString());
-    List<BooksBean> list = (map['books'] as List)
+    List<TagBookBean> list = (map['books'] as List)
         ?.map((e) =>
-    e == null ? null : BooksBean.fromJson(e as Map<String, dynamic>))
+    e == null ? null : TagBookBean.fromJson(e as Map<String, dynamic>))
         ?.toList();
     return Data(list, true);
   } else {
@@ -265,9 +265,9 @@ dioGetSearchBooksByAuthor(String author) async {
   ResultData res = await HttpManager.netFetch(url, path, requestParams);
   if (res != null && res.result) {
     Map map = json.decode(res.data.toString());
-    List<BooksBean> list = (map['books'] as List)
+    List<TagBookBean> list = (map['books'] as List)
         ?.map((e) =>
-    e == null ? null : BooksBean.fromJson(e as Map<String, dynamic>))
+    e == null ? null : TagBookBean.fromJson(e as Map<String, dynamic>))
         ?.toList();
     return Data(list, true);
   } else {

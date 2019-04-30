@@ -12,8 +12,6 @@ class OtherRankingPage extends StatefulWidget {
 
   const OtherRankingPage({Key key, this.bookId, this.title}) : super(key: key);
 
-
-
   @override
   _OtherRankingPageState createState() {
     // TODO: implement createState
@@ -72,7 +70,11 @@ class _OtherRankingPageState extends State<OtherRankingPage> with RouteAware {
                           ),
                         ),
                         Text(
-                          book.author + '  |  ' + book.majorCate,
+                          book.author +
+                              '  |  ' +
+                              (book.majorCate == null
+                                  ? 'null'
+                                  : book.majorCate),
                           style: TextStyle(
                               color: Colors.grey,
                               fontSize: ScreenUtil.getInstance().setSp(12)),
@@ -110,15 +112,14 @@ class _OtherRankingPageState extends State<OtherRankingPage> with RouteAware {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-         appBar: AppBar(
-           title: Text(widget.title),
-         ),
-        body: CupertinoScrollbar(
-          child:
-              Center(
-                child: _buildTabView(booksWeek),
-              ),
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: CupertinoScrollbar(
+        child: Center(
+          child: _buildTabView(booksWeek),
         ),
+      ),
     );
   }
 
@@ -131,8 +132,6 @@ class _OtherRankingPageState extends State<OtherRankingPage> with RouteAware {
         booksWeek = books;
       });
     }
-
-
   }
 
   _buildTabView(List<BooksBean> books) {

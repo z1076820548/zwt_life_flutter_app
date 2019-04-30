@@ -48,7 +48,7 @@ class _ChipsTile extends State<ChipsTile> {
           ),
           selected: _selectedMaterial == name,
           onSelected: (bool value) {
-            NavigatorUtils.gotoBookByTagsPage(context, name);
+            NavigatorUtils.gotoBookByTagsPage(context, name,'Tags');
             setState(() {
               _selectedMaterial = value ? name : '';
             });

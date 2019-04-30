@@ -9,8 +9,9 @@ import 'package:extended_image/extended_image.dart';
 class BooksByTagPage extends StatefulWidget {
   static final String sName = "BooksByTagPage";
   final String tag;
+  final String type;
 
-  const BooksByTagPage({Key key, this.tag}) : super(key: key);
+  const BooksByTagPage({Key key, this.tag, this.type}) : super(key: key);
 
   @override
   _BooksByTagPageState createState() {
@@ -71,7 +72,11 @@ class _BooksByTagPageState extends State<BooksByTagPage> {
                           ),
                         ),
                         Text(
-                          book.author + '  |  ' + book.majorCate,
+                          book.author +
+                              '  |  ' +
+                              (book.majorCate == null
+                                  ? 'null'
+                                  : book.majorCate),
                           style: TextStyle(
                               color: Colors.grey,
                               fontSize: ScreenUtil.getInstance().setSp(12)),
@@ -123,17 +128,31 @@ class _BooksByTagPageState extends State<BooksByTagPage> {
   }
 
   initData() async {
-    Data res = await dioGetBookByTags(
-        widget.tag, currentStart.toString(), currentLimit.toString());
-    if (res.data != null) {
-      List<TagBookBean> list = res.data;
-      setState(() {
-        tagList = list;
+    if (widget.type == 'Tags') {
+      Data res = await dioGetBookByTags(
+          widget.tag, currentStart.toString(), currentLimit.toString());
+      if (res.data != null) {
+        List<TagBookBean> list = res.data;
+        setState(() {
+          tagList = list;
+        });
         currentStart = tagList.length;
         if (list.length >= currentLimit) {
           isLoadeMore = true;
         }
-      });
+      }
+    } else if (widget.type == 'Author') {
+      Data res = await dioGetSearchBooksByAuthor(widget.tag);
+      if (res.data != null) {
+        List<TagBookBean> list = res.data;
+        setState(() {
+          tagList = list;
+        });
+        currentStart = tagList.length;
+        if (list.length >= currentLimit) {
+          isLoadeMore = true;
+        }
+      }
     }
   }
 

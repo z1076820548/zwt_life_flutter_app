@@ -50,7 +50,8 @@ class HistoryListWidget extends StatelessWidget {
               .map((text) => GestureDetector(
                     onTap: () => onItemTap(text),
                     child: Container(
-                      width: ScreenUtil.screenWidth / 2,
+                      alignment: Alignment.centerLeft,
+                      width: items.length == 1 ? ScreenUtil.screenWidth:(ScreenUtil.screenWidth / 2),
                       padding: EdgeInsets.only(left: 20, bottom: 10, top: 10),
                       child: Text(
                         text,

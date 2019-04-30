@@ -20,7 +20,8 @@ BooksBean _$BooksBeanFromJson(Map<String, dynamic> json) {
       json['latelyFollower'] as int,
       json['retentionRatio'],
       json['minorCate'] as String,
-      json['allowMonthly'] as bool);
+      json['allowMonthly'] as bool,
+      json['cat'] as String);
 }
 
 Map<String, dynamic> _$BooksBeanToJson(BooksBean instance) => <String, dynamic>{
@@ -31,6 +32,7 @@ Map<String, dynamic> _$BooksBeanToJson(BooksBean instance) => <String, dynamic>{
       'majorCate': instance.majorCate,
       'minorCate': instance.minorCate,
       'title': instance.title,
+      'cat': instance.cat,
       'shortIntro': instance.shortIntro,
       'allowMonthly': instance.allowMonthly,
       'banned': instance.banned,

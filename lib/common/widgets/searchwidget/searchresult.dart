@@ -1,100 +1,91 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:zwt_life_flutter_app/common/model/Search.dart';
 import 'package:zwt_life_flutter_app/common/style/GlobalStyle.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/screen_util.dart';
+import 'package:zwt_life_flutter_app/public.dart';
 
 class SearchResultListWidget extends StatelessWidget {
-  final SearchResultListModal list;
+  final List<TagBookBean> list;
   final ValueChanged<String> onItemTap;
   final VoidCallback getNextPage;
 
-  SearchResultListWidget(this.list, {this.onItemTap,this.getNextPage});
+  SearchResultListWidget(this.list, {this.onItemTap, this.getNextPage});
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return list.data.length == 0
+    return list.length == 0
         ? Center(
             child: CircularProgressIndicator(),
           )
         : ListView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            itemCount: list.data.length,
-            itemExtent: ScreenUtil().L(127),
+            itemCount: list.length,
             itemBuilder: (BuildContext context, int i) {
-              SearchResultItemModal item = list.data[i];
-              if ((i + 3) == list.data.length) {
-                getNextPage();
-              }
-              return Container(
-                color: GlobalColors.searchAppBarBgColor,
-                padding: EdgeInsets.only(
-                    top: ScreenUtil().L(5), right: ScreenUtil().L(10)),
+              return returnItem(list[i]);
+            });
+  }
+
+  returnItem(TagBookBean book) {
+    return Material(
+      child: Ink(
+        child: InkWell(
+          onTap: () {
+            onItemTap(book.id);
+          },
+          child: Column(
+            children: <Widget>[
+              Container(
                 child: Row(
                   children: <Widget>[
-                    Image.network(
-                      item.imageUrl,
-                      width: ScreenUtil().L(120),
-                      height: ScreenUtil().L(120),
-                    ),
-                    SizedBox(
-                      width: 10,
+                    Container(
+                      padding: EdgeInsets.only(left: 10),
+                      child: ExtendedImage.network(
+                        (Constant.IMG_BASE_URL + book.cover),
+                        height: ScreenUtil.getInstance().L(50),
+                        fit: BoxFit.fitHeight,
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        cache: true,
+                      ),
                     ),
                     Expanded(
                       child: Container(
-                        decoration: BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                                    width: 1,
-                                    color: GlobalColors.divideLineColor))),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
+                            Container(
+                              child: Text(
+                                book.title,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize:
+                                        ScreenUtil.getInstance().setSp(16)),
+                              ),
+                            ),
                             Text(
-                              item.wareName,
-                              maxLines: 2,
+                              book.author + '  |  ' + (book.cat == null ? (book.minorCate == null ? "null":book.minorCate):book.cat),
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: ScreenUtil.getInstance().setSp(12)),
+                            ),
+                            Text(
+                              book.shortIntro,
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                            ),
-                            Row(
-                              children: <Widget>[
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  '￥${item.price}',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: GlobalColors.priceColor),
-                                ),
-                                item.coupon == null
-                                    ? SizedBox()
-                                    : Container(
-                                        child: Text(
-                                          item.coupon,
-                                          style: TextStyle(
-                                              color: GlobalColors.themeColor),
-                                        ),
-                                        padding:
-                                            EdgeInsets.symmetric(horizontal: 3),
-                                        margin: EdgeInsets.only(left: 4),
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                width: 1,
-                                                color:
-                                                    GlobalColors.themeColor)),
-                                      )
-                              ],
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: ScreenUtil.getInstance().setSp(12)),
                             ),
                             Text(
-                              '${item.commentcount}人评价 好评率${item.good}%',
-                              style: GlobalConstant
-                                  .searchResultItemCommentCountStyle,
-                            ),
-                            Text(
-                              '${item.shopName}',
-                              style: GlobalConstant
-                                  .searchResultItemCommentCountStyle,
+                              book.latelyFollower.toString() +
+                                  " 人在追  |  " +
+                                  book.retentionRatio.toString() +
+                                  "% 读者留存率",
+                              style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: ScreenUtil.getInstance().setSp(12)),
                             ),
                           ],
                         ),
@@ -102,7 +93,15 @@ class SearchResultListWidget extends StatelessWidget {
                     )
                   ],
                 ),
-              );
-            });
+              ),
+              Divider(
+                indent: 20,
+                height: 1,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

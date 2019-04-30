@@ -22,37 +22,57 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   List<String> hotWords = [];
   List<String> listHot = [];
-  List<String> listHistory = [
-    "4564564",
-    "566565",
-    "454645645",
-    "6554564654654",
-    "4556545"
-  ];
+  List<String> listHistory = [];
   List<String> recomendWords = [];
   TextEditingController controller = new TextEditingController();
   bool isShowSuggesList = false;
   List<String> suggestions;
   int currentIndex = 0;
+  FocusNode focusNode = new FocusNode();
+  final String HISTORY_KEY = 'history_key';
+  ScrollController scrollController = new ScrollController();
 
   @override
   void initState() {
     // TODO: implement initState
     initData();
     super.initState();
-    controller.addListener(() async {
-      if (controller.text.trim().isNotEmpty) {
-        Data data = await dioGetAutoComplete(controller.text);
-        setState(() {
-          isShowSuggesList = true;
-          suggestions = data.data;
-        });
-      } else {
-        setState(() {
-          isShowSuggesList = false;
-        });
+    scrollController.addListener(() {
+      if (scrollController.offset.abs() > 1) {
+        focusNode.unfocus();
       }
     });
+  }
+
+  getHistory() {
+    String s = sp.getString(HISTORY_KEY, "");
+    if (s.isNotEmpty) {
+      SearchHistory searchHistory = SearchHistory.fromJsonMap(jsonDecode(s));
+      setState(() {
+        listHistory = searchHistory.history;
+      });
+    }
+  }
+
+  deleteHistory() {
+    FocusNode().unfocus();
+    AlertCupertinoUtil.showAletWithTitle(context,
+        contentText: '是否清空搜索历史?',
+        allowText: "删除",
+        cancleText: '取消',
+        isDestructiveAction: true, onAllow: () {
+      setState(() {
+        listHistory.clear();
+      });
+      sp.putString(HISTORY_KEY, "");
+    });
+  }
+
+  saveHistory(String s) {
+    setState(() {
+      listHistory.insert(0, s);
+    });
+    sp.putString(HISTORY_KEY, jsonEncode(SearchHistory(listHistory).toJson()));
   }
 
   @override
@@ -66,6 +86,7 @@ class _SearchPageState extends State<SearchPage> {
             actions: <Widget>[
               SearchTopBarActionWidget(
                 onActionTap: () => goSearchList(controller.text),
+                text: "搜索",
               )
             ],
             elevation: 0,
@@ -73,34 +94,60 @@ class _SearchPageState extends State<SearchPage> {
             title: SearchTopBarTitleWidget(
               textMessageSubmitted: seachTxtSubmitted,
               controller: controller,
+              listener: listener,
+              focusNode: focusNode,
             )),
         body: CupertinoScrollbar(
-          child: isShowSuggesList
-              ? SuggestionList(
-                  suggestions: suggestions,
-                  query: controller.text,
-                  onSelected: goSearchList,
-                )
-              : buildView(),
+          child: Container(
+            child: isShowSuggesList
+                ? SuggestionList(
+                    suggestions: suggestions,
+                    query: controller.text,
+                    onSelected: goSearchList,
+                  )
+                : buildView(),
+          ),
         ));
   }
 
   goSearchList(String keyWord) {
     if (keyWord.trim().isNotEmpty) {
       NavigatorUtils.goSearchResultListPage(context, keyWord);
+      focusNode.unfocus();
+      saveHistory(keyWord);
+      controller.clear();
+      setState(() {
+        isShowSuggesList = false;
+        suggestions.clear();
+      });
+    }
+  }
+
+  listener(String s) async {
+    if (s.trim().isNotEmpty) {
+      Data data = await dioGetAutoComplete(controller.text);
+      setState(() {
+        isShowSuggesList = true;
+        suggestions = data.data;
+      });
+    } else {
+      setState(() {
+        suggestions.clear();
+        isShowSuggesList = false;
+      });
     }
   }
 
   onSearchBtTap() {
     if (controller.text.trim().isNotEmpty) {
       goSearchList(controller.text);
+      saveHistory(controller.text);
     }
   }
 
   void seachTxtSubmitted(String s) async {
-    if (s.trim().isNotEmpty) {
-      NavigatorUtils.goSearchResultListPage(context, s);
-    }
+    goSearchList(s);
+    saveHistory(s);
   }
 
   void initData() async {
@@ -110,6 +157,7 @@ class _SearchPageState extends State<SearchPage> {
       hotWords = hotWordBean.hotWords;
     });
     tapSwitch();
+    getHistory();
   }
 
   tapSwitch() {
@@ -128,24 +176,32 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   buildView() {
-    return Column(
-      children: <Widget>[
-        (listHot == 0)
-            ? Container()
-            : HotSugWidget(
-                hotWords: listHot,
-                goSearchList: goSearchList,
-                tapSwitch: () {
-                  tapSwitch();
-                },
-              ),
-        (listHistory == 0)
-            ? Container()
-            : HistoryListWidget(
-                items: listHistory,
-                onItemTap: goSearchList,
-              ),
-      ],
+    return SingleChildScrollView(
+      controller: scrollController,
+      child: Column(
+        children: <Widget>[
+          (listHot == 0)
+              ? Container()
+              : HotSugWidget(
+                  hotWords: listHot,
+                  goSearchList: goSearchList,
+                  tapSwitch: () {
+                    tapSwitch();
+                  },
+                ),
+          (listHistory == 0)
+              ? Container()
+              : HistoryListWidget(
+                  items: ((listHistory.length <= 8)
+                      ? listHistory
+                      : listHistory.getRange(0, 8).toList()),
+                  onItemTap: goSearchList,
+                  tapDelete: () {
+                    deleteHistory();
+                  },
+                ),
+        ],
+      ),
     );
   }
 }

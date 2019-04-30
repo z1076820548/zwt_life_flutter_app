@@ -72,17 +72,17 @@ class _BookDetailPageState extends State<BookDetailPage> {
     }
     List<RecommendBooks> list =
         await bookShelfDbProvider.getOneData(bookDetailBean.id);
-    if (list.length != 0) {
+    if (list != null && list.length != 0) {
       setState(() {
         isCollect = true;
       });
     }
   }
 
-  //富文本点击  作者
+  //搜索作者
   void richTap() {
     NavigatorUtils.gotoBookByTagsPage(
-        context, bookDetailBean.author.replaceAll(" ", ""));
+        context, bookDetailBean.author.replaceAll(" ", ""), 'Author');
   }
 
   _buildView() {
@@ -361,6 +361,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
   }
 
   void goSearchList(String qery) {
-    NavigatorUtils.gotoBookByTagsPage(context, qery);
+    NavigatorUtils.gotoBookByTagsPage(context, qery, "Tags");
   }
 }

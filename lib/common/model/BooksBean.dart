@@ -11,6 +11,7 @@ class BooksBean {
   String majorCate;
   String minorCate;
   String title;
+  String cat;
   String shortIntro;
   bool allowMonthly;
   int banned;
@@ -20,7 +21,7 @@ class BooksBean {
 
   BooksBean(this.tags,this.id, this.title, this.author, this.cover, this.shortIntro,
       this.site, this.majorCate, this.banned, this.latelyFollower,
-     this.retentionRatio,this.minorCate,this.allowMonthly);
+     this.retentionRatio,this.minorCate,this.allowMonthly,this.cat);
 
   factory BooksBean.fromJson(Map<String, dynamic> json) =>
       _$BooksBeanFromJson(json);

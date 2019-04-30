@@ -72,7 +72,7 @@ class _RankingPageState extends State<RankingPage>  {
                           ),
                         ),
                         Text(
-                          book.author + '  |  ' + book.majorCate,
+                          book.author + '  |  ' + (book.majorCate == null ? "null":book.majorCate) ,
                           style: TextStyle(
                               color: Colors.grey,
                               fontSize: ScreenUtil.getInstance().setSp(12)),

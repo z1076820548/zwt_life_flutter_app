@@ -277,11 +277,12 @@ class NavigatorUtils {
   }
 
   ///小说标签
-  static gotoBookByTagsPage(BuildContext context, String tag) {
+  static gotoBookByTagsPage(BuildContext context, String tag, String type) {
     NavigatorRouter(
         context,
         new BooksByTagPage(
           tag: tag,
+          type: type,
         ));
   }
 

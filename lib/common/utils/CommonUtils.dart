@@ -26,15 +26,6 @@ import 'package:zwt_life_flutter_app/widget/otherwidget/MyCupertinoDialog.dart';
 import 'package:zwt_life_flutter_app/widget/otherwidget/MyRaisedButton.dart';
 
 class CommonUtils {
-  static final double MILLIS_LIMIT = 1000.0;
-
-  static final double SECONDS_LIMIT = 60 * MILLIS_LIMIT;
-
-  static final double MINUTES_LIMIT = 60 * SECONDS_LIMIT;
-
-  static final double HOURS_LIMIT = 24 * MINUTES_LIMIT;
-
-  static final double DAYS_LIMIT = 30 * HOURS_LIMIT;
 
   static double sStaticBarHeight = 0.0;
 
@@ -43,34 +34,7 @@ class CommonUtils {
         await FlutterStatusbar.height / MediaQuery.of(context).devicePixelRatio;
   }
 
-  static String getDateStr(DateTime date) {
-    if (date == null || date.toString() == null) {
-      return "";
-    } else if (date.toString().length < 10) {
-      return date.toString();
-    }
-    return date.toString().substring(0, 10);
-  }
 
-  ///日期格式转换
-  static String getNewsTimeStr(DateTime date) {
-    int subTime =
-        DateTime.now().millisecondsSinceEpoch - date.millisecondsSinceEpoch;
-
-    if (subTime < MILLIS_LIMIT) {
-      return "刚刚";
-    } else if (subTime < SECONDS_LIMIT) {
-      return (subTime / MILLIS_LIMIT).round().toString() + " 秒前";
-    } else if (subTime < MINUTES_LIMIT) {
-      return (subTime / SECONDS_LIMIT).round().toString() + " 分钟前";
-    } else if (subTime < HOURS_LIMIT) {
-      return (subTime / MINUTES_LIMIT).round().toString() + " 小时前";
-    } else if (subTime < DAYS_LIMIT) {
-      return (subTime / HOURS_LIMIT).round().toString() + " 天前";
-    } else {
-      return getDateStr(date);
-    }
-  }
 
   static getLocalPath() async {
     Directory appDir;
@@ -118,28 +82,6 @@ class CommonUtils {
     return path.substring(path.lastIndexOf("/"));
   }
 
-  static getFullName(String repository_url) {
-    if (repository_url != null &&
-        repository_url.substring(repository_url.length - 1) == "/") {
-      repository_url = repository_url.substring(0, repository_url.length - 1);
-    }
-    String fullName = '';
-    if (repository_url != null) {
-      List<String> splicurl = repository_url.split("/");
-      if (splicurl.length > 2) {
-        fullName =
-            splicurl[splicurl.length - 2] + "/" + splicurl[splicurl.length - 1];
-      }
-    }
-    return fullName;
-  }
-
-  static pushTheme(Store store, int index) {
-    ThemeData themeData;
-    List<Color> colors = getThemeListColor();
-    themeData = getThemeData(colors[index]);
-    store.dispatch(new RefreshThemeDataAction(themeData));
-  }
 
   static getThemeData(Color color) {
     return ThemeData(primarySwatch: color);
@@ -179,56 +121,6 @@ class CommonUtils {
 
   static const IMAGE_END = [".png", ".jpg", ".jpeg", ".gif", ".svg"];
 
-  static isImageEnd(path) {
-    bool image = false;
-    for (String item in IMAGE_END) {
-      if (path.indexOf(item) + item.length == path.length) {
-        image = true;
-      }
-    }
-    return image;
-  }
-
-  static copy(String data, BuildContext context) {
-    Clipboard.setData(new ClipboardData(text: data));
-    Fluttertoast.showToast(
-        msg: CommonUtils.getLocale(context).option_share_copy_success);
-  }
-
-  static launchUrl(context, String url) {
-    if (url == null && url.length == 0) return;
-    Uri parseUrl = Uri.parse(url);
-    bool isImage = isImageEnd(parseUrl.toString());
-    if (parseUrl.toString().endsWith("?raw=true")) {
-      isImage = isImageEnd(parseUrl.toString().replaceAll("?raw=true", ""));
-    }
-    if (isImage) {
-      NavigatorUtils.gotoPhotoViewPage(context, url);
-      return;
-    }
-
-    if (parseUrl != null &&
-        parseUrl.host == "github.com" &&
-        parseUrl.path.length > 0) {
-      List<String> pathnames = parseUrl.path.split("/");
-      if (pathnames.length == 2) {
-        //解析人
-        String userName = pathnames[1];
-        NavigatorUtils.goPerson(context, userName);
-      } else if (pathnames.length >= 3) {
-        String userName = pathnames[1];
-        String repoName = pathnames[2];
-        //解析仓库
-        if (pathnames.length == 3) {
-          NavigatorUtils.goReposDetail(context, userName, repoName);
-        } else {
-          launchWebView(context, "", url);
-        }
-      }
-    } else if (url != null && url.startsWith("http")) {
-      launchWebView(context, "", url);
-    }
-  }
 
   static void launchWebView(BuildContext context, String title, String url) {
     if (url.startsWith("http")) {

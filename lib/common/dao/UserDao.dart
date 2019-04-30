@@ -114,7 +114,7 @@ class UserDao {
     //读取主题
     String themeIndex = await LocalStorage.get(Config.THEME_COLOR);
     if(themeIndex != null && themeIndex.length !=0){
-      CommonUtils.pushTheme(store, int.parse(themeIndex));
+//      CommonUtils.pushTheme(store, int.parse(themeIndex));
     }
     //切换语言
     String localeIndex = await LocalStorage.get(Config.LOCALE);

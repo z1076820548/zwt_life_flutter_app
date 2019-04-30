@@ -16,6 +16,7 @@ export 'package:zwt_life_flutter_app/common/utils/util/dateutil.dart';
 export 'package:zwt_life_flutter_app/common/utils/util/screen_util2.dart';
 export 'package:zwt_life_flutter_app/common/utils/util/readutil.dart';
 export 'package:zwt_life_flutter_app/common/utils/util/formatutil.dart';
+export 'package:zwt_life_flutter_app/common/utils/util/alert_cupertino_util.dart';
 //service
 export 'netservice.dart';
 //model

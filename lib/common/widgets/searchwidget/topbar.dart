@@ -17,9 +17,9 @@ class SearchTopBarLeadingWidget extends StatelessWidget {
 
 class SearchTopBarActionWidget extends StatelessWidget {
   final VoidCallback onActionTap;
-
+  final String text;
 //输入框焦点变化
-  const SearchTopBarActionWidget({Key key, this.onActionTap}) : super(key: key);
+  const SearchTopBarActionWidget({Key key, this.onActionTap, this.text,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class SearchTopBarActionWidget extends StatelessWidget {
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(horizontal: 5),
         child: Text(
-          "搜索",
+          text,
           style: TextStyle(color: GlobalColors.themeColor),
         ),
       ),
@@ -41,15 +41,19 @@ class SearchTopBarActionWidget extends StatelessWidget {
 class SearchTopBarTitleWidget extends StatelessWidget {
   final ValueChanged<String> textMessageSubmitted;
   final TextEditingController controller;
+  final ValueChanged<String> listener;
+  final FocusNode focusNode;
 
   const SearchTopBarTitleWidget(
-      {Key key, this.textMessageSubmitted, this.controller})
+      {Key key,
+      this.textMessageSubmitted,
+      this.controller,
+      this.listener,
+      this.focusNode})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
-
     // TODO: implement build
     return Container(
       height: ScreenUtil.searchTxtFieldHeight,
@@ -69,13 +73,15 @@ class SearchTopBarTitleWidget extends StatelessWidget {
           ),
           Expanded(
             child: TextField(
-              focusNode: FocusNode(),
+              focusNode: focusNode,
               controller: controller,
               onSubmitted: (s) {
                 textMessageSubmitted(s);
               },
               textInputAction: TextInputAction.search,
-
+              onChanged: (s) {
+                listener(s);
+              },
               cursorWidth: 1.5,
               autofocus: true,
               cursorColor: GlobalColors.floorTitleColor,
@@ -85,7 +91,23 @@ class SearchTopBarTitleWidget extends StatelessWidget {
                   hintStyle: TextStyle(fontSize: 14),
                   border: InputBorder.none),
             ),
-          )
+          ),
+          controller.text.isEmpty
+              ? Icon(null)
+              : GestureDetector(
+                  onTap: () {
+                    controller.clear();
+                    listener('');
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(right: 10),
+                    child: Icon(
+                      CupertinoIcons.clear_circled,
+                      color: GlobalColors.floorTitleColor,
+                      size: 16,
+                    ),
+                  ),
+                ),
         ],
       ),
     );

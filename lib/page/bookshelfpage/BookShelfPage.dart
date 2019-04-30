@@ -16,7 +16,7 @@ class BookShelfPage extends StatefulWidget {
   }
 }
 
-class _BookShelfPageState extends State<BookShelfPage> with RouteAware {
+class _BookShelfPageState extends State<BookShelfPage>  {
   static List<RecommendBooks> recommendBooksList = new List();
   RefreshController _refreshController;
   ScrollController _scrollController;
@@ -188,11 +188,14 @@ class _BookShelfPageState extends State<BookShelfPage> with RouteAware {
   void checkNewUser(BuildContext context) async {
     //第一次登录 选择性别
     if (!SettingManager.getInstance().isUserChooseSex()) {
-      CommonUtils.showLickeDialog(context, () {
-        setSex(Constant.MALE);
-      }, () {
-        setSex(Constant.FEMALE);
+      Future.delayed(Duration(seconds: 1),(){
+        CommonUtils.showLickeDialog(context, () {
+          setSex(Constant.MALE);
+        }, () {
+          setSex(Constant.FEMALE);
+        });
       });
+
     } else {
       //否则 从数据库中读取书架
       BookShelfDbProvider bookShelfDbProvider = new BookShelfDbProvider();
@@ -230,10 +233,12 @@ class _BookShelfPageState extends State<BookShelfPage> with RouteAware {
         }
       } else {
         //选择性别
-        CommonUtils.showLickeDialog(context, () {
-          setSex(Constant.MALE);
-        }, () {
-          setSex(Constant.FEMALE);
+        Future.delayed(Duration(seconds: 1),(){
+          CommonUtils.showLickeDialog(context, () {
+            setSex(Constant.MALE);
+          }, () {
+            setSex(Constant.FEMALE);
+          });
         });
       }
     }
