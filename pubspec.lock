@@ -29,6 +29,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.8"
+  background_fetch:
+    dependency: "direct main"
+    description:
+      name: background_fetch
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.2.0"
   battery:
     dependency: "direct main"
     description:
@@ -133,7 +140,7 @@ packages:
       name: connectivity
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.3.2"
+    version: "0.4.3+1"
   convert:
     dependency: transitive
     description:

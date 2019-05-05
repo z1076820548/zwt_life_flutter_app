@@ -24,7 +24,7 @@ dependencies:
   json_annotation: ^2.2.0
   flutter_redux: ^0.5.3
   device_info: ^0.3.0
-  connectivity: ^0.3.2
+  connectivity: ^0.4.3+1
   url_launcher: ^4.0.3
   flutter_markdown: ^0.2.0
   share: ^0.5.3
@@ -59,6 +59,7 @@ dependencies:
   extended_image: ^0.2.9
   flutter_sticky_header: ^0.3.4
   flutter_speed_dial: ^1.1.1
+  background_fetch: ^0.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

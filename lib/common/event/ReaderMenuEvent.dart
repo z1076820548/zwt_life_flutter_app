@@ -1,6 +1,5 @@
-import 'package:zwt_life_flutter_app/common/widgets/messagewidget/ChatUser.dart';
 
-enum ReaderMenuType{catlog,lighting,fontsize,background,readTheme,catchDownLoad,rowSpacing}
+enum ReaderMenuType{catlog,lighting,fontsize,background,readTheme,catcheDownLoad,rowSpacing}
 
 class ReaderMenuEvent {
   ReaderMenuType readerMenuType;

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:zwt_life_flutter_app/common/manager/settingmanager.dart';
+import 'package:zwt_life_flutter_app/common/net/Code.dart';
 import 'package:zwt_life_flutter_app/public.dart';
 
 List<RecommendBooks> recommendBooksList = new List();
@@ -105,7 +106,9 @@ class _BookShelfPageState extends State<BookShelfPage> {
               color: Colors.grey[50],
               caption: '缓存',
               icon: Icons.file_download,
-              onTap: () {}),
+              onTap: () {
+                download(item);
+              }),
 //          new IconSlideAction(
 //              foregroundColor: Colors.grey,
 //              color: Colors.grey[50],
@@ -139,6 +142,27 @@ class _BookShelfPageState extends State<BookShelfPage> {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         backgroundColor: GlobalColors.appbarColor,
+        leading: PopupMenuButton<String>(
+          icon: Icon(
+            Icons.menu,
+            color: Colors.black,
+          ),
+          padding: EdgeInsets.zero,
+          onSelected: showMenuSelection,
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                const PopupMenuItem<String>(
+                  value: 'cache',
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.file_download,
+                      color: Colors.black,
+                    ),
+                    title: Text('缓存管理'),
+                  ),
+                ),
+                const PopupMenuDivider(),
+              ],
+        ),
         middle: Text('书架'),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
@@ -193,6 +217,11 @@ class _BookShelfPageState extends State<BookShelfPage> {
     );
   }
 
+  //菜单栏
+  void showMenuSelection(String value) {
+    if (value == 'cache') {}
+  }
+
   void checkNewUser(BuildContext context) async {
     //第一次登录 选择性别
     if (!SettingManager.getInstance().isUserChooseSex()) {
@@ -205,7 +234,6 @@ class _BookShelfPageState extends State<BookShelfPage> {
       });
     } else {
       //否则 从数据库中读取书架
-
       var data = await bookShelfDbProvider.getAllData();
       if (data != null) {
         setState(() {
@@ -297,5 +325,14 @@ class _BookShelfPageState extends State<BookShelfPage> {
     setState(() {
       recommendBooksList = data;
     });
+  }
+
+  void download(RecommendBooks item) async {
+    Data data = await dioGetAToc(item.id, "chapters");
+    MixToc mixToc = data.data;
+    List<Chapters> chaptersList = mixToc.chapters;
+    Code.eventBus.fire(new DownloadEvent(
+        new DownloadBean(item.id, chaptersList, 1, 10),
+        DownloadEventType.start));
   }
 }

@@ -7,7 +7,8 @@ class Chapters {
   String link;
   bool unreadble;
 
-  Chapters(this.title, this.link, this.unreadble);
+
+  Chapters(this.title, this.link);
 
   factory Chapters.fromJson(Map<String, dynamic> json) =>
       _$ChaptersFromJson(json);

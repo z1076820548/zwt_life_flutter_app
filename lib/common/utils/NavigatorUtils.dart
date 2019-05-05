@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:zwt_life_flutter_app/page/MainPage.dart';
 import 'package:zwt_life_flutter_app/page/LoginPage.dart';
+import 'package:zwt_life_flutter_app/page/bookshelfpage/BookCachePage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/BookDetailPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/BooksByTagPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/CategoryListDetailPage.dart';
@@ -300,6 +301,10 @@ class NavigatorUtils {
           cate: cate,
           gender: gender,
         ));
+  }
+
+  static gotoBookCachePage(BuildContext context){
+    NavigatorRouter(context, new BookCachePage());
   }
 
   ///聊天
