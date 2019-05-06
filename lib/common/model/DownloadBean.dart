@@ -1,6 +1,6 @@
 import 'package:zwt_life_flutter_app/common/model/Chapters.dart';
 
-class DownloadBean {
+class DownloadBean  {
   String bookId;
   List<Chapters> list;
   int start;

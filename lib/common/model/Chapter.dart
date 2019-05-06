@@ -10,7 +10,7 @@ class Chapter {
   String cpContent;
   List<Map<String, int>> pageOffsets;
 
-  Chapter(this.title, this.body, this.cpContent, this.pageOffsets);
+  Chapter(this.title, this.body, this.cpContent);
 
   factory Chapter.fromJson(Map<String, dynamic> json) =>
       _$ChapterFromJson(json);

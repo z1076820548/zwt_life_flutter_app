@@ -19,9 +19,9 @@ class FileUtil {
   }
 
   static File getChapterFile(String bookId, int chapter) {
-    File file = new File(root + getChapterPath(bookId, chapter));
+    File file = new File(getChapterPath(bookId, chapter));
     if (!file.existsSync()) {
-      file.createSync();
+      file.createSync(recursive: true);
     }
     return file;
   }
@@ -30,8 +30,8 @@ class FileUtil {
     await file.writeAsString(contents);
   }
 
-  static Future<String> readFile(File file) async {
-    String contents = await file.readAsStringSync();
+  static String readFile(File file)  {
+    String contents =  file.readAsStringSync();
     return contents;
   }
 }

@@ -14,6 +14,8 @@ import 'package:zwt_life_flutter_app/public.dart';
 enum Todo { toPre, toNext, toOther }
 enum PageJumpType { stay, firstPage, lastPage }
 
+
+
 //小说阅读界面
 class ReadBookPage extends StatefulWidget {
   final String bookId;
@@ -54,6 +56,7 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   //缓存10章
   int catchChapterIndex = 9;
   int pointNextCatch = 0;
+
   List<Chapter> catchChaptersList = [];
 
   StreamSubscription stream;
@@ -162,16 +165,16 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
     currentChapterIndex = readBooks.chapterIndex;
     pageIndex = readBooks.pageIndex;
     bool needPre = false;
-
-    await resetContent(currentChapterIndex, Todo.toNext, PageJumpType.stay);
     pageController = PageController(initialPage: pageIndex, keepPage: true);
     pageController.addListener(onScroll);
+    await resetContent(currentChapterIndex, Todo.toNext, PageJumpType.stay);
+
     //第一次必须加载上一章节
-    if (currentChapterIndex != 0) {
-      preChapter = await fetchChapter(currentChapterIndex - 1);
-      pageController.jumpToPage(
-          (preChapter != null ? preChapter.pageCount : 0) + pageIndex);
-    }
+//    if (currentChapterIndex != 0) {
+//      preChapter = await fetchChapter(currentChapterIndex - 1);
+//      pageController.jumpToPage(
+//          (preChapter != null ? preChapter.pageCount : 0) + pageIndex);
+//    }
   }
 
   //获取内容
@@ -237,12 +240,23 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   }
 
   Future<Chapter> fetchChapter(int index) async {
-    Data data = await dioGetChapterBody(
-        chaptersList[index].link, chaptersList[index].title);
-    if (data.data == null) {
-      return null;
+    Chapter article;
+    String body =
+        DownloadManager.getChapter(widget.bookId, currentChapterIndex);
+    if (body.isNotEmpty) {
+      print('从缓存中读取第${currentChapterIndex}章');
+      article = new Chapter('', '', '');
+      article.title = chaptersList[index].title;
+      article.body = body;
+    } else {
+      Data data = await dioGetChapterBody(
+          chaptersList[index].link, chaptersList[index].title);
+      if (data.data == null) {
+        return null;
+      }
+      article = data.data;
     }
-    Chapter article = data.data;
+
     var contentHeight = ScreenUtil.screenHeight -
         topSafeHeight -
         ReaderUtils.topOffset -
@@ -404,7 +418,8 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
     }
     return ReaderMenu(
       onTap: hideMenu,
-      book: widget.bookTitle,
+      bookId: widget.bookId,
+      bookTitle: widget.bookTitle,
       chaptersList: chaptersList,
       currentIndex: currentChapterIndex,
     );

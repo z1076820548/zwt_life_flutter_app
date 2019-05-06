@@ -1,19 +1,76 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:zwt_life_flutter_app/common/event/ReaderMenuEvent.dart';
 import 'package:zwt_life_flutter_app/common/net/Code.dart';
 import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ReaderCatlog.dart';
+import 'package:zwt_life_flutter_app/page/bookshelfpage/ReadBookPage.dart';
 import 'dart:async';
 
 import 'package:zwt_life_flutter_app/public.dart';
 
+void showDownloadSheet(
+    {BuildContext context,
+    String bookId,
+    int currentIndex,
+    List<Chapters> chaptersList,
+    VoidCallback callback}) {
+  void tap(BuildContext context, int start, int end) {
+    Navigator.pop(context);
+    Code.eventBus.fire(new DownloadEvent(
+        bookId, chaptersList, start, end, DownloadEventType.start));
+    callback();
+  }
+
+  AlertCupertinoUtil.showDemoActionSheet(
+    context: context,
+    child: CupertinoActionSheet(
+      title: Text('缓存多少章?'),
+//       message: ,
+      actions: <Widget>[
+        CupertinoActionSheetAction(
+          child: Text('后面50章'),
+          onPressed: () {
+            tap(context, currentIndex, currentIndex + 50);
+          },
+        ),
+        CupertinoActionSheetAction(
+          child: Text('后面全部'),
+          onPressed: () {
+//            tap(currentIndex, chaptersList.length - 1);
+          },
+        ),
+        CupertinoActionSheetAction(
+          child: Text('全部'),
+          onPressed: () {
+//            tap(0, chaptersList.length - 1);
+          },
+        ),
+      ],
+      cancelButton: CupertinoActionSheetAction(
+        child: Text('取消'),
+        isDefaultAction: true,
+        onPressed: () {
+          Navigator.pop(context, '取消');
+        },
+      ),
+    ),
+  );
+}
+
 class ReaderMenu extends StatefulWidget {
   final VoidCallback onTap;
-  final String book;
+  final String bookTitle;
   final List<Chapters> chaptersList;
   final int currentIndex;
+  final String bookId;
 
-  ReaderMenu({this.onTap, this.book, this.chaptersList, this.currentIndex});
+  ReaderMenu(
+      {this.onTap,
+      this.bookTitle,
+      this.chaptersList,
+      this.currentIndex,
+      this.bookId});
 
   @override
   _ReaderMenuState createState() => _ReaderMenuState();
@@ -186,6 +243,16 @@ class _ReaderMenuState extends State<ReaderMenu>
           showSetting = !showSetting;
         });
         break;
+      case '缓存':
+        showDownloadSheet(
+          context: context,
+          bookId: widget.bookId,
+          chaptersList: widget.chaptersList,
+          currentIndex: widget.currentIndex,
+          callback: hide,
+        );
+
+        break;
     }
   }
 
@@ -196,7 +263,7 @@ class _ReaderMenuState extends State<ReaderMenu>
         context,
         MaterialPageRoute(
           builder: (BuildContext context) =>
-              ReaderCatlog(widget.book, chap, currentChapterIndex),
+              ReaderCatlog(widget.bookTitle, chap, currentChapterIndex),
           fullscreenDialog: true,
         ));
   }

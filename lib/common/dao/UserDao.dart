@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:redux/redux.dart';
 import 'package:zwt_life_flutter_app/common/config/Config.dart';
-import 'package:zwt_life_flutter_app/common/config/NetConfig.dart';
 import 'package:zwt_life_flutter_app/common/local/LocalStorage.dart';
 import 'package:zwt_life_flutter_app/common/model/User.dart';
 import 'package:zwt_life_flutter_app/common/net/Api.dart';
@@ -22,12 +21,12 @@ class UserDao {
     await LocalStorage.save(Config.USER_NAME_KEY, userName);
     await LocalStorage.save(Config.USER_BASIC_CODE, base64Str);
 
-    Map requestParams = {
-      "scopes": ['user', 'repo', 'gist', 'notifications'],
-      "note": "admin_script",
-      "client_id": NetConfig.CLIENT_ID,
-      "client_secret": NetConfig.CLIENT_SECRET
-    };
+//    Map requestParams = {
+//      "scopes": ['user', 'repo', 'gist', 'notifications'],
+//      "note": "admin_script",
+//      "client_id": NetConfig.CLIENT_ID,
+//      "client_secret": NetConfig.CLIENT_SECRET
+//    };
     HttpManager.clearAuthorization();
 //    ResultData res = await HttpManager.netFetch(Address.getAuthorization(),
 //        json.encode(requestParams), null, new Options(method: "post"));

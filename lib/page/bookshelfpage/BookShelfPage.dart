@@ -101,14 +101,6 @@ class _BookShelfPageState extends State<BookShelfPage> {
           ),
         ),
         secondaryActions: <Widget>[
-          new IconSlideAction(
-              foregroundColor: Colors.grey,
-              color: Colors.grey[50],
-              caption: '缓存',
-              icon: Icons.file_download,
-              onTap: () {
-                download(item);
-              }),
 //          new IconSlideAction(
 //              foregroundColor: Colors.grey,
 //              color: Colors.grey[50],
@@ -122,6 +114,14 @@ class _BookShelfPageState extends State<BookShelfPage> {
               icon: Icons.vertical_align_top,
               onTap: () {
                 toTop(item, index);
+              }),
+          new IconSlideAction(
+              foregroundColor: Colors.grey,
+              color: Colors.grey[50],
+              caption: '缓存',
+              icon: Icons.file_download,
+              onTap: () {
+                download(item);
               }),
           new IconSlideAction(
               caption: '删除',
@@ -328,11 +328,12 @@ class _BookShelfPageState extends State<BookShelfPage> {
   }
 
   void download(RecommendBooks item) async {
+    print('点击缓存');
     Data data = await dioGetAToc(item.id, "chapters");
     MixToc mixToc = data.data;
     List<Chapters> chaptersList = mixToc.chapters;
+    print('' + chaptersList.length.toString());
     Code.eventBus.fire(new DownloadEvent(
-        new DownloadBean(item.id, chaptersList, 1, 10),
-        DownloadEventType.start));
+        item.id, chaptersList, 1, 10, DownloadEventType.start));
   }
 }

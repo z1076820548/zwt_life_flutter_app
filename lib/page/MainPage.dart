@@ -125,34 +125,15 @@ class _MainPageState extends State<MainPage> {
 //      HomePage(),
 //      HomePage(),
     ];
+  }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
     //缓存监听
     _stream = Code.eventBus.on<DownloadEvent>().listen((event) {
-      BackgroundFetch.configure(
-          BackgroundFetchConfig(
-              minimumFetchInterval: 1,
-              stopOnTerminate: false,
-              enableHeadless: true), () async {
-        for (int i = downloadEventList.length - 1; i >= 0; i--) {
-          if (downloadEventList[i].downloadBean.bookId ==
-              event.downloadBean.bookId) {
-            print('任务已存在');
-            break;
-          } else {
-            if (i == 0) {
-              downloadEventList.add(event);
-              var connectivityResult =
-                  await (new Connectivity().checkConnectivity());
-              if (connectivityResult == ConnectivityResult.none) {
-                print('网络异常，取消下载');
-              } else {
-                check();
-              }
-              break;
-            }
-          }
-        }
-      });
+      initDownload(event);
     });
   }
 
@@ -200,38 +181,61 @@ class _MainPageState extends State<MainPage> {
   }
 
   void check() async {
-    if (!isBusy && downloadEventList.length > 0) {
+    if (downloadEventList.length > 0) {
       for (int i = 0; i < downloadEventList.length; i++) {
-        startDownload(downloadEventList[i]);
+        await startDownload(downloadEventList[i]);
       }
     }
   }
 
   void startDownload(DownloadEvent downloadEventList) async {
-    List<Chapters> list = downloadEventList.downloadBean.list;
-    String bookId = downloadEventList.downloadBean.bookId;
-    int start = downloadEventList.downloadBean.start; // 起始章节
-    int end = downloadEventList.downloadBean.end; // 结束章节
-
-    for (int i = start; i <= end && i <= list.length; i++) {
-      if (downloadEventList.type == DownloadEventType.cancel ||
-          downloadEventList.type == DownloadEventType.remove ||
-          downloadEventList.type == DownloadEventType.pause) {
-        break;
-      }
-      if (downloadEventList.type != DownloadEventType.finish) {
-        // 章节文件不存在,则下载，否则跳过
+    List<Chapters> list = downloadEventList.list;
+    String bookId = downloadEventList.bookId;
+    int start = downloadEventList.start; // 起始章节
+    int end = downloadEventList.end; // 结束章节
+    if (downloadEventList.type != DownloadEventType.finish) {
+      for (int i = start; i <= end && i <= list.length; i++) {
         String contents = await DownloadManager.getChapter(bookId, i);
-        if (contents.trim().length > 0) {
+        if (contents.isNotEmpty && contents.trim().length > 0) {
         } else {
           Data data = await dioGetChapterBody(list[i].link, list[i].title);
           Chapter chapter = data.data;
           await DownloadManager.saveChapter(bookId, i, chapter.body);
+          print('开始缓存 第' + i.toString() + '章');
           if (i == end) {
             downloadEventList.type = DownloadEventType.finish;
+            print('下载完成');
           }
         }
       }
+    } else {
+      print('该书籍已全部缓存，自动跳过下载');
+    }
+  }
+
+  void initDownload(DownloadEvent event) async {
+    if (downloadEventList.length == 0) {
+      print('下载队列为空，进入队列');
+      downloadEventList.insert(0, event);
+    } else {
+      for (int i = downloadEventList.length - 1; i >= 0; i--) {
+        if (downloadEventList[i].bookId == event.bookId) {
+          print('任务已存在');
+          break;
+        } else {
+          if (i == 0) {
+            print('进入下载队列，排序在首位');
+            downloadEventList.insert(0, event);
+          }
+        }
+      }
+    }
+
+    var connectivityResult = await (new Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      print('网络异常，取消下载');
+    } else {
+      await check();
     }
   }
 }

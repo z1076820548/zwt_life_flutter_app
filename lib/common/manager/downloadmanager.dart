@@ -14,9 +14,14 @@ class DownloadManager {
     return _manager;
   }
 
-  static Future<String> getChapter(String bookId, int chapter) async {
+  static String getChapter(String bookId, int chapter)  {
     File file = FileUtil.getChapterFile(bookId, chapter);
-    return await FileUtil.readFile(file);
+    String s =  FileUtil.readFile(file);
+    if (s.length > 0) {
+      return s;
+    } else {
+      return "";
+    }
   }
 
   static saveChapter(String bookId, int chapter, String contents) async {

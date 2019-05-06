@@ -31,7 +31,6 @@ class AlertCupertinoUtil{
 
 
 
-
  static void showDemoDialog({BuildContext context, Widget child}) {
     showCupertinoDialog<String>(
       context: context,
@@ -51,4 +50,5 @@ class AlertCupertinoUtil{
       }
     });
   }
+
 }
