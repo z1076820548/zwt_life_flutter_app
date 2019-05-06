@@ -1,6 +1,5 @@
 # zwt_life_flutter_app
-
-mylift
+小说阅读器
 
 ## Getting Started
 
