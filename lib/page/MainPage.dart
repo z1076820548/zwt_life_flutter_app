@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provide/provide.dart';
 import 'package:zwt_life_flutter_app/common/net/Code.dart';
 import 'package:zwt_life_flutter_app/common/utils/CommonUtils.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/screen_util.dart';
@@ -188,48 +189,70 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  void startDownload(DownloadEvent downloadEventList) async {
-    List<Chapters> list = downloadEventList.list;
-    String bookId = downloadEventList.bookId;
-    int start = downloadEventList.start; // 起始章节
-    int end = downloadEventList.end; // 结束章节
-    if (downloadEventList.type != DownloadEventType.finish) {
-      for (int i = start; i <= end && i <= list.length; i++) {
-        String contents = await DownloadManager.getChapter(bookId, i);
-        if (contents.isNotEmpty && contents.trim().length > 0) {
-        } else {
-          Data data = await dioGetChapterBody(list[i].link, list[i].title);
-          Chapter chapter = data.data;
-          await DownloadManager.saveChapter(bookId, i, chapter.body);
-          print('开始缓存 第' + i.toString() + '章');
-          if (i == end) {
-            downloadEventList.type = DownloadEventType.finish;
-            print('下载完成');
-          }
-        }
+  void startDownload(DownloadEvent downloadEvent) async {
+    List<Chapters> list = downloadEvent.list;
+    String bookId = downloadEvent.bookId;
+    int start = downloadEvent.start; // 起始章节
+    int end = downloadEvent.end; // 结束章节
+    final downloadStatusEvent = Provide.value<DownloadStatusEvent>(context);
+
+    if (downloadEvent.type == DownloadEventType.cancel ||
+        downloadEvent.type == DownloadEventType.remove ||
+        downloadEvent.type == DownloadEventType.pause) {
+       print('缓存停止');
+      if (downloadEvent.type == DownloadEventType.remove) {
+        print('清除缓存');
+        
       }
-    } else {
-      print('该书籍已全部缓存，自动跳过下载');
+      downloadStatusEvent.notifyDownload(
+          downloadEvent.bookId, start, end, downloadEvent.type);
+//      Code.eventBus.fire(new DownloadStatusEvent(downloadEvent.bookId,start,end,downloadEvent.type));
+      return;
     }
+//    if (downloadEvent.type != DownloadEventType.finish) {
+    print('缓存中');
+    downloadEvent.type = DownloadEventType.loading;
+    for (int i = start; i <= end && i <= list.length; i++) {
+      String contents = await DownloadManager.getChapter(bookId, i);
+      if (contents.isNotEmpty && contents.trim().length > 0) {
+        print('该章节已缓存，自动跳过');
+      } else {
+        Data data = await dioGetChapterBody(list[i].link, list[i].title);
+        Chapter chapter = data.data;
+        await DownloadManager.saveChapter(bookId, i, chapter.body);
+        print('开始缓存 第' + i.toString() + '章');
+      }
+      if (i == end) {
+        downloadEvent.type = DownloadEventType.finish;
+        print('缓存完成');
+      }
+      //下载状态通知
+      downloadStatusEvent.notifyDownload(
+          downloadEvent.bookId, i + 1, end + 1, downloadEvent.type);
+    }
+//    } else {
+//      downloadEvent.type = DownloadEventType.finish;
+//      print('该书籍已全部缓存，自动跳过下载');
+//    }
   }
 
   void initDownload(DownloadEvent event) async {
-    if (downloadEventList.length == 0) {
-      print('下载队列为空，进入队列');
-      downloadEventList.insert(0, event);
-    } else {
-      for (int i = downloadEventList.length - 1; i >= 0; i--) {
-        if (downloadEventList[i].bookId == event.bookId) {
-          print('任务已存在');
-          break;
-        } else {
-          if (i == 0) {
-            print('进入下载队列，排序在首位');
-            downloadEventList.insert(0, event);
-          }
-        }
-      }
-    }
+//    if (downloadEventList.length == 0) {
+    print('进入下载队列，排序在首位');
+    downloadEventList.insert(0, event);
+//    } else {
+//      for (int i = downloadEventList.length - 1; i >= 0; i--) {
+//        if (downloadEventList[i].bookId == event.bookId) {
+//          print('任务已存在');
+//          break;
+//        } else {
+//          if (i == 0) {
+//            print('进入下载队列，排序在首位');
+//            downloadEventList.insert(0, event);
+//          }
+//        }
+//      }
+//    }
 
     var connectivityResult = await (new Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {

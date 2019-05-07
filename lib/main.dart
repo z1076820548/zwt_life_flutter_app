@@ -17,20 +17,28 @@ import 'package:zwt_life_flutter_app/common/utils/CommonUtils.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/TipUtil.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/fileutil.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/shared_preferences.dart';
+import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ReaderOverlayer.dart';
 import 'package:zwt_life_flutter_app/page/MainPage.dart';
 import 'package:zwt_life_flutter_app/page/LoginPage.dart';
 import 'package:zwt_life_flutter_app/page/WelcomePage.dart';
-
+import 'package:provide/provide.dart';
+import 'package:zwt_life_flutter_app/public.dart';
 SpUtil sp;
 List<CameraDescription> cameras;
 
 void main() async {
-  runApp(FlutterReduxApp());
+  final providers = Providers()
+    ..provide(Provider.function((context)=>
+        DownloadStatusEvent('0',0,1,DownloadEventType.remove)
+    ));
+//  ProviderNode(providers: providers,child: MainPage(),);
+  runApp(ProviderNode(providers: providers,child: FlutterReduxApp(),));
   sp = await SpUtil.getInstance();
   new SearchHistoryList(sp);
   PaintingBinding.instance.imageCache.maximumSize = 100;
   cameras = await availableCameras();
   FileUtil.root = await FileUtil.getRootPath();
+
 }
 
 class FlutterReduxApp extends StatelessWidget {
@@ -38,13 +46,16 @@ class FlutterReduxApp extends StatelessWidget {
   /// initialState 初始化 State
   final store = new Store<GlobalState>(
     appReducer,
-
     ///初始化数据
     initialState: new GlobalState(
       userInfo: User.empty(),
       themeData: CommonUtils.getThemeData(GlobalColors.themeColor),
     ),
   );
+
+
+
+
 
   FlutterReduxApp({Key key}) : super(key: key);
 

@@ -1,7 +1,7 @@
 import 'package:zwt_life_flutter_app/common/model/Chapters.dart';
 import 'package:zwt_life_flutter_app/common/model/DownloadBean.dart';
 
-enum DownloadEventType { start, cancel, pause, resume, fail, remove,finish}
+enum DownloadEventType { start, cancel, pause, resume, fail, remove,finish,loading}
 
 class DownloadEvent {
   String bookId;

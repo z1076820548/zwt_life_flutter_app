@@ -8,7 +8,7 @@ export 'package:zwt_life_flutter_app/common/event/ChatVoiceAniEvent.dart';
 export 'package:zwt_life_flutter_app/common/event/DownloadEvent.dart';
 export 'package:zwt_life_flutter_app/common/event/HttpErrorEvent.dart';
 export 'package:zwt_life_flutter_app/common/event/ReaderMenuEvent.dart';
-
+export 'package:zwt_life_flutter_app/common/event/DownloadStatusEvent.dart';
 // Global
 export 'package:zwt_life_flutter_app/global.dart';
 export 'package:zwt_life_flutter_app/main.dart';

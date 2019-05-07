@@ -76,7 +76,12 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
         //目录
         case ReaderMenuType.catlog:
           currentChapterIndex = int.parse(data.toString());
-          resetContent(data, Todo.toOther, PageJumpType.firstPage);
+          Future.delayed(Duration(seconds: 0), () async {
+           await resetContent(data, Todo.toOther, PageJumpType.firstPage);
+           pageController =
+               PageController(initialPage: pageIndex, keepPage: false);
+           pageController.addListener(onScroll);
+          });
           break;
         //字体大小
         case ReaderMenuType.fontsize:
@@ -350,7 +355,7 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
         onTap(details.globalPosition);
       },
       child: ReaderView(
-          article: article, page: page, topSafeHeight: topSafeHeight),
+          article: article, page: page, topSafeHeight: topSafeHeight,bookId: widget.bookId,),
     );
   }
 

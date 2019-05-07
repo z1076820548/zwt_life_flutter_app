@@ -37,13 +37,23 @@ void showDownloadSheet(
         CupertinoActionSheetAction(
           child: Text('后面全部'),
           onPressed: () {
-//            tap(currentIndex, chaptersList.length - 1);
+            tap(context, currentIndex, chaptersList.length - 1);
           },
         ),
         CupertinoActionSheetAction(
           child: Text('全部'),
           onPressed: () {
+            tap(context, 0, chaptersList.length - 1);
 //            tap(0, chaptersList.length - 1);
+          },
+        ),
+        CupertinoActionSheetAction(
+          child: Text('清除本书缓存'),
+          onPressed: () {
+            Navigator.pop(context);
+            Code.eventBus.fire(new DownloadEvent(
+                bookId, chaptersList, 0, 0, DownloadEventType.remove));
+            callback();
           },
         ),
       ],

@@ -6,8 +6,8 @@ class ReaderView extends StatelessWidget {
   final Chapter article;
   final int page;
   final double topSafeHeight;
-
-  ReaderView({this.article, this.page, this.topSafeHeight});
+  final String bookId;
+  ReaderView({this.bookId,this.article, this.page, this.topSafeHeight});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class ReaderView extends StatelessWidget {
             bottom: 0,
             child: Image.asset('static/images/read_bg.png', fit: BoxFit.cover)),
         ReaderOverlayer(
-            article: article, page: page, topSafeHeight: topSafeHeight),
+            article: article, page: page, topSafeHeight: topSafeHeight,bookId: bookId,),
         buildContent(article, page),
       ],
     );
