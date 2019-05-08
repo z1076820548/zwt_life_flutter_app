@@ -18,7 +18,7 @@ void showDownloadSheet(
   void tap(BuildContext context, int start, int end) {
     Navigator.pop(context);
     Code.eventBus.fire(new DownloadEvent(
-        bookId, chaptersList, start, end, DownloadEventType.start));
+        bookId, chaptersList, start, end, DownloadEventType.start,current: start));
     callback();
   }
 
@@ -52,7 +52,7 @@ void showDownloadSheet(
           onPressed: () {
             Navigator.pop(context);
             Code.eventBus.fire(new DownloadEvent(
-                bookId, chaptersList, 0, 0, DownloadEventType.remove));
+                bookId, chaptersList, 0, 0, DownloadEventType.remove,current: 0));
             callback();
           },
         ),

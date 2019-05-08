@@ -9,16 +9,17 @@ class DownloadStatusEvent with ChangeNotifier{
   String bookId;
   int start;
   int end;
-
+  int current;
   DownloadEventType type;
 
   DownloadStatusEvent(this.bookId, this.start, this.end, this.type);
 
-  void notifyDownload(bookId,start,end,type){
+  void notifyDownload(String bookId,int start,int end,DownloadEventType type,{int current}){
     this.bookId = bookId;
     this.start = start;
     this.end = end;
     this.type = type;
+    this.current = current == null ? start:current;
     notifyListeners();
   }
 

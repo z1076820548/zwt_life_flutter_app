@@ -340,8 +340,7 @@ class CommonUtils {
         completeText: '刷新完成',
         noDataText: '没有更多数据了',
         failedText: '刷新失败',
-        idleText: '下拉刷新',
-        height: 40);
+        idleText: '下拉刷新');
   }
 
   static Widget footerCreate(BuildContext context, RefreshStatus mode) {

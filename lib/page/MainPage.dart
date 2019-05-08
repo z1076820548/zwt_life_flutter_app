@@ -38,13 +38,13 @@ class MainPage extends StatefulWidget {
     return _MainPageState();
   }
 }
+ List<DownloadEvent> downloadEventList = [];
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   var appBarTitles = ['书架', '找书'];
   var tabImages;
   StreamSubscription _stream;
-  static List<DownloadEvent> downloadEventList = [];
   bool isBusy = false; // 当前是否有下载任务在进行
   /*
    * 根据image路径获取图片
@@ -196,16 +196,17 @@ class _MainPageState extends State<MainPage> {
     int end = downloadEvent.end; // 结束章节
     final downloadStatusEvent = Provide.value<DownloadStatusEvent>(context);
 
-    if (downloadEvent.type == DownloadEventType.cancel ||
-        downloadEvent.type == DownloadEventType.remove ||
+    if (downloadEvent.type == DownloadEventType.remove ||
         downloadEvent.type == DownloadEventType.pause) {
-       print('缓存停止');
+        print('缓存停止');
       if (downloadEvent.type == DownloadEventType.remove) {
         print('清除缓存');
-        
+       await DownloadManager.removeBook(downloadEvent.bookId);
+       downloadEventList.remove(downloadEvent);
       }
+      //下载状态通知
       downloadStatusEvent.notifyDownload(
-          downloadEvent.bookId, start, end, downloadEvent.type);
+          downloadEvent.bookId, start, end, downloadEvent.type,current: downloadEvent.current);
 //      Code.eventBus.fire(new DownloadStatusEvent(downloadEvent.bookId,start,end,downloadEvent.type));
       return;
     }
@@ -226,9 +227,10 @@ class _MainPageState extends State<MainPage> {
         downloadEvent.type = DownloadEventType.finish;
         print('缓存完成');
       }
+      downloadEvent.current = i;
       //下载状态通知
       downloadStatusEvent.notifyDownload(
-          downloadEvent.bookId, i + 1, end + 1, downloadEvent.type);
+          downloadEvent.bookId, start ,end, downloadEvent.type,current: downloadEvent.current);
     }
 //    } else {
 //      downloadEvent.type = DownloadEventType.finish;
@@ -237,22 +239,19 @@ class _MainPageState extends State<MainPage> {
   }
 
   void initDownload(DownloadEvent event) async {
-//    if (downloadEventList.length == 0) {
+    if (downloadEventList.length == 0) {
     print('进入下载队列，排序在首位');
     downloadEventList.insert(0, event);
-//    } else {
-//      for (int i = downloadEventList.length - 1; i >= 0; i--) {
-//        if (downloadEventList[i].bookId == event.bookId) {
-//          print('任务已存在');
-//          break;
-//        } else {
-//          if (i == 0) {
-//            print('进入下载队列，排序在首位');
-//            downloadEventList.insert(0, event);
-//          }
-//        }
-//      }
-//    }
+    } else {
+      for (int i = downloadEventList.length - 1; i >= 0; i--) {
+        if (downloadEventList[i].bookId == event.bookId) {
+          downloadEventList.removeAt(i);
+          print('任务已存在');
+          break;
+        }
+      }
+      downloadEventList.insert(0, event);
+    }
 
     var connectivityResult = await (new Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {

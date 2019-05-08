@@ -113,6 +113,8 @@ class _OtherRankingPageState extends State<OtherRankingPage> with RouteAware {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        elevation: 0,
         title: Text(widget.title),
       ),
       body: CupertinoScrollbar(

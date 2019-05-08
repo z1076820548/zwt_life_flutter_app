@@ -30,8 +30,13 @@ class FileUtil {
     await file.writeAsString(contents);
   }
 
-  static String readFile(File file)  {
-    String contents =  file.readAsStringSync();
+  static String readFile(File file) {
+    String contents = file.readAsStringSync();
     return contents;
+  }
+
+  static deleteChapterFile(String bookId) async {
+    var tempDir = await new Directory(Constant.PATH_TXT + bookId).create(recursive: true);
+    await tempDir.delete(recursive: true);
   }
 }

@@ -35,7 +35,7 @@ class ReaderOverlayer extends StatelessWidget {
                   builder: (context,child,downloadStatusEvent)=>
                   (downloadStatusEvent.type == DownloadEventType.loading
                       && downloadStatusEvent.bookId == bookId) ? Text(
-                      '缓存 '+'${downloadStatusEvent.start }'+'/'+'${downloadStatusEvent.end}'
+                      '缓存 '+'${downloadStatusEvent.current }'+'/'+'${downloadStatusEvent.end}'
                       ,style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(11))):Text(''),
                 ),
               )),

@@ -160,7 +160,7 @@ class _BookShelfPageState extends State<BookShelfPage> {
                     title: Text('缓存管理'),
                   ),
                 ),
-                const PopupMenuDivider(),
+//                const PopupMenuDivider(),
               ],
         ),
         middle: Text('书架'),
@@ -219,7 +219,9 @@ class _BookShelfPageState extends State<BookShelfPage> {
 
   //菜单栏
   void showMenuSelection(String value) {
-    if (value == 'cache') {}
+    if (value == 'cache') {
+      NavigatorUtils.gotoBookCachePage(context);
+    }
   }
 
   void checkNewUser(BuildContext context) async {
@@ -334,6 +336,6 @@ class _BookShelfPageState extends State<BookShelfPage> {
     List<Chapters> chaptersList = mixToc.chapters;
     print('' + chaptersList.length.toString());
     Code.eventBus.fire(new DownloadEvent(
-        item.id, chaptersList, 1, 10, DownloadEventType.start));
+        item.id, chaptersList, 1, 10, DownloadEventType.start,current: 1));
   }
 }

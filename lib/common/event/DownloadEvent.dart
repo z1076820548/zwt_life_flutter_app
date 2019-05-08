@@ -9,7 +9,7 @@ class DownloadEvent {
   int start;
   int end;
   DownloadEventType type;
-
-  DownloadEvent(this.bookId, this.list, this.start, this.end, this.type);
+  int current;
+  DownloadEvent(this.bookId, this.list, this.start, this.end, this.type,{this.current});
 
 }

@@ -28,4 +28,8 @@ class DownloadManager {
     File file = FileUtil.getChapterFile(bookId, chapter);
     await FileUtil.writeFile(file, contents);
   }
+
+  static removeBook(String bookId) async{
+    await FileUtil.deleteChapterFile(bookId);
+  }
 }
