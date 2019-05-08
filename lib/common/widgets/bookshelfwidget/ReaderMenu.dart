@@ -15,11 +15,10 @@ void showDownloadSheet(
     int currentIndex,
     List<Chapters> chaptersList,
     VoidCallback callback}) {
-  void tap(BuildContext context, int start, int end) {
-    Navigator.pop(context);
+  void tap(BuildContext context, int start, int end) async {
     Code.eventBus.fire(new DownloadEvent(
-        bookId, chaptersList, start, end, DownloadEventType.start,current: start));
-    callback();
+        bookId, chaptersList, start, end, DownloadEventType.start,
+        current: start));
   }
 
   AlertCupertinoUtil.showDemoActionSheet(
@@ -31,18 +30,24 @@ void showDownloadSheet(
         CupertinoActionSheetAction(
           child: Text('后面50章'),
           onPressed: () {
+            Navigator.pop(context, "后面50章");
+            callback();
             tap(context, currentIndex, currentIndex + 50);
           },
         ),
         CupertinoActionSheetAction(
           child: Text('后面全部'),
           onPressed: () {
+            Navigator.pop(context, '后面全部');
+            callback();
             tap(context, currentIndex, chaptersList.length - 1);
           },
         ),
         CupertinoActionSheetAction(
           child: Text('全部'),
           onPressed: () {
+            Navigator.pop(context, '全部');
+            callback();
             tap(context, 0, chaptersList.length - 1);
 //            tap(0, chaptersList.length - 1);
           },
@@ -51,9 +56,10 @@ void showDownloadSheet(
           child: Text('清除本书缓存'),
           onPressed: () {
             Navigator.pop(context);
-            Code.eventBus.fire(new DownloadEvent(
-                bookId, chaptersList, 0, 0, DownloadEventType.remove,current: 0));
             callback();
+            Code.eventBus.fire(new DownloadEvent(
+                bookId, chaptersList, 0, 0, DownloadEventType.remove,
+                current: 0));
           },
         ),
       ],

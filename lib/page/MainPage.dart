@@ -38,14 +38,17 @@ class MainPage extends StatefulWidget {
     return _MainPageState();
   }
 }
- List<DownloadEvent> downloadEventList = [];
+
+List<DownloadEvent> downloadEventList = [];
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   var appBarTitles = ['书架', '找书'];
   var tabImages;
   StreamSubscription _stream;
-  bool isBusy = false; // 当前是否有下载任务在进行
+  bool isPause = false;
+  BookCacheDbProvider bookCacheDbProvider = new BookCacheDbProvider();
+
   /*
    * 根据image路径获取图片
    * 这个图片的路径需要在 pubspec.yaml 中去定义
@@ -94,7 +97,7 @@ class _MainPageState extends State<MainPage> {
    */
   var _bodys;
 
-  void initData() {
+  void initData() async {
     /*
       bottom的按压图片
      */
@@ -126,12 +129,24 @@ class _MainPageState extends State<MainPage> {
 //      HomePage(),
 //      HomePage(),
     ];
+    downloadEventList = await bookCacheDbProvider.getAllData();
+  }
+
+  @override
+  void dispose() {
+    willpop();
+
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
   void initState() {
     // TODO: implement initState
+    initData();
+
     super.initState();
+
     //缓存监听
     _stream = Code.eventBus.on<DownloadEvent>().listen((event) {
       initDownload(event);
@@ -143,7 +158,6 @@ class _MainPageState extends State<MainPage> {
     ScreenUtil.instance = ScreenUtil(
         width: ScreenUtil.designWidth, height: ScreenUtil.designHeight)
       ..init(context);
-    initData();
     // TODO: implement build
     return Scaffold(
 //      appBar: AppBar(
@@ -184,6 +198,7 @@ class _MainPageState extends State<MainPage> {
   void check() async {
     if (downloadEventList.length > 0) {
       for (int i = 0; i < downloadEventList.length; i++) {
+        //开始下载
         await startDownload(downloadEventList[i]);
       }
     }
@@ -192,28 +207,41 @@ class _MainPageState extends State<MainPage> {
   void startDownload(DownloadEvent downloadEvent) async {
     List<Chapters> list = downloadEvent.list;
     String bookId = downloadEvent.bookId;
-    int start = downloadEvent.start; // 起始章节
-    int end = downloadEvent.end; // 结束章节
     final downloadStatusEvent = Provide.value<DownloadStatusEvent>(context);
-
-    if (downloadEvent.type == DownloadEventType.remove ||
-        downloadEvent.type == DownloadEventType.pause) {
-        print('缓存停止');
-      if (downloadEvent.type == DownloadEventType.remove) {
-        print('清除缓存');
-       await DownloadManager.removeBook(downloadEvent.bookId);
-       downloadEventList.remove(downloadEvent);
-      }
-      //下载状态通知
-      downloadStatusEvent.notifyDownload(
-          downloadEvent.bookId, start, end, downloadEvent.type,current: downloadEvent.current);
-//      Code.eventBus.fire(new DownloadStatusEvent(downloadEvent.bookId,start,end,downloadEvent.type));
-      return;
-    }
 //    if (downloadEvent.type != DownloadEventType.finish) {
-    print('缓存中');
-    downloadEvent.type = DownloadEventType.loading;
-    for (int i = start; i <= end && i <= list.length; i++) {
+    for (int i = downloadEvent.current;
+        i <= downloadEvent.end && i <= list.length;
+        i++) {
+
+      for (int j = 0; j < downloadEventList.length; j++) {
+        if (downloadEvent.bookId == downloadEventList[j].bookId) {
+          downloadEvent.type = downloadEventList[j].type;
+          return;
+        }
+      }
+      //每次下载都需要判断是否有通知暂停 或清除 或取消
+      if (downloadEvent.type == DownloadEventType.remove ||
+          downloadEvent.type == DownloadEventType.pause) {
+        print('缓存停止');
+        if (downloadEvent.type == DownloadEventType.remove) {
+          print('清除缓存');
+          await DownloadManager.removeBook(downloadEvent.bookId);
+          bookCacheDbProvider.delete(downloadEvent.bookId);
+          downloadEventList.remove(downloadEvent);
+        }
+        if (downloadEvent.type == DownloadEventType.pause) {
+          print('缓存');
+        }
+        //下载状态通知
+        downloadStatusEvent.notifyDownload(downloadEvent.bookId,
+            downloadEvent.start, downloadEvent.end, downloadEvent.type,
+            current: downloadEvent.current, list: downloadEvent.list);
+       break;
+      }
+
+      print('缓存中');
+
+      downloadEvent.type = DownloadEventType.loading;
       String contents = await DownloadManager.getChapter(bookId, i);
       if (contents.isNotEmpty && contents.trim().length > 0) {
         print('该章节已缓存，自动跳过');
@@ -223,14 +251,15 @@ class _MainPageState extends State<MainPage> {
         await DownloadManager.saveChapter(bookId, i, chapter.body);
         print('开始缓存 第' + i.toString() + '章');
       }
-      if (i == end) {
+      if (i == downloadEvent.end) {
         downloadEvent.type = DownloadEventType.finish;
         print('缓存完成');
       }
       downloadEvent.current = i;
       //下载状态通知
-      downloadStatusEvent.notifyDownload(
-          downloadEvent.bookId, start ,end, downloadEvent.type,current: downloadEvent.current);
+      downloadStatusEvent.notifyDownload(downloadEvent.bookId,
+          downloadEvent.start, downloadEvent.end, downloadEvent.type,
+          current: downloadEvent.current, list: downloadEvent.list);
     }
 //    } else {
 //      downloadEvent.type = DownloadEventType.finish;
@@ -239,25 +268,35 @@ class _MainPageState extends State<MainPage> {
   }
 
   void initDownload(DownloadEvent event) async {
+
     if (downloadEventList.length == 0) {
-    print('进入下载队列，排序在首位');
-    downloadEventList.insert(0, event);
+      downloadEventList.add(event);
     } else {
       for (int i = downloadEventList.length - 1; i >= 0; i--) {
         if (downloadEventList[i].bookId == event.bookId) {
-          downloadEventList.removeAt(i);
+          downloadEventList[i] = event;
           print('任务已存在');
           break;
+        } else {
+          if (i == 0) {
+            downloadEventList.add(event);
+          }
         }
       }
-      downloadEventList.insert(0, event);
     }
-
     var connectivityResult = await (new Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
       print('网络异常，取消下载');
     } else {
       await check();
+    }
+  }
+
+  void willpop() async {
+    //退出APP 保存下载记录
+    for (DownloadEvent downloadEvent in downloadEventList) {
+      await bookCacheDbProvider.insert(
+          downloadEvent.bookId, json.encode(downloadEvent.toJson()));
     }
   }
 }

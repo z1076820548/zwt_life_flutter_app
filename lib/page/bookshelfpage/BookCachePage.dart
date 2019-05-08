@@ -102,57 +102,117 @@ class _BookCachePageState extends State<BookCachePage> {
                                   color: Color(0xFFe1e1e1), width: 0.5))),
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Stack(
                         children: <Widget>[
                           Container(
-                            child: Text(
-                              book.title,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: ScreenUtil.getInstance().setSp(16)),
-                            ),
-                          ),
-                          Container(
+                            alignment: Alignment.topRight,
                             child: Provide<DownloadStatusEvent>(
-                              builder: (context, child, downloadStatusEvent) {
-                                if (downloadStatusEvent.bookId == book.id) {
-                                  int total = downloadStatusEvent.end -
-                                      downloadStatusEvent.start;
-                                  int current = downloadStatusEvent.current -
-                                      downloadStatusEvent.start;
-                                  double progress = current / total;
-                                  return Column(
-                                    children: <Widget>[
-                                      Row(
+                                builder: (context, child, downloadStatusEvent) {
+                              if (downloadStatusEvent.bookId == book.id) {
+                                if (downloadStatusEvent.type ==
+                                    DownloadEventType.pause) {
+                                  return IconButton(
+                                    alignment: Alignment.topRight,
+                                    icon: Icon(Icons.file_download),
+                                    onPressed: () {
+                                      Code.eventBus.fire(new DownloadEvent(
+                                          book.id,
+                                          downloadStatusEvent.list,
+                                          downloadStatusEvent.start,
+                                          downloadStatusEvent.end,
+                                          DownloadEventType.start,
+                                          current:
+                                              downloadStatusEvent.current));
+                                    },
+                                  );
+                                }
+                                if (downloadStatusEvent.type ==
+                                    DownloadEventType.loading) {
+                                  return IconButton(
+                                    alignment: Alignment.topRight,
+                                    icon: Icon(Icons.pause),
+                                    onPressed: () {
+                                      Code.eventBus.fire(new DownloadEvent(
+                                          book.id,
+                                          downloadStatusEvent.list,
+                                          downloadStatusEvent.start,
+                                          downloadStatusEvent.end,
+                                          DownloadEventType.pause,
+                                          current:
+                                              downloadStatusEvent.current));
+                                    },
+                                  );
+                                }
+                                if (downloadStatusEvent.type ==
+                                    DownloadEventType.finish) {
+                                  return IconButton(
+                                    alignment: Alignment.topRight,
+                                    icon: Icon(
+                                      Icons.check,
+                                      color: GlobalColors.themeColor,
+                                    ),
+                                    onPressed: () {},
+                                  );
+                                }
+                              }
+                            }),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                child: Text(
+                                  book.title,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize:
+                                          ScreenUtil.getInstance().setSp(16)),
+                                ),
+                              ),
+                              Container(
+                                child: Provide<DownloadStatusEvent>(
+                                  builder:
+                                      (context, child, downloadStatusEvent) {
+                                    if (downloadStatusEvent.bookId == book.id) {
+                                      int total = downloadStatusEvent.end -
+                                          downloadStatusEvent.start;
+                                      int current =
+                                          downloadStatusEvent.current -
+                                              downloadStatusEvent.start;
+                                      double progress = current / total;
+                                      return Column(
                                         children: <Widget>[
-                                          Text('第' +
-                                              '${downloadStatusEvent.start + 1}章' +
-                                              '~' +
-                                              '第${downloadStatusEvent.end + 1}章'),
-                                          Text(
-                                            '  缓存进度 ${(progress * 100.0).toStringAsFixed(1)}%',
-                                            textAlign: TextAlign.right,
+                                          Row(
+                                            children: <Widget>[
+                                              Text('第' +
+                                                  '${downloadStatusEvent.start + 1}章' +
+                                                  '~' +
+                                                  '第${downloadStatusEvent.end + 1}章'),
+                                              Text(
+                                                '  缓存进度 ${(progress * 100.0).toStringAsFixed(1)}%',
+                                                textAlign: TextAlign.right,
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                      LinearProgressIndicator(
-                                        value: progress,
-                                        backgroundColor: Colors.grey,
-                                      ),
+                                          LinearProgressIndicator(
+                                            value: progress,
+                                            backgroundColor: Colors.grey,
+                                          ),
 //                                  SizedBox(
 //                                    width: 20.0,
 //                                    height: 20.0,
 //                                    child: CircularProgressIndicator(
 //                                        value: progress),
 //                                  ),
-                                    ],
-                                  );
-                                } else {
-                                  return Container();
-                                }
-                              },
-                            ),
+                                        ],
+                                      );
+                                    } else {
+                                      return Container();
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -182,6 +242,7 @@ class _BookCachePageState extends State<BookCachePage> {
     bookDetailBeanList.removeAt(index);
     setState(() {});
     Code.eventBus.fire(new DownloadEvent(
-        book.id, [], 0, 0, DownloadEventType.remove,current: 0));
+        book.id, [], 0, 0, DownloadEventType.remove,
+        current: 0));
   }
 }
