@@ -1,11 +1,16 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provide/provide.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:zwt_life_flutter_app/common/manager/settingmanager.dart';
 import 'package:zwt_life_flutter_app/common/net/Code.dart';
+import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ReaderMenu.dart';
+import 'package:zwt_life_flutter_app/page/MainPage.dart';
 import 'package:zwt_life_flutter_app/public.dart';
+import 'package:package_info/package_info.dart';
 
 List<RecommendBooks> recommendBooksList = new List();
 
@@ -19,14 +24,19 @@ class BookShelfPage extends StatefulWidget {
   }
 }
 
-class _BookShelfPageState extends State<BookShelfPage> {
+class _BookShelfPageState extends State<BookShelfPage> with AutomaticKeepAliveClientMixin{
   RefreshController _refreshController;
   ScrollController _scrollController;
   final SlidableController slidableController = new SlidableController();
   BookShelfDbProvider bookShelfDbProvider = new BookShelfDbProvider();
+//  @override
+//  void didChangeAppLifecycleState(AppLifecycleState state) {}
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {}
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -34,6 +44,7 @@ class _BookShelfPageState extends State<BookShelfPage> {
     _refreshController = new RefreshController();
     _scrollController = new ScrollController();
     checkNewUser(context);
+    checkUpdate();
   }
 
   void scrollTop() {
@@ -57,45 +68,149 @@ class _BookShelfPageState extends State<BookShelfPage> {
               onTap: () {
                 tap(item);
               },
-              child: new Container(
-                decoration: new BoxDecoration(
-                    border: new BorderDirectional(
-                        bottom: new BorderSide(
-                            color: Color(0xFFe1e1e1), width: 1.0))),
-                child: new ListTile(
-                  leading: ExtendedImage.network(
-                    (Constant.IMG_BASE_URL + '${item.cover}'),
-                    height: ScreenUtil.getInstance().L(50),
-                    fit: BoxFit.fitHeight,
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    cache: true,
-                  ),
-                  title: Row(
-                    children: <Widget>[
-                      new Text('${item.title}'),
-                      Container(
-                        width: 5,
-                      ),
-                      Offstage(
-                        offstage: item.noUpdate == null ? true : item.noUpdate,
-                        child: new Container(
-                          color: Colors.red,
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-                          child: Text(
-                            "更新",
-                            style: TextStyle(color: Colors.white, fontSize: 10),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Stack(
+                            children: <Widget>[
+                              ExtendedImage.network(
+                                (Constant.IMG_BASE_URL + '${item.cover}'),
+                                height: ScreenUtil.getInstance().L(50),
+                                fit: BoxFit.fitHeight,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0)),
+                                cache: true,
+                              ),
+                              Provide<DownloadStatusEvent>(builder:
+                                  (context, child, downloadStatusEvent) {
+                                DownloadEvent downloadEvent;
+                                if (downloadEventList.length == 0) {
+                                  return Text('');
+                                }
+                                for (int i = 0;
+                                    i < downloadEventList.length;
+                                    i++) {
+                                  if (item.id == downloadEventList[i].bookId) {
+                                    downloadEvent = downloadEventList[i];
+                                    i = downloadEventList.length;
+                                  }
+                                }
+                                if (item.id == downloadEvent?.bookId) {
+                                  if (downloadEvent.type ==
+                                          DownloadEventType.loading ||
+                                      downloadEvent.type ==
+                                          DownloadEventType.pause) {
+                                    int total =
+                                        downloadEvent.end - downloadEvent.start;
+                                    int current = downloadEvent.current -
+                                        downloadEvent.start;
+                                    double progress = current / total;
+                                    return Material(
+                                      type: MaterialType.transparency,
+                                      child: Opacity(
+                                        opacity: 0.6,
+                                        child: Container(
+                                          color: Colors.black,
+                                          alignment: Alignment.center,
+                                          child: Stack(
+                                            children: <Widget>[
+                                              Container(
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                      '${(progress * 100.0).toStringAsFixed(1)}%',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                      ))),
+                                              Container(
+                                                alignment: Alignment.center,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  value: progress,
+                                                  backgroundColor: Colors.white,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    return Text('');
+                                  }
+                                } else {
+                                  return Text('');
+                                }
+                              }),
+                            ],
                           ),
                         ),
-                      )
-                    ],
-                  ),
-                  subtitle: new Text(
-                    '${item.lastChapter}',
-                    style: TextStyle(fontSize: 11),
-                  ),
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.topLeft,
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    new Text('${item.title}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: ScreenUtil.getInstance()
+                                                .setSp(16))),
+                                    Container(
+                                      width: 5,
+                                    ),
+                                    Offstage(
+                                      offstage: item.noUpdate == null
+                                          ? true
+                                          : item.noUpdate,
+                                      child: new Container(
+                                        color: Colors.red,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 4, vertical: 0),
+                                        child: Text(
+                                          "更新",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Container(
+                                  height: ScreenUtil.getInstance().setSp(5),
+                                ),
+                                Text(
+                                  '${item.lastChapter}',
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      color: Colors.black54,
+                                      fontSize:
+                                          ScreenUtil.getInstance().setSp(11)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
 //              trailing: new Text('${item.updated}'),
-                ),
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    indent: 20,
+                  )
+                ],
               ),
             ),
           ),
@@ -115,14 +230,67 @@ class _BookShelfPageState extends State<BookShelfPage> {
               onTap: () {
                 toTop(item, index);
               }),
-          new IconSlideAction(
-              foregroundColor: Colors.grey,
-              color: Colors.grey[50],
-              caption: '缓存',
-              icon: Icons.file_download,
-              onTap: () {
-                download(item);
-              }),
+          Provide<DownloadStatusEvent>(
+              builder: (context, child, downloadStatusEvent) {
+            DownloadEvent downloadEvent;
+            if (downloadEventList.length == 0) {
+              return new IconSlideAction(
+                  foregroundColor: Colors.grey,
+                  color: Colors.grey[50],
+                  caption: '缓存',
+                  icon: Icons.file_download,
+                  onTap: () {
+                    download(item, DownloadEventType.start);
+                  });
+            } else {
+              for (int i = 0; i < downloadEventList.length; i++) {
+                if (item.id == downloadEventList[i].bookId) {
+                  downloadEvent = downloadEventList[i];
+                  i = downloadEventList.length;
+                }
+              }
+              if (downloadEvent?.bookId == item.id) {
+                if (downloadEvent.type == DownloadEventType.loading) {
+                  return new IconSlideAction(
+                      foregroundColor: Colors.grey,
+                      color: Colors.grey[50],
+                      caption: '取消缓存',
+                      icon: Icons.cancel,
+                      onTap: () {
+                        download(item, DownloadEventType.remove);
+                      });
+                } else if (downloadEvent.type == DownloadEventType.finish) {
+                  return new IconSlideAction(
+                      foregroundColor: Colors.grey,
+                      color: Colors.grey[50],
+                      caption: '清除缓存',
+                      icon: Icons.hourglass_empty,
+                      onTap: () {
+                        download(item, DownloadEventType.remove);
+                      });
+                } else {
+                  return new IconSlideAction(
+                      foregroundColor: Colors.grey,
+                      color: Colors.grey[50],
+                      caption: '缓存',
+                      icon: Icons.file_download,
+                      onTap: () {
+                        download(item, DownloadEventType.start);
+                      });
+                }
+              } else {
+                return new IconSlideAction(
+                    foregroundColor: Colors.grey,
+                    color: Colors.grey[50],
+                    caption: '缓存',
+                    icon: Icons.file_download,
+                    onTap: () {
+                      download(item, DownloadEventType.start);
+                    });
+              }
+            }
+          }),
+
           new IconSlideAction(
               caption: '删除',
               foregroundColor: Colors.red,
@@ -238,10 +406,9 @@ class _BookShelfPageState extends State<BookShelfPage> {
       //否则 从数据库中读取书架
       var data = await bookShelfDbProvider.getAllData();
       if (data != null) {
-        setState(() {
-          recommendBooksList.clear();
-          recommendBooksList.addAll(data);
-        });
+        recommendBooksList.clear();
+        recommendBooksList.addAll(data);
+        setState(() {});
         RecommendBooks recommendBooks;
         if (recommendBooksList?.length != null) {
           for (int i = 0; i < recommendBooksList.length; i++) {
@@ -329,13 +496,41 @@ class _BookShelfPageState extends State<BookShelfPage> {
     });
   }
 
-  void download(RecommendBooks item) async {
+  void download(RecommendBooks item, String type) async {
     print('点击缓存');
     Data data = await dioGetAToc(item.id, "chapters");
     MixToc mixToc = data.data;
     List<Chapters> chaptersList = mixToc.chapters;
-    print('' + chaptersList.length.toString());
-    Code.eventBus.fire(new DownloadEvent(
-        item.id, chaptersList, 1, 10, DownloadEventType.start,current: 1));
+    if (type == DownloadEventType.start) {
+      showDownloadSheet(
+          context: context,
+          bookId: item.id,
+          chaptersList: chaptersList,
+          callback: () async {},
+          currentIndex: 0);
+    } else {
+      Code.eventBus.fire(
+          new DownloadEvent(item.id, chaptersList, 1, 1, type, current: 1));
+    }
   }
+
+  void checkUpdate() async {
+    bool isupdate = false;
+    bool ismustUpdate = false;
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    String appName = packageInfo.appName;
+    String packageName = packageInfo.packageName;
+    String version = packageInfo.version;
+    String buildNumber = packageInfo.buildNumber;
+
+    bool isSupport = await FlutterAppBadger.isAppBadgeSupported();
+    if (isSupport) {
+      FlutterAppBadger.updateBadgeCount(1);
+    }
+  }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

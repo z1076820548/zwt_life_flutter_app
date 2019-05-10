@@ -23,6 +23,7 @@ import 'package:zwt_life_flutter_app/page/LoginPage.dart';
 import 'package:zwt_life_flutter_app/page/WelcomePage.dart';
 import 'package:provide/provide.dart';
 import 'package:zwt_life_flutter_app/public.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 SpUtil sp;
 List<CameraDescription> cameras;
 

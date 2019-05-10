@@ -23,7 +23,7 @@ dioGetRecommend(String gender) async {
     }
     return Data(recommendBooksList, true);
   } else {
-    return Data("", false);
+    return Data(null, false);
   }
 }
 
@@ -43,7 +43,7 @@ dioGetAToc(String bookId, String view) async {
     MixToc mic = MixToc.fromJson(map);
     return Data(mic, true);
   } else {
-    return Data("", false);
+    return Data(null, false);
   }
 }
 
@@ -62,7 +62,7 @@ dioGetChapterBody(String link, String title) async {
     chapter.title = title;
     return Data(chapter, true);
   } else {
-    return Data("", false);
+    return Data(null, false);
   }
 }
 
@@ -77,7 +77,7 @@ dioGetTopBank() async {
     Map map = json.decode(res.data.toString());
     return Data(map, true);
   } else {
-    return Data("", false);
+    return Data(null, false);
   }
 }
 
@@ -93,7 +93,7 @@ dioGetRankingDetail(String rankingId) async {
     RankingBean rankingBean = RankingBean.fromJson(map['ranking']);
     return Data(rankingBean, true);
   } else {
-    return Data("", false);
+    return Data(null, false);
   }
 }
 
@@ -109,7 +109,7 @@ dioGetBookDetail(String bookId) async {
     BookDetailBean bookDetailBean = BookDetailBean.fromJson(map);
     return Data(bookDetailBean, true);
   } else {
-    return Data("", false);
+    return Data(null, false);
   }
 }
 
@@ -133,7 +133,7 @@ dioGetBookByTags(String tags, String start, String limit) async {
         ?.toList();
     return Data(list, true);
   } else {
-    return Data("", false);
+    return Data(null, false);
   }
 }
 
@@ -149,7 +149,7 @@ dioGetCategoryList() async {
     CategoryList categoryList = new CategoryList.fromJsonMap(map);
     return Data(categoryList, true);
   } else {
-    return Data("", false);
+    return Data(null, false);
   }
 }
 
@@ -165,7 +165,7 @@ dioGetCategoryList2() async {
     CategoryList2 categoryList2 = new CategoryList2.fromJsonMap(map);
     return Data(categoryList2, true);
   } else {
-    return Data("", false);
+    return Data(null, false);
   }
 }
 
@@ -197,7 +197,7 @@ dioGetBooksByCats(
         ?.toList();
     return Data(list, true);
   } else {
-    return Data("", false);
+    return Data(null, false);
   }
 }
 
@@ -212,7 +212,7 @@ dioGetHotSugs() async {
     HotWordBean hotWordBean = HotWordBean.fromJsonMap(map);
     return Data(hotWordBean, true);
   } else {
-    return Data("", false);
+    return Data(null, false);
   }
 }
 
@@ -230,7 +230,7 @@ dioGetAutoComplete(String query) async {
     List<String> list =(map['keywords'] as List)?.map((e) => e as String)?.toList();
     return Data(list, true);
   } else {
-    return Data("", false);
+    return Data(null, false);
   }
 }
 
@@ -250,7 +250,7 @@ dioGetSearchBooks(String query) async {
         ?.toList();
     return Data(list, true);
   } else {
-    return Data("", false);
+    return Data(null, false);
   }
 }
 
@@ -271,6 +271,6 @@ dioGetSearchBooksByAuthor(String author) async {
         ?.toList();
     return Data(list, true);
   } else {
-    return Data("", false);
+    return Data(null, false);
   }
 }

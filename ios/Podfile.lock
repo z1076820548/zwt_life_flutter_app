@@ -1,4 +1,6 @@
 PODS:
+  - background_fetch (0.1.1):
+    - Flutter
   - battery (0.0.1):
     - Flutter
   - camera (0.0.1):
@@ -9,6 +11,8 @@ PODS:
   - device_info (0.0.1):
     - Flutter
   - Flutter (1.0.0)
+  - flutter_app_badger (0.0.1):
+    - Flutter
   - flutter_sound (0.0.1):
     - Flutter
   - flutter_statusbar (0.0.1):
@@ -44,11 +48,13 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - background_fetch (from `.symlinks/plugins/background_fetch/ios`)
   - battery (from `.symlinks/plugins/battery/ios`)
   - camera (from `.symlinks/plugins/camera/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
+  - flutter_app_badger (from `.symlinks/plugins/flutter_app_badger/ios`)
   - flutter_sound (from `.symlinks/plugins/flutter_sound/ios`)
   - flutter_statusbar (from `.symlinks/plugins/flutter_statusbar/ios`)
   - flutter_statusbarcolor (from `.symlinks/plugins/flutter_statusbarcolor/ios`)
@@ -70,6 +76,8 @@ SPEC REPOS:
     - Reachability
 
 EXTERNAL SOURCES:
+  background_fetch:
+    :path: ".symlinks/plugins/background_fetch/ios"
   battery:
     :path: ".symlinks/plugins/battery/ios"
   camera:
@@ -80,6 +88,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/device_info/ios"
   Flutter:
     :path: ".symlinks/flutter/ios"
+  flutter_app_badger:
+    :path: ".symlinks/plugins/flutter_app_badger/ios"
   flutter_sound:
     :path: ".symlinks/plugins/flutter_sound/ios"
   flutter_statusbar:
@@ -110,11 +120,13 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/video_player/ios"
 
 SPEC CHECKSUMS:
+  background_fetch: 385552e57d3bde2c7a3abd6b1edc76b87823b6c4
   battery: 2efe849ceb3b99f3976f91c5448e375ca7db022e
   camera: d56ad165545ae5a0ffb892376033760a969c68c8
   connectivity: c72716e202a1225ec4810740d5cb56b8ae3bf4cc
   device_info: 3ebad48f726348f69abd802f3334a8d1ed795fbd
   Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
+  flutter_app_badger: 65de4d6f0c34a891df49e6cfb8a1c0496426fa68
   flutter_sound: 0e8163ceac1e00eb6d894e2ae4641ba726a2c479
   flutter_statusbar: aa4982b847304a72c5ac8439a9f37861b662c6bb
   flutter_statusbarcolor: 8afb1071ed8c58be929f1e32b36c629771fd2259

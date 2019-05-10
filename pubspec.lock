@@ -190,6 +190,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.0"
+  dots_indicator:
+    dependency: transitive
+    description:
+      name: dots_indicator
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.0.4"
   event_bus:
     dependency: "direct main"
     description:
@@ -237,6 +244,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_app_badger:
+    dependency: "direct main"
+    description:
+      name: flutter_app_badger
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.2"
   flutter_cache_manager:
     dependency: "direct main"
     description:
@@ -429,6 +443,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.15.8"
+  introduction_screen:
+    dependency: "direct main"
+    description:
+      name: introduction_screen
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.2"
   io:
     dependency: transitive
     description:
@@ -512,7 +533,7 @@ packages:
       name: package_info
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.3.2+1"
+    version: "0.4.0+3"
   package_resolver:
     dependency: transitive
     description:

@@ -108,8 +108,19 @@ class _BookCachePageState extends State<BookCachePage> {
                             alignment: Alignment.topRight,
                             child: Provide<DownloadStatusEvent>(
                                 builder: (context, child, downloadStatusEvent) {
-                              if (downloadStatusEvent.bookId == book.id) {
-                                if (downloadStatusEvent.type ==
+                                  DownloadEvent downloadEvent;
+
+                                  if(downloadEventList.length == 0){
+                                    return Container();
+                                  }
+                                  for(int i = 0;i < downloadEventList.length;i++){
+                                    if(book.id == downloadEventList[i].bookId){
+                                      downloadEvent = downloadEventList[i];
+                                      i = downloadEventList.length;
+                                    }
+                                  }
+                              if (downloadEvent.bookId == book.id) {
+                                if (downloadEvent.type ==
                                     DownloadEventType.pause) {
                                   return IconButton(
                                     alignment: Alignment.topRight,
@@ -117,16 +128,16 @@ class _BookCachePageState extends State<BookCachePage> {
                                     onPressed: () {
                                       Code.eventBus.fire(new DownloadEvent(
                                           book.id,
-                                          downloadStatusEvent.list,
-                                          downloadStatusEvent.start,
-                                          downloadStatusEvent.end,
+                                          downloadEvent.list,
+                                          downloadEvent.start,
+                                          downloadEvent.end,
                                           DownloadEventType.start,
                                           current:
-                                              downloadStatusEvent.current));
+                                          downloadEvent.current));
                                     },
                                   );
                                 }
-                                if (downloadStatusEvent.type ==
+                                if (downloadEvent.type ==
                                     DownloadEventType.loading) {
                                   return IconButton(
                                     alignment: Alignment.topRight,
@@ -134,16 +145,16 @@ class _BookCachePageState extends State<BookCachePage> {
                                     onPressed: () {
                                       Code.eventBus.fire(new DownloadEvent(
                                           book.id,
-                                          downloadStatusEvent.list,
-                                          downloadStatusEvent.start,
-                                          downloadStatusEvent.end,
+                                          downloadEvent.list,
+                                          downloadEvent.start,
+                                          downloadEvent.end,
                                           DownloadEventType.pause,
                                           current:
-                                              downloadStatusEvent.current));
+                                          downloadEvent.current));
                                     },
                                   );
                                 }
-                                if (downloadStatusEvent.type ==
+                                if (downloadEvent.type ==
                                     DownloadEventType.finish) {
                                   return IconButton(
                                     alignment: Alignment.topRight,
@@ -154,6 +165,8 @@ class _BookCachePageState extends State<BookCachePage> {
                                     onPressed: () {},
                                   );
                                 }
+                              }else{
+                                return Container();
                               }
                             }),
                           ),
@@ -173,21 +186,31 @@ class _BookCachePageState extends State<BookCachePage> {
                                 child: Provide<DownloadStatusEvent>(
                                   builder:
                                       (context, child, downloadStatusEvent) {
-                                    if (downloadStatusEvent.bookId == book.id) {
-                                      int total = downloadStatusEvent.end -
-                                          downloadStatusEvent.start;
+                                        DownloadEvent downloadEvent;
+                                        if(downloadEventList.length == 0){
+                                          return Container();
+                                        }
+                                        for(int i = 0;i < downloadEventList.length;i++){
+                                          if(book.id == downloadEventList[i].bookId){
+                                            downloadEvent = downloadEventList[i];
+                                            i = downloadEventList.length;
+                                          }
+                                        }
+                                    if (downloadEvent.bookId == book.id) {
+                                      int total = downloadEvent.end -
+                                          downloadEvent.start;
                                       int current =
-                                          downloadStatusEvent.current -
-                                              downloadStatusEvent.start;
+                                          downloadEvent.current -
+                                              downloadEvent.start;
                                       double progress = current / total;
                                       return Column(
                                         children: <Widget>[
                                           Row(
                                             children: <Widget>[
                                               Text('第' +
-                                                  '${downloadStatusEvent.start + 1}章' +
+                                                  '${downloadEvent.start + 1}章' +
                                                   '~' +
-                                                  '第${downloadStatusEvent.end + 1}章'),
+                                                  '第${downloadEvent.end + 1}章'),
                                               Text(
                                                 '  缓存进度 ${(progress * 100.0).toStringAsFixed(1)}%',
                                                 textAlign: TextAlign.right,

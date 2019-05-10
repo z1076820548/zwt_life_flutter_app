@@ -17,6 +17,7 @@ import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/services.dart';
 import 'package:connectivity/connectivity.dart';
 
+
 class MainPage extends StatefulWidget {
   static final String sName = "main";
 
@@ -46,9 +47,9 @@ class _MainPageState extends State<MainPage> {
   var appBarTitles = ['书架', '找书'];
   var tabImages;
   StreamSubscription _stream;
-  bool isPause = false;
+  bool isLoading = false;
   BookCacheDbProvider bookCacheDbProvider = new BookCacheDbProvider();
-
+  Timer  _timer;
   /*
    * 根据image路径获取图片
    * 这个图片的路径需要在 pubspec.yaml 中去定义
@@ -134,8 +135,8 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void dispose() {
+    _timer.cancel();
     willpop();
-
     // TODO: implement dispose
     super.dispose();
   }
@@ -147,6 +148,12 @@ class _MainPageState extends State<MainPage> {
 
     super.initState();
 
+      //每5秒将数据保存进数据库中
+      _timer = Timer.periodic(Duration(seconds: 5), (timer) async {
+      if(isLoading){
+         saveCache();
+      }
+    });
     //缓存监听
     _stream = Code.eventBus.on<DownloadEvent>().listen((event) {
       initDownload(event);
@@ -199,7 +206,7 @@ class _MainPageState extends State<MainPage> {
     if (downloadEventList.length > 0) {
       for (int i = 0; i < downloadEventList.length; i++) {
         //开始下载
-        await startDownload(downloadEventList[i]);
+         startDownload(downloadEventList[i]);
       }
     }
   }
@@ -216,7 +223,7 @@ class _MainPageState extends State<MainPage> {
       for (int j = 0; j < downloadEventList.length; j++) {
         if (downloadEvent.bookId == downloadEventList[j].bookId) {
           downloadEvent.type = downloadEventList[j].type;
-          return;
+          j = downloadEventList.length;
         }
       }
       //每次下载都需要判断是否有通知暂停 或清除 或取消
@@ -236,7 +243,7 @@ class _MainPageState extends State<MainPage> {
         downloadStatusEvent.notifyDownload(downloadEvent.bookId,
             downloadEvent.start, downloadEvent.end, downloadEvent.type,
             current: downloadEvent.current, list: downloadEvent.list);
-       break;
+       return;
       }
 
       print('缓存中');
@@ -251,7 +258,12 @@ class _MainPageState extends State<MainPage> {
         await DownloadManager.saveChapter(bookId, i, chapter.body);
         print('开始缓存 第' + i.toString() + '章');
       }
+      isLoading = true;
       if (i == downloadEvent.end) {
+        //延迟执行 使得数据库可以保存数据
+        Future.delayed(Duration(seconds: 15),()async{
+          isLoading= false;
+        });
         downloadEvent.type = DownloadEventType.finish;
         print('缓存完成');
       }
@@ -294,9 +306,12 @@ class _MainPageState extends State<MainPage> {
 
   void willpop() async {
     //退出APP 保存下载记录
-    for (DownloadEvent downloadEvent in downloadEventList) {
-      await bookCacheDbProvider.insert(
-          downloadEvent.bookId, json.encode(downloadEvent.toJson()));
-    }
+    await saveCache();
   }
+   void saveCache()async{
+     for (DownloadEvent downloadEvent in downloadEventList) {
+       await bookCacheDbProvider.insert(
+           downloadEvent.bookId, json.encode(downloadEvent.toJson()));
+     }
+   }
 }

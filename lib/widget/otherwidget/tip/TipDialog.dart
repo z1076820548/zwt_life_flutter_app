@@ -74,6 +74,7 @@ class TipDialog extends Dialog {
   Widget build(BuildContext context) {
     return openMask
         ? Material(
+
             type: MaterialType.transparency,
             child: Center(
               child: new ClipRRect(

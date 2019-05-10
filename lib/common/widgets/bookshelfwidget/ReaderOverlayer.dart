@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provide/provide.dart';
 import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/BatteryView.dart';
+import 'package:zwt_life_flutter_app/page/MainPage.dart';
 import 'package:zwt_life_flutter_app/public.dart';
 
 class ReaderOverlayer extends StatelessWidget {
   final Chapter article;
   final int page;
   final double topSafeHeight;
-   final String bookId;
+  final String bookId;
+
   ReaderOverlayer({this.article, this.page, this.topSafeHeight, this.bookId});
 
   @override
@@ -18,28 +20,50 @@ class ReaderOverlayer extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.fromLTRB(
-          15,  5+ topSafeHeight, 15, 10 + ScreenUtil2.bottomSafeHeight),
+          15, 5 + topSafeHeight, 15, 10 + ScreenUtil2.bottomSafeHeight),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-      Text(article.title,style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(12))),
-    Expanded(child: Container()),
+          Text(article.title,
+              style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(12))),
+          Expanded(child: Container()),
           Row(
             children: <Widget>[
               BatteryView(),
               SizedBox(width: 10),
-              Text(time, style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(11))),
-              Expanded(child: Container(
+              Text(time,
+                  style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(11))),
+              Expanded(
+                  child: Container(
                 alignment: Alignment.center,
                 child: Provide<DownloadStatusEvent>(
-                  builder: (context,child,downloadStatusEvent)=>
-                  (downloadStatusEvent.type == DownloadEventType.loading
-                      && downloadStatusEvent.bookId == bookId) ? Text(
-                      '缓存 '+'${downloadStatusEvent.current }'+'/'+'${downloadStatusEvent.end}'
-                      ,style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(11))):Text(''),
-                ),
+                    builder: (context, child, downloadStatusEvent) {
+                  DownloadEvent downloadEvent;
+                  if (downloadEventList.length == 0) {
+                    return Text('');
+                  } else {
+                    for (int i = 0; i < downloadEventList.length; i++) {
+                      if (bookId == downloadEventList[i].bookId) {
+                        downloadEvent = downloadEventList[i];
+                        i = downloadEventList.length;
+                      }
+                    }
+                    if (downloadEvent?.bookId == bookId &&
+                        downloadEvent.type == DownloadEventType.loading) {
+                      return Text(
+                          '缓存 ' +
+                              '${downloadEvent.current}' +
+                              '/' +
+                              '${downloadEvent.end}',
+                          style: TextStyle(
+                              fontSize: ScreenUtil2.fixedFontSize(11)));
+                    } else {
+                      return Text(' ');
+                    }
+                  }
+                }),
               )),
-              Text('第${page + 1}'+'/'+'${article.pageCount}'+'页',
+              Text('第${page + 1}' + '/' + '${article.pageCount}' + '页',
                   style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(11))),
             ],
           ),

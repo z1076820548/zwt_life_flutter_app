@@ -35,19 +35,19 @@ class _BatteryViewState extends State<BatteryView> {
   }
 
   getBatteryLevel() async {
-//    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-//    if (Platform.isAndroid) {
-//      var androidInfo = await deviceInfo.androidInfo;
-//      if (!androidInfo.isPhysicalDevice) {
-//        return;
-//      }
-//    }
-//    if (Platform.isIOS) {
-//      var iosInfo = await deviceInfo.iosInfo;
-//      if (!iosInfo.isPhysicalDevice) {
-//        return;
-//      }
-//    }
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      var androidInfo = await deviceInfo.androidInfo;
+      if (!androidInfo.isPhysicalDevice) {
+        return;
+      }
+    }
+    if (Platform.isIOS) {
+      var iosInfo = await deviceInfo.iosInfo;
+      if (!iosInfo.isPhysicalDevice) {
+        return;
+      }
+    }
 
 //    Battery().onBatteryStateChanged.listen((BatteryState state) {});
     var level = await Battery().batteryLevel;

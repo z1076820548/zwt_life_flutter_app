@@ -63,6 +63,8 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
 
   @override
   void initState() {
+    super.initState();
+
     // TODO: implement State
     Future.delayed(Duration(seconds: 0), () async {
       await setup();
@@ -71,7 +73,6 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
     //菜单栏监听
     stream = Code.eventBus.on<ReaderMenuEvent>().listen((event) {
       var data = event.data;
-
       switch (event.readerMenuType) {
         //目录
         case ReaderMenuType.catlog:
@@ -110,7 +111,6 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
         default:
       }
     });
-    super.initState();
   }
 
   @override
@@ -148,12 +148,8 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
 
   void setup() async {
     await SystemChrome.setEnabledSystemUIOverlays([]);
-    // 不延迟的话，安卓获取到的topSafeHeight是错的。
-    await Future.delayed(const Duration(milliseconds: 100), () {});
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-
     topSafeHeight = ScreenUtil2.topSafeHeight;
-
     //先获取所要章节的链接
     Data data = await dioGetAToc(widget.bookId, "chapters");
     if (data.result && data.data.toString().length > 0) {
@@ -169,17 +165,18 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
     }
     currentChapterIndex = readBooks.chapterIndex;
     pageIndex = readBooks.pageIndex;
-    bool needPre = false;
     pageController = PageController(initialPage: pageIndex, keepPage: true);
     pageController.addListener(onScroll);
     await resetContent(currentChapterIndex, Todo.toNext, PageJumpType.stay);
 
     //第一次必须加载上一章节
-//    if (currentChapterIndex != 0) {
-//      preChapter = await fetchChapter(currentChapterIndex - 1);
-//      pageController.jumpToPage(
-//          (preChapter != null ? preChapter.pageCount : 0) + pageIndex);
-//    }
+    if (currentChapterIndex != 0) {
+      if(preChapter == null){
+        preChapter = await fetchChapter(currentChapterIndex - 1);
+      }
+      pageController.jumpToPage(
+          (preChapter != null ? preChapter.pageCount : 0) + pageIndex);
+    }
   }
 
   //获取内容
@@ -189,7 +186,8 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
     PageJumpType jumpType,
   ) async {
     if (todo == Todo.toNext) {
-      preChapter = currentChapter;
+        preChapter = currentChapter;
+
       if (nextChapter != null && jumpType != PageJumpType.stay) {
         currentChapter = nextChapter;
         chapterL.add(currentChapter);
@@ -211,8 +209,6 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
         } else {
           preChapter = null;
         }
-      } else {
-//        currentChapter = await fetchChapter(currentChapterIndex);
       }
     } else if (todo == Todo.toOther) {
       if (currentChapterIndex != 0) {
