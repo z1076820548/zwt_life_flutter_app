@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:zwt_life_flutter_app/widget/otherwidget/tip/TipDialog.dart';
 
+//仿ios提示框
 class TipUtil {
   static BuildContext mContext;
 
@@ -18,6 +19,7 @@ class TipUtil {
         builder: (BuildContext context) {
           return TipDialog(
             type: TipDialogType.NOTHING,
+            tip: tip,
           );
         });
   }
@@ -29,6 +31,42 @@ class TipUtil {
         builder: (BuildContext context) {
           return TipDialog(
             type: TipDialogType.LOADING,
+            tip: tip,
+          );
+        });
+  }
+
+  static Future<Null> Fail(BuildContext context, String tip) {
+    mContext = context;
+    return showCustomDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return TipDialog(
+            type: TipDialogType.FAIL,
+            tip: tip,
+          );
+        });
+  }
+
+  static Future<Null> Success(BuildContext context, String tip) {
+    mContext = context;
+    return showCustomDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return TipDialog(
+            type: TipDialogType.SUCCESS,
+            tip: tip,
+          );
+        });
+  }
+
+  static Future<Null> Info(BuildContext context, String tip) {
+    mContext = context;
+    return showCustomDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return TipDialog(
+            type: TipDialogType.INFO,
             tip: tip,
           );
         });

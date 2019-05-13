@@ -36,11 +36,14 @@ class TipDialog extends StatelessWidget {
 //        super(key: key);
 
   final String tip;
-  final Widget icon;
+  Widget icon;
   final WidgetBuilder bodyBuilder;
   final Color color;
   final TipDialogType type;
-  TipDialog(this.type, {this.tip ,this.icon,this.bodyBuilder,this.color,});
+
+  TipDialog({this.type, this.tip, this.bodyBuilder, this.color}) {
+    icon = type == TipDialogType.NOTHING ? null : new TipDialogIcon(type);
+  }
 
   Widget _buildBody() {
     List<Widget> childs = [];
@@ -75,21 +78,20 @@ class TipDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-            type: MaterialType.transparency,
-            child: Center(
-              child: new ClipRRect(
-                borderRadius: new BorderRadius.circular(15.0),
-                child: new Container(
-                  constraints: icon == null || tip == null
-                      ? new BoxConstraints(minHeight: 50.0, minWidth: 100.0)
-                      : new BoxConstraints(minHeight: 90.0, minWidth: 120.0),
-                  color: color,
-                  child:
-                      bodyBuilder == null ? _buildBody() : bodyBuilder(context),
-                ),
-              ),
-            ),
-          );
+      type : MaterialType.transparency,
+      child: Center(
+        child: new ClipRRect(
+          borderRadius: new BorderRadius.circular(15.0),
+          child: new Container(
+            constraints: icon == null || tip == null
+                ? new BoxConstraints(minHeight: 50.0, minWidth: 100.0)
+                : new BoxConstraints(minHeight: 90.0, minWidth: 120.0),
+            color: color == null ? Colors.black87 : color,
+            child: bodyBuilder == null ? _buildBody() : bodyBuilder(context),
+          ),
+        ),
+      ),
+    );
   }
 }
 
