@@ -20,19 +20,19 @@ class ReaderOverlayer extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.fromLTRB(
-          15, 5 + topSafeHeight, 15, 10 + ScreenUtil2.bottomSafeHeight),
+          15,  topSafeHeight * 2, 15, 10 + ScreenUtil2.bottomSafeHeight),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(article.title,
-              style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(12))),
+              style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(10))),
           Expanded(child: Container()),
           Row(
             children: <Widget>[
               BatteryView(),
               SizedBox(width: 10),
               Text(time,
-                  style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(11))),
+                  style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(10))),
               Expanded(
                   child: Container(
                 alignment: Alignment.center,
@@ -56,7 +56,7 @@ class ReaderOverlayer extends StatelessWidget {
                               '/' +
                               '${downloadEvent.end}',
                           style: TextStyle(
-                              fontSize: ScreenUtil2.fixedFontSize(11)));
+                              fontSize: ScreenUtil2.fixedFontSize(10)));
                     } else {
                       return Text(' ');
                     }
@@ -64,7 +64,7 @@ class ReaderOverlayer extends StatelessWidget {
                 }),
               )),
               Text('第${page + 1}' + '/' + '${article.pageCount}' + '页',
-                  style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(11))),
+                  style: TextStyle(fontSize: ScreenUtil2.fixedFontSize(10))),
             ],
           ),
         ],

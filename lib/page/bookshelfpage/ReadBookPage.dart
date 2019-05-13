@@ -14,8 +14,6 @@ import 'package:zwt_life_flutter_app/public.dart';
 enum Todo { toPre, toNext, toOther }
 enum PageJumpType { stay, firstPage, lastPage }
 
-
-
 //小说阅读界面
 class ReadBookPage extends StatefulWidget {
   final String bookId;
@@ -67,7 +65,8 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
 
     // TODO: implement State
     Future.delayed(Duration(seconds: 0), () async {
-      await setup();
+      TipUtil.Loading(context, "加载中...");
+      setup();
     });
 
     //菜单栏监听
@@ -78,10 +77,10 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
         case ReaderMenuType.catlog:
           currentChapterIndex = int.parse(data.toString());
           Future.delayed(Duration(seconds: 0), () async {
-           await resetContent(data, Todo.toOther, PageJumpType.firstPage);
-           pageController =
-               PageController(initialPage: pageIndex, keepPage: false);
-           pageController.addListener(onScroll);
+            await resetContent(data, Todo.toOther, PageJumpType.firstPage);
+            pageController =
+                PageController(initialPage: pageIndex, keepPage: false);
+            pageController.addListener(onScroll);
           });
           break;
         //字体大小
@@ -149,7 +148,7 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
   void setup() async {
     await SystemChrome.setEnabledSystemUIOverlays([]);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-    topSafeHeight = ScreenUtil2.topSafeHeight;
+    topSafeHeight = 5;
     //先获取所要章节的链接
     Data data = await dioGetAToc(widget.bookId, "chapters");
     if (data.result && data.data.toString().length > 0) {
@@ -168,10 +167,11 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
     pageController = PageController(initialPage: pageIndex, keepPage: true);
     pageController.addListener(onScroll);
     await resetContent(currentChapterIndex, Todo.toNext, PageJumpType.stay);
+    TipUtil.dismiss();
 
     //第一次必须加载上一章节
     if (currentChapterIndex != 0) {
-      if(preChapter == null){
+      if (preChapter == null) {
         preChapter = await fetchChapter(currentChapterIndex - 1);
       }
       pageController.jumpToPage(
@@ -186,7 +186,7 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
     PageJumpType jumpType,
   ) async {
     if (todo == Todo.toNext) {
-        preChapter = currentChapter;
+      preChapter = currentChapter;
 
       if (nextChapter != null && jumpType != PageJumpType.stay) {
         currentChapter = nextChapter;
@@ -351,7 +351,11 @@ class _ReadBookPageState extends State<ReadBookPage> with RouteAware {
         onTap(details.globalPosition);
       },
       child: ReaderView(
-          article: article, page: page, topSafeHeight: topSafeHeight,bookId: widget.bookId,),
+        article: article,
+        page: page,
+        topSafeHeight: topSafeHeight,
+        bookId: widget.bookId,
+      ),
     );
   }
 

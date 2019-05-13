@@ -5,40 +5,42 @@ import 'package:zwt_life_flutter_app/widget/otherwidget/tip/LoadingView.dart';
 
 enum TipDialogType { NOTHING, LOADING, SUCCESS, FAIL, INFO }
 
-class TipDialog extends Dialog {
-  TipDialog(
-      {Key key,
-      TipDialogType type: TipDialogType.NOTHING,
-      this.tip,
-      this.openMask: false})
-      : assert(type != null),
-        icon = type == TipDialogType.NOTHING ? null : new TipDialogIcon(type),
-        bodyBuilder = null,
-        color = const Color(0xbb000000),
-        super(key: key);
-
-  TipDialog.customIcon({Key key, this.icon, this.tip})
-      : assert(icon != null || tip != null),
-        bodyBuilder = null,
-        openMask = null,
-        color = const Color(0xbb000000),
-        super(key: key);
-
-  TipDialog.builder(
-      {Key key,
-      this.bodyBuilder,
-      this.color: const Color(0xbb000000),
-      this.openMask})
-      : assert(bodyBuilder != null),
-        tip = null,
-        icon = null,
-        super(key: key);
+class TipDialog extends StatelessWidget {
+//  TipDialog(
+//      {Key key,
+//      TipDialogType type: TipDialogType.NOTHING,
+//      this.tip,
+//      this.openMask: false})
+//      : assert(type != null),
+//        icon = type == TipDialogType.NOTHING ? null : new TipDialogIcon(type),
+//        bodyBuilder = null,
+//        color = const Color(0xcc000000),
+//        super(key: key);
+//
+//  TipDialog.customIcon({Key key, this.icon, this.tip})
+//      : assert(icon != null || tip != null),
+//        bodyBuilder = null,
+//        openMask = null,
+//        color = const Color(0xbb000000),
+//        super(key: key);
+//
+//
+//  TipDialog.builder(
+//      {Key key,
+//      this.bodyBuilder,
+//      this.color: const Color(0xbb000000),
+//      this.openMask})
+//      : assert(bodyBuilder != null),
+//        tip = null,
+//        icon = null,
+//        super(key: key);
 
   final String tip;
   final Widget icon;
   final WidgetBuilder bodyBuilder;
   final Color color;
-  final bool openMask;
+  final TipDialogType type;
+  TipDialog(this.type, {this.tip ,this.icon,this.bodyBuilder,this.color,});
 
   Widget _buildBody() {
     List<Widget> childs = [];
@@ -72,9 +74,7 @@ class TipDialog extends Dialog {
 
   @override
   Widget build(BuildContext context) {
-    return openMask
-        ? Material(
-
+    return Material(
             type: MaterialType.transparency,
             child: Center(
               child: new ClipRRect(
@@ -87,19 +87,6 @@ class TipDialog extends Dialog {
                   child:
                       bodyBuilder == null ? _buildBody() : bodyBuilder(context),
                 ),
-              ),
-            ),
-          )
-        : Center(
-            child: new ClipRRect(
-              borderRadius: new BorderRadius.circular(15.0),
-              child: new Container(
-                constraints: icon == null || tip == null
-                    ? new BoxConstraints(minHeight: 50.0, minWidth: 100.0)
-                    : new BoxConstraints(minHeight: 90.0, minWidth: 120.0),
-                color: color,
-                child:
-                    bodyBuilder == null ? _buildBody() : bodyBuilder(context),
               ),
             ),
           );

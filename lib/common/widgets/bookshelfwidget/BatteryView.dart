@@ -60,7 +60,7 @@ class _BatteryViewState extends State<BatteryView> {
   Widget build(BuildContext context) {
     return Container(
       width: 27,
-      height: 12,
+      height: 10,
       child: Row(
         children: <Widget>[
           Stack(

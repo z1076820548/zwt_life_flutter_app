@@ -2,6 +2,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:zwt_life_flutter_app/common/net/Code.dart';
 import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ChipsTile.dart';
 import 'package:zwt_life_flutter_app/common/widgets/searchwidget/hotSug.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/BookShelfPage.dart';
@@ -50,10 +51,12 @@ class _BookDetailPageState extends State<BookDetailPage> {
         actions: <Widget>[
           Center(
               child: GestureDetector(
-            onTap: () {},
-            child: Container(
-                padding: EdgeInsets.only(right: 10), child: Text('全本缓存')),
-          ))
+                onTap: () {
+                  cacheBook();
+                },
+                child: Container(
+                    padding: EdgeInsets.only(right: 10), child: Text('全本缓存')),
+              ))
         ],
       ),
       body: CupertinoScrollbar(
@@ -72,7 +75,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
       });
     }
     List<RecommendBooks> list =
-        await bookShelfDbProvider.getOneData(bookDetailBean.id);
+    await bookShelfDbProvider.getOneData(bookDetailBean.id);
     if (list != null && list.length != 0) {
       setState(() {
         isCollect = true;
@@ -92,202 +95,202 @@ class _BookDetailPageState extends State<BookDetailPage> {
     }
     return Container(
         child: Column(
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.symmetric(vertical: 5),
-          child: Row(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(left: 15),
-                child: ExtendedImage.network(
-                  (Constant.IMG_BASE_URL + bookDetailBean.cover),
-                  height: ScreenUtil.getInstance().L(70),
-                  fit: BoxFit.fitHeight,
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  cache: true,
-                  border: Border.all(color: Colors.black, width: 1.0),
-                  shape: BoxShape.rectangle,
-                ),
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 5),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(left: 15),
+                    child: ExtendedImage.network(
+                      (Constant.IMG_BASE_URL + bookDetailBean.cover),
+                      height: ScreenUtil.getInstance().L(70),
+                      fit: BoxFit.fitHeight,
+                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      cache: true,
+                      border: Border.all(color: Colors.black, width: 1.0),
+                      shape: BoxShape.rectangle,
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            child: Text(
+                              bookDetailBean.title,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: ScreenUtil.getInstance().setSp(16)),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            child: Text.rich(TextSpan(children: [
+                              TextSpan(
+                                recognizer: tapRecognizer,
+                                text: bookDetailBean.author,
+                                style: TextStyle(
+                                    color: Colors.red[800],
+                                    fontSize: ScreenUtil.getInstance().setSp(12)),
+                              ),
+                              TextSpan(
+                                text: ('  |  ' +
+                                    bookDetailBean.cat +
+                                    '  |  ' +
+                                    FormatUtil.wordCount(bookDetailBean.wordCount)),
+                                style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: ScreenUtil.getInstance().setSp(12)),
+                              ),
+                            ])),
+                          ),
+                          Container(
+                            child: Text(
+                                (FormatUtil.getDescriptionTimeFromDateString(
+                                    bookDetailBean.updated) +
+                                    "更新"),
+                                style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: ScreenUtil.getInstance().setSp(12))),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
               ),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        child: Text(
-                          bookDetailBean.title,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: ScreenUtil.getInstance().setSp(16)),
+            ),
+            //以下是追更新 开始阅读 -------------------------------------------------------------------------------------------------------------------------------------------------------
+            Container(
+              padding: EdgeInsets.only(top: 10, bottom: 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Material(
+                    child: Ink(
+                      child: InkWell(
+                        onTap: () => {joinCollection()},
+                        child: Container(
+                          padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 40),
+                          decoration: BoxDecoration(
+                            border: new Border.all(color: Colors.black, width: 1),
+                            // 边色与边宽度
+                            borderRadius: new BorderRadius.circular((5.0)), // 圆角度
+                          ),
+                          child: isCollect
+                              ? Text(
+                            "- 不追了",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: ScreenUtil.getInstance().setSp(15)),
+                          )
+                              : Text(
+                            "+ 追更新",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: ScreenUtil.getInstance().setSp(15)),
+                          ),
                         ),
                       ),
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 5),
-                        child: Text.rich(TextSpan(children: [
-                          TextSpan(
-                            recognizer: tapRecognizer,
-                            text: bookDetailBean.author,
-                            style: TextStyle(
-                                color: Colors.red[800],
-                                fontSize: ScreenUtil.getInstance().setSp(12)),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                  ),
+                  Material(
+                    child: Ink(
+                      child: InkWell(
+                        onTap: () => {startRead()},
+                        child: Container(
+                          padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 40),
+                          decoration: BoxDecoration(
+                            border: new Border.all(
+                                color: GlobalColors.themeColor, width: 1),
+                            // 边色与边宽度
+                            borderRadius: new BorderRadius.circular((5.0)), // 圆角度
                           ),
-                          TextSpan(
-                            text: ('  |  ' +
-                                bookDetailBean.cat +
-                                '  |  ' +
-                                FormatUtil.wordCount(bookDetailBean.wordCount)),
+                          child: Text(
+                            "开始阅读",
                             style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: ScreenUtil.getInstance().setSp(12)),
+                                color: GlobalColors.themeColor,
+                                fontSize: ScreenUtil.getInstance().setSp(15)),
                           ),
-                        ])),
+                        ),
                       ),
-                      Container(
-                        child: Text(
-                            (FormatUtil.getDescriptionTimeFromDateString(
-                                    bookDetailBean.updated) +
-                                "更新"),
-                            style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: ScreenUtil.getInstance().setSp(12))),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            //以上是 追更新 开始阅读 -------------------------------------------------------------------------------------------------------------------------------------------------------
+            Container(
+              color: Colors.grey[200],
+              padding: EdgeInsets.symmetric(vertical: 3),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        '追书人数',
+                        style: TextStyle(color: Colors.grey[600]),
                       ),
+                      Text(
+                        bookDetailBean.latelyFollower.toString(),
+                        style: TextStyle(color: Colors.grey[600]),
+                      )
                     ],
                   ),
-                ),
-              )
-            ],
-          ),
-        ),
-        //以下是追更新 开始阅读 -------------------------------------------------------------------------------------------------------------------------------------------------------
-        Container(
-          padding: EdgeInsets.only(top: 10, bottom: 30),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Material(
-                child: Ink(
-                  child: InkWell(
-                    onTap: () => {joinCollection()},
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 40),
-                      decoration: BoxDecoration(
-                        border: new Border.all(color: Colors.black, width: 1),
-                        // 边色与边宽度
-                        borderRadius: new BorderRadius.circular((5.0)), // 圆角度
-                      ),
-                      child: isCollect
-                          ? Text(
-                              "- 不追了",
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: ScreenUtil.getInstance().setSp(15)),
-                            )
-                          : Text(
-                              "+ 追更新",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: ScreenUtil.getInstance().setSp(15)),
-                            ),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: ScreenUtil.getInstance().L(50)),
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          '读者留存率',
+                          style: TextStyle(color: Colors.grey[600]),
+                        ),
+                        Text(
+                          bookDetailBean.retentionRatio.toString() + '%',
+                          style: TextStyle(color: Colors.grey[600]),
+                        )
+                      ],
                     ),
                   ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-              ),
-              Material(
-                child: Ink(
-                  child: InkWell(
-                    onTap: () => {startRead()},
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 40),
-                      decoration: BoxDecoration(
-                        border: new Border.all(
-                            color: GlobalColors.themeColor, width: 1),
-                        // 边色与边宽度
-                        borderRadius: new BorderRadius.circular((5.0)), // 圆角度
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        '更新字数/天',
+                        style: TextStyle(color: Colors.grey[600]),
                       ),
-                      child: Text(
-                        "开始阅读",
-                        style: TextStyle(
-                            color: GlobalColors.themeColor,
-                            fontSize: ScreenUtil.getInstance().setSp(15)),
-                      ),
-                    ),
+                      Text(
+                        bookDetailBean.serializeWordCount.toString(),
+                        style: TextStyle(color: Colors.grey[600]),
+                      )
+                    ],
                   ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        //以上是 追更新 开始阅读 -------------------------------------------------------------------------------------------------------------------------------------------------------
-        Container(
-          color: Colors.grey[200],
-          padding: EdgeInsets.symmetric(vertical: 3),
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Text(
-                    '追书人数',
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
-                  Text(
-                    bookDetailBean.latelyFollower.toString(),
-                    style: TextStyle(color: Colors.grey[600]),
-                  )
                 ],
               ),
-              Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: ScreenUtil.getInstance().L(50)),
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      '读者留存率',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                    Text(
-                      bookDetailBean.retentionRatio.toString() + '%',
-                      style: TextStyle(color: Colors.grey[600]),
-                    )
-                  ],
-                ),
-              ),
-              Column(
-                children: <Widget>[
-                  Text(
-                    '更新字数/天',
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
-                  Text(
-                    bookDetailBean.serializeWordCount.toString(),
-                    style: TextStyle(color: Colors.grey[600]),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
-        Divider(
-          indent: ScreenUtil.getInstance().L(20),
-        ),
-        buildChips(),
-        buildLongInfo(),
-        Container(
-          color: Colors.grey[200],
-          padding: EdgeInsets.symmetric(vertical: 3),
-        ),
-      ],
-    ));
+            ),
+            Divider(
+              indent: ScreenUtil.getInstance().L(20),
+            ),
+            buildChips(),
+            buildLongInfo(),
+            Container(
+              color: Colors.grey[200],
+              padding: EdgeInsets.symmetric(vertical: 3),
+            ),
+          ],
+        ));
   }
 
   buildChips() {
@@ -356,7 +359,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
       ToastUtils.info(context, "添加成功");
       //添加到书架
       RecommendBooks recommendBooks =
-          RecommendBooks.fromJson(bookDetailBean.toJson());
+      RecommendBooks.fromJson(bookDetailBean.toJson());
       recommendBooksList.add(recommendBooks);
       bookShelfDbProvider.insert(recommendBooks.id, DateTime.now(),
           json.encode(recommendBooks.toJson()));
@@ -371,5 +374,18 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
   void goSearchList(String qery) {
     NavigatorUtils.gotoBookByTagsPage(context, qery, "Tags");
+  }
+
+  //全本缓存
+  void cacheBook() async{
+    AlertCupertinoUtil.showAletWithTitle(context,title: "是否全本缓存?",contentText: '虽然用不了几M...',onAllow: ()async{
+      ToastUtils.info(context, "开始缓存");
+      Data data = await dioGetAToc(bookDetailBean.id, "chapters");
+      MixToc mixToc = data.data;
+      List<Chapters> chaptersList = mixToc.chapters;
+      Code.eventBus.fire(
+          new DownloadEvent(bookDetailBean.id, chaptersList, 0, chaptersList.length - 1, DownloadEventType.start, current: 0));
+    });
+
   }
 }
