@@ -12,7 +12,7 @@ class TipUtil {
     Navigator.pop(mContext);
   }
 
-  static Future<Null> nothing(BuildContext context, String tip) {
+  static Future<Null> Nothing(BuildContext context, String tip) {
     mContext = context;
     return showDialog(
         context: context,
