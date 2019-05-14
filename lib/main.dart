@@ -24,21 +24,30 @@ import 'package:zwt_life_flutter_app/page/WelcomePage.dart';
 import 'package:provide/provide.dart';
 import 'package:zwt_life_flutter_app/public.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:firebase_admob/firebase_admob.dart';
+
 SpUtil sp;
 List<CameraDescription> cameras;
+MobileAdTargetingInfo targetingInfo;
+BannerAd myBanner;
+InterstitialAd myInterstitial;
 
 void main() async {
   final providers = Providers()
-    ..provide(Provider.function((context)=>
-        DownloadStatusEvent('0',0,1,DownloadEventType.remove)
-    ));
+    ..provide(Provider.function(
+        (context) => DownloadStatusEvent('0', 0, 1, DownloadEventType.remove)));
 //  ProviderNode(providers: providers,child: MainPage(),);
-  runApp(ProviderNode(providers: providers,child: FlutterReduxApp(),));
+  runApp(ProviderNode(
+    providers: providers,
+    child: FlutterReduxApp(),
+  ));
   sp = await SpUtil.getInstance();
   new SearchHistoryList(sp);
   PaintingBinding.instance.imageCache.maximumSize = 100;
   cameras = await availableCameras();
   FileUtil.root = await FileUtil.getRootPath();
+  FirebaseAdMob.instance.initialize(appId: AdmobId.AndroidAppId);
+
 
 }
 
@@ -47,16 +56,13 @@ class FlutterReduxApp extends StatelessWidget {
   /// initialState 初始化 State
   final store = new Store<GlobalState>(
     appReducer,
+
     ///初始化数据
     initialState: new GlobalState(
       userInfo: User.empty(),
       themeData: CommonUtils.getThemeData(GlobalColors.themeColor),
     ),
   );
-
-
-
-
 
   FlutterReduxApp({Key key}) : super(key: key);
 

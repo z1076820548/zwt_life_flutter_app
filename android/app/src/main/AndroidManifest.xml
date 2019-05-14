@@ -14,6 +14,9 @@
         tools:replace="android:label"
         android:label="今日追书"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3487865750845286~8249904505"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

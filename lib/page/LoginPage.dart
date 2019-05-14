@@ -100,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                         new Padding(padding: new EdgeInsets.all(10.0)),
                         new MyRaisedButton(
                           text: CommonUtils.getLocale(context).login_text,
-                          color: Colors.greenAccent[400],
+                          color: GlobalColors.themeColor,
                           textColor: Color(GlobalColors.textWhite),
                           onPress: () {
 //                            if (_userName.isEmpty || _password.isEmpty) {

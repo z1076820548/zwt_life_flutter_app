@@ -39,3 +39,5 @@ export 'dart:convert';
 //manager
 export 'package:zwt_life_flutter_app/common/manager/settingmanager.dart';
 export 'package:zwt_life_flutter_app/common/manager/downloadmanager.dart';
+
+export 'package:zwt_life_flutter_app/common/admob/AdmobId.dart';
