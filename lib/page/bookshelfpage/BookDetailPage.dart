@@ -402,7 +402,11 @@ class _BookDetailPageState extends State<BookDetailPage> {
   }
 
   //开始阅读
-  startRead() {
+  startRead() async{
+    var isloade = await myBanner.isLoaded();
+    if(isloade){
+      myBanner.dispose();
+    }
     NavigatorUtils.gotoReadBookPage(
         context, bookDetailBean.title, bookDetailBean.id);
   }
