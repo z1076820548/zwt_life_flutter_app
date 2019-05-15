@@ -3,9 +3,9 @@
 本项目只要不点packages upgrade基本就可以运行
 ## Getting Started
 ![image](https://github.com/z1076820548/zwt_life_flutter_app/blob/master/gif/read.gif)
-![image](https://github.com/z1076820548/zwt_life_flutter_app/blob/master/gif/read.gif)
-![image](https://github.com/z1076820548/zwt_life_flutter_app/blob/master/gif/read.gif)
-![image](https://github.com/z1076820548/zwt_life_flutter_app/blob/master/gif/read.gif)
+![image](https://github.com/z1076820548/zwt_life_flutter_app/blob/master/gif/cache.gif)
+![image](https://github.com/z1076820548/zwt_life_flutter_app/blob/master/gif/search.gif)
+![image](https://github.com/z1076820548/zwt_life_flutter_app/blob/master/gif/rank.gif)
 
 This project is a starting point for a Flutter application.
 
