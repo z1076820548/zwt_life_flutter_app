@@ -7,6 +7,13 @@
 ![image](https://github.com/z1076820548/zwt_life_flutter_app/blob/master/gif/search.gif)
 ![image](https://github.com/z1076820548/zwt_life_flutter_app/blob/master/gif/cache.gif)
 
+扫面二维码
+![image](https://github.com/z1076820548/zwt_life_flutter_app/blob/master/gif/code.png)
+下载地址 https://www.pgyer.com/rFZ6
+
+如果以上下载都失效
+可以在寻找zwt_life_flutter_app\build\app\outputs\apk\release\app-release.apk 进行安装
+
 This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
