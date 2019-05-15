@@ -43,16 +43,6 @@ class CommonUtils {
     } else {
       appDir = await getExternalStorageDirectory();
     }
-//    PermissionStatus permission = await PermissionHandler()
-//        .checkPermissionStatus(PermissionGroup.storage);
-//    if (permission != PermissionStatus.granted) {
-//      Map<PermissionGroup, PermissionStatus> permissions =
-//          await PermissionHandler()
-//              .requestPermissions([PermissionGroup.storage]);
-//      if (permissions[PermissionGroup.storage] != PermissionStatus.granted) {
-//        return null;
-//      }
-//    }
     String appDocPath = appDir.path + "/gsygithubappflutter";
     Directory appPath = Directory(appDocPath);
     await appPath.create(recursive: true);
@@ -60,22 +50,6 @@ class CommonUtils {
   }
 
   static saveImage(String url) async {
-//    Future<String> _findPath(String imageUrl) async {
-//      final cache = await CacheManager.getInstance();
-//      final file = await cache.getFile(imageUrl);
-//      if (file == null) {
-//        return null;
-//      }
-//      Directory localPath = await CommonUtils.getLocalPath();
-//      if (localPath == null) {
-//        return null;
-//      }
-//      final name = splitFileNameByPath(file.path);
-//      final result = await file.copy(localPath.path + name);
-//      return result.path;
-//    }
-//
-//    return _findPath(url);
   }
 
   static splitFileNameByPath(String path) {
@@ -91,16 +65,6 @@ class CommonUtils {
    * 切换语言
    */
   static changeLocale(Store<GlobalState> store, int index) {
-//    Locale locale = store.state.platformLocale;
-//    switch (index) {
-//      case 1:
-//        locale = Locale('zh', 'CH');
-//        break;
-//      case 2:
-//        locale = Locale('en', 'US');
-//        break;
-//    }
-//    store.dispatch(RefreshLocaleAction(locale));
   }
 
   static GlobalStringBase getLocale(BuildContext context) {
@@ -120,20 +84,6 @@ class CommonUtils {
   }
 
   static const IMAGE_END = [".png", ".jpg", ".jpeg", ".gif", ".svg"];
-
-
-  static void launchWebView(BuildContext context, String title, String url) {
-    if (url.startsWith("http")) {
-      NavigatorUtils.goGSYWebView(context, url, title);
-    } else {
-      NavigatorUtils.goGSYWebView(
-          context,
-          new Uri.dataFromString(url,
-                  mimeType: 'text/html', encoding: Encoding.getByName("utf-8"))
-              .toString(),
-          title);
-    }
-  }
 
   static launchOutURL(String url, BuildContext context) async {
     if (await canLaunch(url)) {

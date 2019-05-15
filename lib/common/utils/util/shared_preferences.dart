@@ -50,7 +50,9 @@ class SpUtil {
   }
 
   getString(String key, String defaultVal) {
-    if (_beforeCheck()) return null;
+    if (_beforeCheck()){
+      return defaultVal;
+    }
     if (_spf.getString(key) != null && _spf.getString(key).length > 0) {
       return _spf.getString(key);
     } else {

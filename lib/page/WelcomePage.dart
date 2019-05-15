@@ -24,6 +24,7 @@ class _WelcomePageState extends State<WelcomePage> {
   Timer _timer;
   bool hadInit = false;
   int sTime = 4;
+
   List<String> messageList = [
     '劳于读书，逸于作文。 —— 程端礼',
     '读书使人心明眼亮。 —— 伏尔泰',
@@ -59,33 +60,37 @@ class _WelcomePageState extends State<WelcomePage> {
     '立身以立学为先，立学以读书为本。 —— 朱熹',
     '人家不必论富贵，惟有读书声最佳。 —— 唐寅'
   ];
+  var msg;
 
   @override
   void dispose() {
     _timer.cancel();
+    myBanner.dispose();
     // TODO: implement dispose
     super.dispose();
   }
 
   @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
+  void initState() {
+    msg = messageList[Random().nextInt(messageList.length - 1)];
+    // TODO: implement initState
+    super.initState();
+    var male = SettingManager().getUserChooseSex();
+    var m = male == 'male' ? MobileAdGender.male : MobileAdGender.female;
+    FirebaseAdMob.instance.initialize(appId: AdmobId.AppId);
+
     targetingInfo = MobileAdTargetingInfo(
-      keywords: <String>['flutterio', 'beautiful apps'],
+      keywords: <String>['flutterio', '今日追书'],
       contentUrl: 'https://flutter.io',
       birthday: DateTime.now(),
       childDirected: false,
       designedForFamilies: false,
-      gender: MobileAdGender.unknown,
+      gender: m,
       // or MobileAdGender.female, MobileAdGender.unknown
       testDevices: <String>[], // Android emulators are considered test devices
     );
     myBanner = BannerAd(
-      // Replace the testAdUnitId with an ad unit id from the AdMob dash.
-      // https://developers.google.com/admob/android/test-ads
-      // https://developers.google.com/admob/ios/test-ads
-      adUnitId: BannerAd.testAdUnitId,
+      adUnitId: AdmobId.BannerId,
       size: AdSize.smartBanner,
       targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
@@ -97,27 +102,38 @@ class _WelcomePageState extends State<WelcomePage> {
       ..load()
       ..show(
         // Positions the banner ad 60 pixels from the bottom of the screen
-        anchorOffset: 0.0,
+        anchorOffset: 10,
         // Banner Position
         anchorType: AnchorType.bottom,
       );
-//    myInterstitial = InterstitialAd(
-//      // Replace the testAdUnitId with an ad unit id from the AdMob dash.
-//      // https://developers.google.com/admob/android/test-ads
-//      // https://developers.google.com/admob/ios/test-ads
-//      adUnitId: InterstitialAd.testAdUnitId,
-//      targetingInfo: targetingInfo,
-//      listener: (MobileAdEvent event) {
-//        print("InterstitialAd event is $event");
-//      },
-//    );
-//    myInterstitial
-//      ..load()
-//      ..show(
-//        anchorType: AnchorType.bottom,
-//        anchorOffset: 0.0,
-//      );
+    myInterstitial = InterstitialAd(
+      adUnitId: AdmobId.InterstitialId,
+      targetingInfo: targetingInfo,
+      listener: (MobileAdEvent event) {
+        print("InterstitialAd event is $event");
+      },
+    );
+    myInterstitial
+      ..load()
+      ..show(
+        anchorType: AnchorType.top,
+        anchorOffset: 0.0,
+      );
+    _timer = Timer.periodic(Duration(seconds: 4), (time) async {
+      if (sTime == 1) {
+        timeOver();
+      } else {
+        setState(() {
+          --sTime;
+        });
+      }
+    });
+  }
 
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
     if (hadInit) {
       return;
     }
@@ -125,15 +141,6 @@ class _WelcomePageState extends State<WelcomePage> {
     //防止多次进入
     Store<GlobalState> store = StoreProvider.of(context);
     CommonUtils.initStatusBarHeight(context);
-    _timer = Timer.periodic(Duration(seconds: 4), (time) async {
-      if (sTime == 0) {
-//        NavigatorUtils.goMain(context);
-      } else {
-        setState(() {
-          --sTime;
-        });
-      }
-    });
   }
 
   @override
@@ -151,11 +158,16 @@ class _WelcomePageState extends State<WelcomePage> {
                     image: new AssetImage('static/images/welcome.jpeg'),
                   ),
                   Positioned(
-                    top: 5,
-                    right: 10,
-                    width: 20,
-                    child: Container(
-                      child: Text("跳过广告($sTime " + "s)"),
+                    top: 25,
+                    right: 25,
+                    child: GestureDetector(
+                      onTap: () {
+                        timeOver();
+                      },
+                      child: Container(
+                        color: Colors.white70,
+                        child: Text("跳过广告 $sTime" + "s"),
+                      ),
                     ),
                   ),
                   Positioned(
@@ -166,8 +178,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         child: Wrap(
                           children: <Widget>[
                             Text(
-                              messageList[
-                                  Random().nextInt(messageList.length - 1)],
+                              msg,
                               style:
                                   TextStyle(color: Colors.white, fontSize: 20),
                             ),
@@ -181,5 +192,9 @@ class _WelcomePageState extends State<WelcomePage> {
         );
       },
     );
+  }
+
+  void timeOver() {
+    NavigatorUtils.goMain(context);
   }
 }

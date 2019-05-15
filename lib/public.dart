@@ -2,9 +2,6 @@ library public;
 
 //event
 export 'package:zwt_life_flutter_app/common/event/CategoryEvent.dart';
-export 'package:zwt_life_flutter_app/common/event/ChatEvent.dart';
-export 'package:zwt_life_flutter_app/common/event/ChatImageEvent.dart';
-export 'package:zwt_life_flutter_app/common/event/ChatVoiceAniEvent.dart';
 export 'package:zwt_life_flutter_app/common/event/DownloadEvent.dart';
 export 'package:zwt_life_flutter_app/common/event/HttpErrorEvent.dart';
 export 'package:zwt_life_flutter_app/common/event/ReaderMenuEvent.dart';

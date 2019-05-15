@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:zwt_life_flutter_app/common/event/ChatEvent.dart';
 import 'package:zwt_life_flutter_app/common/event/ReaderMenuEvent.dart';
 import 'package:zwt_life_flutter_app/common/net/Code.dart';
 import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/ReaderMenu.dart';

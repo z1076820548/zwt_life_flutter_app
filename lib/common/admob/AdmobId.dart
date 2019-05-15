@@ -11,8 +11,8 @@ class AdmobId {
   static String IOSCYId = 'ca-app-pub-3487865750845286/3276068983';
   static String IOSJLId = 'ca-app-pub-3487865750845286/7762108904';
 
-  static final String AppId = Platform.isAndroid ? AndroidAppId : IOSAppId;
-  static final String BannerId  = Platform.isAndroid ? AndroidHFId : IOSHFId;
-  static final String InterstitialId  = Platform.isAndroid ? AndroidCYId : IOSCYId;
-  static final String RewardedVideoId  = Platform.isAndroid ? AndroidJLId : IOSJLId;
+  static  String AppId = Platform.isAndroid ? AndroidAppId : IOSAppId;
+  static  String BannerId  = Platform.isAndroid ? AndroidHFId : IOSHFId;
+  static  String InterstitialId  = Platform.isAndroid ? AndroidCYId : IOSCYId;
+  static  String RewardedVideoId  = Platform.isAndroid ? AndroidJLId : IOSJLId;
 }

@@ -37,16 +37,16 @@ void main() async {
     ..provide(Provider.function(
         (context) => DownloadStatusEvent('0', 0, 1, DownloadEventType.remove)));
 //  ProviderNode(providers: providers,child: MainPage(),);
+  sp = await SpUtil.getInstance();
+
   runApp(ProviderNode(
     providers: providers,
     child: FlutterReduxApp(),
   ));
-  sp = await SpUtil.getInstance();
   new SearchHistoryList(sp);
   PaintingBinding.instance.imageCache.maximumSize = 100;
   cameras = await availableCameras();
   FileUtil.root = await FileUtil.getRootPath();
-  FirebaseAdMob.instance.initialize(appId: AdmobId.AndroidAppId);
 
 
 }

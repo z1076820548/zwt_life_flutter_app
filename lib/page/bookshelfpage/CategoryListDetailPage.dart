@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:zwt_life_flutter_app/common/event/CategoryEvent.dart';
 import 'package:zwt_life_flutter_app/common/net/Code.dart';
 import 'package:zwt_life_flutter_app/common/widgets/bookshelfwidget/CategoryListDetailWidget.dart';
 import 'package:zwt_life_flutter_app/public.dart';

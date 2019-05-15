@@ -142,7 +142,8 @@ class SettingManager {
    * @return
    */
   String getUserChooseSex() {
-    return sp.getString("userChooseSex", Constant.MALE);
+    String s = sp.getString("userChooseSex", Constant.MALE);
+    return s == null ? Constant.MALE:s;
   }
 
   bool isUserChooseSex() {

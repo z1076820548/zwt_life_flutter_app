@@ -8,13 +8,8 @@ import 'package:zwt_life_flutter_app/common/utils/CommonUtils.dart';
 import 'package:zwt_life_flutter_app/common/utils/util/screen_util.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/BookShelfPage.dart';
 import 'package:zwt_life_flutter_app/page/bookshelfpage/FindBookPage.dart';
-import 'package:zwt_life_flutter_app/page/homepage/HomePage.dart';
-import 'package:zwt_life_flutter_app/page/messagepage/MessageContactsPage.dart';
-import 'package:zwt_life_flutter_app/page/messagepage/MessageTalkingPage.dart';
 import 'package:zwt_life_flutter_app/widget/otherwidget/MyCupertinoDialog.dart';
 import 'package:zwt_life_flutter_app/public.dart';
-import 'package:background_fetch/background_fetch.dart';
-import 'package:flutter/services.dart';
 import 'package:connectivity/connectivity.dart';
 
 
