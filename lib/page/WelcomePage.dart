@@ -87,7 +87,7 @@ class _WelcomePageState extends State<WelcomePage> {
       designedForFamilies: false,
       gender: m,
       // or MobileAdGender.female, MobileAdGender.unknown
-      testDevices: <String>[], // Android emulators are considered test devices
+//      testDevices: <String>[], // Android emulators are considered test devices
     );
     myBanner = BannerAd(
       adUnitId: AdmobId.BannerId,

@@ -31,6 +31,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
 
 
+
+
+
   @override
   void dispose() {
     myBanner.dispose();
@@ -69,6 +72,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
         // Banner Position
         anchorType: AnchorType.bottom,
       );
+
   }
 
   @override
