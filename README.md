@@ -1,6 +1,6 @@
 # zwt_life_flutter_app
-小说阅读器
-
+小说阅读器 参考了好几个app做的 如果有相似代码 不要惊讶
+本项目只要不点packages upgrade基本就可以运行
 ## Getting Started
 
 This project is a starting point for a Flutter application.
