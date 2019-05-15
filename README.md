@@ -1,5 +1,5 @@
 # zwt_life_flutter_app
-小说阅读器 参考了好几个app做的 如果有相似代码 不要惊讶
+小说阅读器 参考了好几个app做的 如果有相似代码 不要惊讶 模拟器很卡十分抱歉  下面有安卓apk下载体验 
 本项目只要不点packages upgrade基本就可以运行
 ## Getting Started
 ![image](https://github.com/z1076820548/zwt_life_flutter_app/blob/master/gif/read.gif)
