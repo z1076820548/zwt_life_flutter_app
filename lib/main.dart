@@ -36,7 +36,6 @@ void main() async {
   final providers = Providers()
     ..provide(Provider.function(
         (context) => DownloadStatusEvent('0', 0, 1, DownloadEventType.remove)));
-//  ProviderNode(providers: providers,child: MainPage(),);
   sp = await SpUtil.getInstance();
 
   runApp(ProviderNode(

@@ -162,14 +162,6 @@ class _MainPageState extends State<MainPage> {
       ..init(context);
     // TODO: implement build
     return Scaffold(
-//      appBar: AppBar(
-//        title: Text("dasdasd"),
-//        actions: <Widget>[
-//          //导航栏右侧菜单
-//          IconButton(icon: Icon(Icons.share), onPressed: () {}),
-//        ],
-//      ),
-      //用IOS的比较美观
       bottomNavigationBar: CupertinoTabBar(
         backgroundColor: Colors.grey[100],
         activeColor: GlobalColors.themeColor,
@@ -179,10 +171,6 @@ class _MainPageState extends State<MainPage> {
               icon: getTabIcon(0), title: getTabTitle(0)),
           new BottomNavigationBarItem(
               icon: getTabIcon(1), title: getTabTitle(1)),
-//          new BottomNavigationBarItem(
-//              icon: getTabIcon(2), title: getTabTitle(2)),
-//          new BottomNavigationBarItem(
-//              icon: getTabIcon(3), title: getTabTitle(3)),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

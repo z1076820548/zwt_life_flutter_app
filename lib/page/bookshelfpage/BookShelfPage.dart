@@ -24,11 +24,13 @@ class BookShelfPage extends StatefulWidget {
   }
 }
 
-class _BookShelfPageState extends State<BookShelfPage> with AutomaticKeepAliveClientMixin{
+class _BookShelfPageState extends State<BookShelfPage>
+    with AutomaticKeepAliveClientMixin {
   RefreshController _refreshController;
   ScrollController _scrollController;
   final SlidableController slidableController = new SlidableController();
   BookShelfDbProvider bookShelfDbProvider = new BookShelfDbProvider();
+
 //  @override
 //  void didChangeAppLifecycleState(AppLifecycleState state) {}
 
@@ -117,6 +119,7 @@ class _BookShelfPageState extends State<BookShelfPage> with AutomaticKeepAliveCl
                                       child: Opacity(
                                         opacity: 0.6,
                                         child: Container(
+                                          height: ScreenUtil.getInstance().L(50),
                                           color: Colors.black,
                                           alignment: Alignment.center,
                                           child: Stack(

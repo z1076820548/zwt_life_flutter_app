@@ -20,10 +20,14 @@ class _FindBookPageState extends State<FindBookPage> {
   RefreshController _refreshController;
   ScrollController _scrollController;
   var tabList = [
-  ['static/images/rankinglist.png', '排行榜'],
-  ['static/images/sortlist.png', "分类",],
-  ['static/images/booklist.png', "主题书单",]];
+    ['static/images/rankinglist.png', '排行榜'],
+    [
+      'static/images/sortlist.png',
+      "分类",
+    ],
+  ];
 
+//  ['static/images/booklist.png', "主题书单",]
   Image getTabImage(path) {
     return new Image.asset(path, width: 20.0, height: 20.0);
   }
@@ -35,13 +39,11 @@ class _FindBookPageState extends State<FindBookPage> {
     super.initState();
   }
 
-
   returnItem(int index) {
     return new Container(
       decoration: new BoxDecoration(
           border: new BorderDirectional(
-              bottom:
-              new BorderSide(color: Color(0xFFe1e1e1), width: 1.0))),
+              bottom: new BorderSide(color: Color(0xFFe1e1e1), width: 1.0))),
       child: Material(
         child: Ink(
           child: InkWell(
@@ -60,7 +62,9 @@ class _FindBookPageState extends State<FindBookPage> {
               ),
               title: Text('${tabList[index][1]}'),
               trailing: Icon(
-                Icons.keyboard_arrow_right, color: Colors.grey,),
+                Icons.keyboard_arrow_right,
+                color: Colors.grey,
+              ),
             ),
           ),
         ),
@@ -79,16 +83,15 @@ class _FindBookPageState extends State<FindBookPage> {
           padding: EdgeInsets.zero,
           child: Semantics(
             child: IconButton(
-                onPressed: () => {},
+                onPressed: () {
+                  NavigatorUtils.gotoSearchPage(context);
+                },
                 icon: Icon(CupertinoIcons.search, color: Colors.black)),
           ),
         ),
       ),
       child: DefaultTextStyle(
-        style: CupertinoTheme
-            .of(context)
-            .textTheme
-            .textStyle,
+        style: CupertinoTheme.of(context).textTheme.textStyle,
         child: Center(
           child: CupertinoScrollbar(
               child: SmartRefresher(
@@ -107,15 +110,14 @@ class _FindBookPageState extends State<FindBookPage> {
     );
   }
 
-
   //点击阅读
   void tap(int position) async {
-    switch(position){
+    switch (position) {
       //排行榜
       case 0:
         NavigatorUtils.gotoTopRankPage(context);
         break;
-       //分类
+      //分类
       case 1:
         NavigatorUtils.gotoTopCategoryPage(context);
         break;
