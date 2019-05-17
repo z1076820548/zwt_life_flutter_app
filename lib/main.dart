@@ -25,6 +25,7 @@ import 'package:provide/provide.dart';
 import 'package:zwt_life_flutter_app/public.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:firebase_admob/firebase_admob.dart';
+import 'package:flutter/foundation.dart';
 
 SpUtil sp;
 List<CameraDescription> cameras;
@@ -46,8 +47,18 @@ void main() async {
   PaintingBinding.instance.imageCache.maximumSize = 100;
   cameras = await availableCameras();
   FileUtil.root = await FileUtil.getRootPath();
+  void syncIsolates(int i) {
+    //创建Isolates耗时操作执行耗时操作
 
+  }
+  await compute(syncIsolates, 20);
 
+  ErrorWidget.builder = (FlutterErrorDetails flutterErrorDetails) {
+    print(flutterErrorDetails.toString());
+    return Center(
+      child: Text("自定义错误界面"),
+    );
+  };
 }
 
 class FlutterReduxApp extends StatelessWidget {
